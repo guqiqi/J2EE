@@ -31,13 +31,13 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/showItemList");
         }
         else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/wrongPage.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/page/wrongPage.jsp");
             dispatcher.forward(request, response);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/page/login.jsp").forward(request, response);
     }
 }

@@ -41,7 +41,7 @@ public class ShowItemListServlet extends HttpServlet {
 //        session.setAttribute("pageCount", pageCount);
 
         try {
-            request.getRequestDispatcher("/showItems.jsp").forward(request, response);
+            request.getRequestDispatcher("/page/showItems.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
