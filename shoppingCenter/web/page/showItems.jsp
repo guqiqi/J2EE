@@ -28,12 +28,10 @@
             <%
                 ItemListBean bean = (ItemListBean) session.getAttribute("itemList");
                 List<Item> list = bean.getItemList();
-                list.add(new Item("橘子", 40));
-                list.add(new Item("apple", 500));
                 for (Item item : list) {%>
             <tr>
-                <td><input type="checkbox" name="favorite"
-                           onClick="selectOne(<%=list.indexOf(item)%>)"></td>
+                <td><input type="checkbox" id="<%=item.getName()%>"
+                           onClick="selectOne(<%=item.getName()%>)"></td>
                 <td><%=item.getName()%>
                 </td>
                 <td><%=item.getPrice()%>
@@ -43,11 +41,11 @@
         </table>
 
         <%--<%--%>
-            <%--int pageNow = 1;--%>
-            <%--int pageCount = 2;--%>
-<%--//            int pageNow = (Integer) session.getAttribute("pageNow");--%>
-<%--//            int pageCount = (Integer) session.getAttribute("pageCount");--%>
-            <%--if (pageNow != 1) {--%>
+        <%--int pageNow = 1;--%>
+        <%--int pageCount = 2;--%>
+        <%--//            int pageNow = (Integer) session.getAttribute("pageNow");--%>
+        <%--//            int pageCount = (Integer) session.getAttribute("pageCount");--%>
+        <%--if (pageNow != 1) {--%>
         <%--%>--%>
         <%--<a href='<%=response.encodeURL(request.getContextPath())%>/showItemList?pageNow=<%=pageNow - 1%>'>last page</a>--%>
         <%--<%}%>--%>
@@ -71,21 +69,26 @@
       e.checked = !checkedAll;
     }
     checkedAll = !checkedAll;
-    if(checkedAll) {
-      selected = selected.push(0);
-      selected = selected.push(1);
-      selected = selected.push(2);
-      selected = selected.push(3);
-      selected = selected.push(4);
-    }
-    else
-      selected = []
+    if (checkedAll) {
+      // 先清空，然后一个一个加
+      selected = [];
+      for (var i = 1; i < form.length - 1; i++) {
+        var e = form[i].id;
+        selected.push(e);
+      }
+      console.log(selected)
+    } else
+      selected = [];
   }
 
-  function selectOne(index) {
-    var size =<%=((ItemListBean) session.getAttribute("itemList")).getItemList().size()%>
+  function selectOne(name) {
+    var size =
+    <%=((ItemListBean) session.getAttribute("itemList")).getItemList().size()%>
 
     var form = document.getElementById("listForm");
+
+    // 这边传过来的是整个dom节点！！！
+    console.log(name);
 
     // 原来是全选的
     if (selected.length === size) {
@@ -93,16 +96,18 @@
       form[0].checked = false;
     }
 
+    // 取消选择
     for (var i = 0; i < selected.length; i++) {
-      if (selected[i] === index) {
-        selected.splice(index, 1);
-        form[index] = !form[i].checked;
+      if (selected[i] === name) {
+        selected.splice(i, 1);
+        form[i].checked = !form[i].checked;
         return
       }
     }
 
-    form[index + 1].checked = true;
-    selected.push(index);
+    // 选择
+    name.checked = true;
+    selected.push(name.id);
 
     // 选择之后变成全选
     if (selected.length === size) {
@@ -114,19 +119,19 @@
   /* 检查是否选择内容
   */
   function placeOrder() {
-    if(selected.length === 0) {
+    if (selected.length === 0) {
       alert("您的购物车为空, 请添加物品后提交!");
       return
     }
-    var myForm=document.createElement("form");
-    var params={"itemList": selected};
+    var myForm = document.createElement("form");
+    var params = {"itemList": selected};
     myForm.method = "POST";
     myForm.action = "<%=response.encodeURL(request.getContextPath())%>/order";
     myForm.style.display = "none";
-    for ( var k in params) {
+    for (var k in params) {
       var myInput = document.createElement("input");
-      myInput.name= k;
-      myInput.value= params[k];
+      myInput.name = k;
+      myInput.value = params[k];
       myForm.appendChild(myInput);
     }
     document.body.appendChild(myForm);
