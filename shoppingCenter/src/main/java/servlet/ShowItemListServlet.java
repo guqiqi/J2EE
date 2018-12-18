@@ -20,9 +20,13 @@ public class ShowItemListServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int pageNow = 1;
-        int pageCount;
-        int pageSize = 5;
+        HttpSession session = request.getSession(false);
+
+        if (null == session)
+            request.getRequestDispatcher("/page/notLoginPage.jsp").forward(request, response);
+//        int pageNow = 1;
+//        int pageCount;
+//        int pageSize = 5;
 //        String temp_pageNow = request.getParameter("pageNow");
 //        if (temp_pageNow != null) {
 //            pageNow = Integer.parseInt(temp_pageNow);
@@ -35,18 +39,12 @@ public class ShowItemListServlet extends HttpServlet {
         list.add(new Item("apple", 200));
 
         ItemListBean itemListBean = new ItemListBean(list);
-        HttpSession session = request.getSession(false);
-        if(null == session)
-            request.getRequestDispatcher("/page/notLoginPage.jsp").forward(request, response);
 
         session.setAttribute("itemList", itemListBean);
-        session.setAttribute("pageNow", pageNow);
+//        session.setAttribute("pageNow", pageNow);
 //        session.setAttribute("pageCount", pageCount);
 
-        try {
-            request.getRequestDispatcher("/page/showItems.jsp").forward(request, response);
-        } catch (Exception e) {
-            request.getRequestDispatcher("/page/notLoginPage.jsp").forward(request, response);
-        }
+
+        request.getRequestDispatcher("/page/showItems.jsp").forward(request, response);
     }
 }

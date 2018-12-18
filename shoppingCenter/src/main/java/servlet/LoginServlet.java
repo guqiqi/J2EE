@@ -14,6 +14,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // match user and password
+        request.setCharacterEncoding("utf-8");
         boolean isCorrectPassword = new UserServiceImpl().Login(String.valueOf(request.getParameter("username")),
                 String.valueOf(request.getParameter("password")));
 
@@ -28,6 +29,7 @@ public class LoginServlet extends HttpServlet {
             cookie.setMaxAge(Integer.MAX_VALUE);
             System.out.println("Add cookie");
             response.addCookie(cookie);
+
             response.sendRedirect(request.getContextPath() + "/showItemList");
         }
         else {
@@ -38,7 +40,10 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        HttpSession session = request.getSession(false);
+        if (null != session) {
+            session.invalidate();
+        }
         request.getRequestDispatcher("/page/login.jsp").forward(request, response);
     }
 }

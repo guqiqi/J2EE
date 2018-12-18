@@ -42,6 +42,19 @@
             <%}%>
         </table>
 
+        <%--<%--%>
+            <%--int pageNow = 1;--%>
+            <%--int pageCount = 2;--%>
+<%--//            int pageNow = (Integer) session.getAttribute("pageNow");--%>
+<%--//            int pageCount = (Integer) session.getAttribute("pageCount");--%>
+            <%--if (pageNow != 1) {--%>
+        <%--%>--%>
+        <%--<a href='<%=response.encodeURL(request.getContextPath())%>/showItemList?pageNow=<%=pageNow - 1%>'>last page</a>--%>
+        <%--<%}%>--%>
+        <%--<%if (pageNow != pageCount) {%>--%>
+        <%--<a href='<%=response.encodeURL(request.getContextPath())%>/showItemList?pageNow=<%=pageNow + 1%>'>next page</a>--%>
+        <%--<%}%>--%>
+
         <input type="button" value="提交" onClick="placeOrder()">
     </form>
 </div>
@@ -58,6 +71,15 @@
       e.checked = !checkedAll;
     }
     checkedAll = !checkedAll;
+    if(checkedAll) {
+      selected = selected.push(0);
+      selected = selected.push(1);
+      selected = selected.push(2);
+      selected = selected.push(3);
+      selected = selected.push(4);
+    }
+    else
+      selected = []
   }
 
   function selectOne(index) {
@@ -89,18 +111,26 @@
     }
   }
 
-
   /* 检查是否选择内容
   */
   function placeOrder() {
-
-    window.location.href="<%=response.encodeURL(request.getContextPath())%>/order";
-
-    // console.log(selected.length);
-    // var form = document.getElementById("listForm");
-    // form.action="/ShoppingCenter/Login";
-    // form.submit();
-    // console.log(formName)
+    if(selected.length === 0) {
+      alert("您的购物车为空, 请添加物品后提交!");
+      return
+    }
+    var myForm=document.createElement("form");
+    var params={"itemList": selected};
+    myForm.method = "POST";
+    myForm.action = "<%=response.encodeURL(request.getContextPath())%>/order";
+    myForm.style.display = "none";
+    for ( var k in params) {
+      var myInput = document.createElement("input");
+      myInput.name= k;
+      myInput.value= params[k];
+      myForm.appendChild(myInput);
+    }
+    document.body.appendChild(myForm);
+    myForm.submit();
   }
 </script>
 </body>
