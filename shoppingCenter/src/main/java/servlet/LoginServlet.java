@@ -65,7 +65,7 @@ public class LoginServlet extends HttpServlet {
             System.out.println("Add cookie");
             response.addCookie(cookie);
 
-            response.sendRedirect(request.getContextPath() + "/showItemList");
+            response.sendRedirect(request.getContextPath() + "/showItemList?page=1");
         } else {
             RequestDispatcher dispatcher = request.getRequestDispatcher("/page/wrongPage.jsp");
             dispatcher.forward(request, response);

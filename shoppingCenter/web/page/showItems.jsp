@@ -40,18 +40,16 @@
             <%}%>
         </table>
 
-        <%--<%--%>
-        <%--int pageNow = 1;--%>
-        <%--int pageCount = 2;--%>
-        <%--//            int pageNow = (Integer) session.getAttribute("pageNow");--%>
-        <%--//            int pageCount = (Integer) session.getAttribute("pageCount");--%>
-        <%--if (pageNow != 1) {--%>
-        <%--%>--%>
-        <%--<a href='<%=response.encodeURL(request.getContextPath())%>/showItemList?pageNow=<%=pageNow - 1%>'>last page</a>--%>
-        <%--<%}%>--%>
-        <%--<%if (pageNow != pageCount) {%>--%>
-        <%--<a href='<%=response.encodeURL(request.getContextPath())%>/showItemList?pageNow=<%=pageNow + 1%>'>next page</a>--%>
-        <%--<%}%>--%>
+        <%
+            int pageNow = (Integer) session.getAttribute("page");
+            int pageCount = (Integer) session.getAttribute("pageCount");
+            if (pageNow != 1) {
+        %>
+        <a href='<%=response.encodeURL(request.getContextPath())%>/showItemList?page=<%=pageNow - 1%>'>上一页</a>
+        <%}%>
+        <%if (pageNow != pageCount) {%>
+        <a href='<%=response.encodeURL(request.getContextPath())%>/showItemList?page=<%=pageNow + 1%>'>下一页</a>
+        <%}%>
 
         <input type="button" value="提交" onClick="placeOrder()">
     </form>

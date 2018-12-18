@@ -45,15 +45,15 @@ public class ShowItemListServlet extends HttpServlet {
 
         if (null == session)
             request.getRequestDispatcher("/page/notLoginPage.jsp").forward(request, response);
-//        int pageNow = 1;
-//        int pageCount;
-//        int pageSize = 5;
-//        String temp_pageNow = request.getParameter("pageNow");
-//        if (temp_pageNow != null) {
-//            pageNow = Integer.parseInt(temp_pageNow);
-//        }
-//        int rowCount = orderService.findTotalOrder(String.valueOf(request.getAttribute("login")));
-//        pageCount = (rowCount - 1) / pageSize + 1;
+
+        int page = 1;
+        int pageCount;
+        int pageSize = 6;
+        String temp_pageNow = request.getParameter("page");
+        if (temp_pageNow != null) {
+            page = Integer.parseInt(temp_pageNow);
+        }
+
         List<Item> list = new ArrayList<Item>();
         try {
             Connection connection = ds.getConnection();
@@ -70,11 +70,20 @@ public class ShowItemListServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        ItemListBean itemListBean = new ItemListBean(list);
+        pageCount = (list.size() - 1) / pageSize + 1;
+
+        List<Item> tempList = new ArrayList<Item>();
+        for(int i = 0; i < pageSize; i++){
+            if((page-1)*pageSize + i < list.size() - 1){
+                tempList.add(list.get((page-1)*pageSize + i));
+            }
+        }
+
+        ItemListBean itemListBean = new ItemListBean(tempList);
 
         session.setAttribute("itemList", itemListBean);
-//        session.setAttribute("pageNow", pageNow);
-//        session.setAttribute("pageCount", pageCount);
+        session.setAttribute("page", page);
+        session.setAttribute("pageCount", pageCount);
 
 
         request.getRequestDispatcher("/page/showItems.jsp").forward(request, response);
