@@ -36,6 +36,9 @@ public class ShowItemListServlet extends HttpServlet {
 
         ItemListBean itemListBean = new ItemListBean(list);
         HttpSession session = request.getSession(false);
+        if(null == session)
+            request.getRequestDispatcher("/page/notLoginPage.jsp").forward(request, response);
+
         session.setAttribute("itemList", itemListBean);
         session.setAttribute("pageNow", pageNow);
 //        session.setAttribute("pageCount", pageCount);
@@ -43,7 +46,7 @@ public class ShowItemListServlet extends HttpServlet {
         try {
             request.getRequestDispatcher("/page/showItems.jsp").forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
+            request.getRequestDispatcher("/page/notLoginPage.jsp").forward(request, response);
         }
     }
 }

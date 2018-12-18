@@ -11,9 +11,9 @@
     <title>Login</title>
 </head>
 <body>
-<form method='Post' action="/ShoppingCenter/Login">
-    username:<input type='text' name='username' value=''>
-    password:<input type='password' name='password' value=''>
-    <input type='submit' name='Submit' value='Submit'>
+<form method='POST' action="<%=response.encodeURL(request.getContextPath())%>/login">
+    用户名: <input type='text' name='username' value=''>
+    密码: <input type='password' name='password' value=''>
+    <input type='submit' name='Submit' value='提交'>
 </body>
 </html>

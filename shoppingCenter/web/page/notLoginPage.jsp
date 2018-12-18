@@ -7,9 +7,9 @@
     <title>Error</title>
 </head>
 <body>
-<p>用户名或者密码错误!请重新登录!</p>
+<p>抱歉，您尚未登录，请前往登录界面!</p>
 <form method='GET' action='<%=response.encodeURL(request.getContextPath())%>/login'>
-    <input type='submit' name='return' value='return'>
+    <input type='submit' name='return' value='登录'>
 </form>
 </body>
 </html>

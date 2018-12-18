@@ -8,7 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 
-@WebServlet("/Login")
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
     @Override
@@ -38,6 +38,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         request.getRequestDispatcher("/page/login.jsp").forward(request, response);
     }
 }

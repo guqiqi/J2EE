@@ -19,7 +19,7 @@
         <table class="table">
             <thead>
             <tr>
-                <th><input type="checkbox" value="all" onClick="selectAll('listForm','all')"></th>
+                <th><input type="checkbox" value="all" onClick="selectAll()"></th>
                 <th>名称</th>
                 <th>价格</th>
             </tr>
@@ -33,7 +33,7 @@
                 for (Item item : list) {%>
             <tr>
                 <td><input type="checkbox" name="favorite"
-                           onClick="selectOne('listForm', <%=list.indexOf(item)%>)"></td>
+                           onClick="selectOne(<%=list.indexOf(item)%>)"></td>
                 <td><%=item.getName()%>
                 </td>
                 <td><%=item.getPrice()%>
@@ -42,7 +42,7 @@
             <%}%>
         </table>
 
-        <input type="button" value="提交" onclick="submit('listForm')">
+        <input type="button" value="提交" onClick="placeOrder()">
     </form>
 </div>
 
@@ -51,8 +51,8 @@
   var selected = [];
 
   /* 全选/取消全选 */
-  function selectAll(formName) {
-    var form = document.getElementById(formName);
+  function selectAll() {
+    var form = document.getElementById('listForm');
     for (var i = 0; i < form.length; i++) {
       var e = form[i];
       e.checked = !checkedAll;
@@ -60,10 +60,10 @@
     checkedAll = !checkedAll;
   }
 
-  function selectOne(formName, index) {
+  function selectOne(index) {
     var size =<%=((ItemListBean) session.getAttribute("itemList")).getItemList().size()%>
 
-    var form = document.getElementById(formName);
+    var form = document.getElementById("listForm");
 
     // 原来是全选的
     if (selected.length === size) {
@@ -92,14 +92,15 @@
 
   /* 检查是否选择内容
   */
-  function submit(formName) {
-    console.log('hhhhh');
-    window.location.href="http://localhost:8099/ShoppingCenter/Login";
+  function placeOrder() {
 
-    console.log(selected.length);
-    var form = document.getElementById(formName);
-    form.action="Login";
-    form.submit();
+    window.location.href="<%=response.encodeURL(request.getContextPath())%>/order";
+
+    // console.log(selected.length);
+    // var form = document.getElementById("listForm");
+    // form.action="/ShoppingCenter/Login";
+    // form.submit();
+    // console.log(formName)
   }
 </script>
 </body>
