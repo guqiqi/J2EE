@@ -11,10 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
@@ -38,7 +35,7 @@ public class OrderServlet extends HttpServlet {
         if (null == session)
             request.getRequestDispatcher("/page/notLoginPage.jsp").forward(request, response);
 
-        request.setCharacterEncoding("utf-8");
+        String username = (String) session.getAttribute("username");
 
         String[] itemLists = request.getParameter("itemList").split(",");
 
@@ -62,6 +59,22 @@ public class OrderServlet extends HttpServlet {
         }
 
         OrderBean orderBean = new OrderBean(total, total > 15 ? total * 0.05 : 0.0);
+
+        try {
+            Connection connection = ds.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO orders.order (username, " +
+                    "total, discount, pay) VALUES(?,?,?,?);");
+            preparedStatement.setString(1, username);
+            preparedStatement.setDouble(2, orderBean.getTotal());
+            preparedStatement.setDouble(3, orderBean.getDiscount());
+            preparedStatement.setDouble(4, orderBean.getPay());
+            preparedStatement.executeUpdate();
+
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         if (null != orderBean) {
             session.setAttribute("orderBean", orderBean);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/page/successPlaceOrderPage.jsp");

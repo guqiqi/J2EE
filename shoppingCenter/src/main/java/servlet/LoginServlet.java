@@ -32,8 +32,9 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // match user and password
-        request.setCharacterEncoding("utf-8");
         boolean isCorrectPassword = false;
+
+        System.out.println(request.getParameter("username"));
 
         try {
             Connection connection = ds.getConnection();

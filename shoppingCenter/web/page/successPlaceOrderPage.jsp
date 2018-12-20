@@ -1,4 +1,5 @@
-<%@ page import="entity.OrderBean" %><%--
+<%@ page import="entity.OrderBean" %>
+<%@ page import="java.text.DecimalFormat" %><%--
   Created by IntelliJ IDEA.
   User: kiki
   Date: 2018-12-18
@@ -14,7 +15,8 @@
 <body>
 <p>成功下单</p>
 <% OrderBean bean = (OrderBean) session.getAttribute("orderBean");%>
-<p>此笔原价订单<%=bean.getTotal()%>元，优惠<%=bean.getDiscount()%>元，实际需要支付<%=bean.getPay()%>元</p>
+<p>此笔原价订单<%=new DecimalFormat("#.00").format(bean.getTotal())%>元，优惠<%=new DecimalFormat("#.00").format(bean.getDiscount())%>元，
+    实际需要支付<%=new DecimalFormat("#.00").format(bean.getPay())%>元</p>
 <form method='GET' action='<%=response.encodeURL(request.getContextPath())%>/showItemList'>
     <input type='submit' name='return' value='再来一单'>
 </form>
