@@ -45,12 +45,11 @@
             int pageCount = (Integer) session.getAttribute("pageCount");
             if (pageNow != 1) {
         %>
-        <a href='<%=response.encodeURL(request.getContextPath())%>/showItemList?page=<%=pageNow - 1%>'>上一页</a>
+        <input type="button" value="上一页" onclick="turnToBeforePage()"/>
         <%}%>
         <%if (pageNow != pageCount) {%>
-        <a href='<%=response.encodeURL(request.getContextPath())%>/showItemList?page=<%=pageNow + 1%>'>下一页</a>
+        <input type="button" value="下一页" onclick="turnToNextPage()"/>
         <%}%>
-
         <input type="button" value="提交" onClick="placeOrder()">
     </form>
     <jsp:include page="numberStatistic.jsp"/>
@@ -59,6 +58,39 @@
 <script language="JavaScript" type="text/JavaScript">
   var checkedAll = false;
   var selected = [];
+
+  function turnToBeforePage() {
+    var myForm = document.createElement("form");
+    var params = {"itemList": selected, "page": <%=(Integer) session.getAttribute("page")-1%>};
+    myForm.method = "POST";
+    myForm.action = "<%=response.encodeURL(request.getContextPath())%>/showItemList?page=<%=(Integer) session.getAttribute("page")-1%>";
+    myForm.style.display = "none";
+    for (var k in params) {
+      var myInput = document.createElement("input");
+      myInput.name = k;
+      myInput.value = params[k];
+      myForm.appendChild(myInput);
+    }
+    document.body.appendChild(myForm);
+    myForm.submit();
+  }
+
+  function turnToNextPage() {
+    var myForm = document.createElement("form");
+    var params = {"itemList": selected, "page": <%=(Integer) session.getAttribute("page")+1%>};
+    myForm.method = "POST";
+    myForm.action = "<%=response.encodeURL(request.getContextPath())%>/showItemList?page=<%=(Integer)
+    session.getAttribute("page")+1%>";
+    myForm.style.display = "none";
+    for (var k in params) {
+      var myInput = document.createElement("input");
+      myInput.name = k;
+      myInput.value = params[k];
+      myForm.appendChild(myInput);
+    }
+    document.body.appendChild(myForm);
+    myForm.submit();
+  }
 
   /* 全选/取消全选 */
   function selectAll() {
@@ -115,9 +147,9 @@
 
     // 取消选择
     for (var i = 0; i < selected.length; i++) {
-      if (selected[i] === name) {
+      if (selected[i] === name.id) {
         selected.splice(i, 1);
-        form[i].checked = !form[i].checked;
+        name.checked = false;
         return
       }
     }
@@ -131,6 +163,8 @@
       checkedAll = true;
       form[0].checked = true;
     }
+
+    console.log(selected)
   }
 
   /* 检查是否选择内容

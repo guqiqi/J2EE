@@ -24,6 +24,8 @@ import java.util.List;
 @WebServlet("/showItemList")
 public class ShowItemListServlet extends HttpServlet {
     private DataSource ds;
+    private static int pageSize = 6;
+
 
     @Override
     public void init() throws ServletException {
@@ -37,7 +39,26 @@ public class ShowItemListServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
 
+        if (null == session)
+            request.getRequestDispatcher("/page/notLoginPage.jsp").forward(request, response);
+
+        ArrayList<String> selectedList = new ArrayList<String>();
+        if(session.getAttribute("selectedList")!=null){
+            selectedList = (ArrayList<String>)session.getAttribute("selectedList");
+        }
+
+        String[] itemLists = request.getParameter("itemList").split(",");
+
+        for(int i = 0; i < itemLists.length; i++){
+            if(!selectedList.contains(itemLists[i]))
+                selectedList.add(itemLists[i]);
+        }
+
+        session.setAttribute("selectedList", selectedList);
+
+        getList(session, request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,9 +67,12 @@ public class ShowItemListServlet extends HttpServlet {
         if (null == session)
             request.getRequestDispatcher("/page/notLoginPage.jsp").forward(request, response);
 
+        getList(session, request, response);
+    }
+
+    private void getList(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int page = 1;
         int pageCount;
-        int pageSize = 6;
         String temp_pageNow = request.getParameter("page");
         if (temp_pageNow != null) {
             page = Integer.parseInt(temp_pageNow);
@@ -74,7 +98,7 @@ public class ShowItemListServlet extends HttpServlet {
 
         List<Item> tempList = new ArrayList<Item>();
         for(int i = 0; i < pageSize; i++){
-            if((page-1)*pageSize + i < list.size() - 1){
+            if((page-1)*pageSize + i < list.size()){
                 tempList.add(list.get((page-1)*pageSize + i));
             }
         }
@@ -84,7 +108,6 @@ public class ShowItemListServlet extends HttpServlet {
         session.setAttribute("itemList", itemListBean);
         session.setAttribute("page", page);
         session.setAttribute("pageCount", pageCount);
-
 
         request.getRequestDispatcher("/page/showItems.jsp").forward(request, response);
     }

@@ -12,6 +12,7 @@ import javax.servlet.http.*;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
@@ -39,6 +40,18 @@ public class OrderServlet extends HttpServlet {
 
         String[] itemLists = request.getParameter("itemList").split(",");
 
+        ArrayList<String> selectedList = new ArrayList<String>();
+        if(session.getAttribute("selectedList")!=null){
+            selectedList = (ArrayList<String>)session.getAttribute("selectedList");
+        }
+
+        for(int i = 0; i < itemLists.length; i++){
+            if(!selectedList.contains(itemLists[i]))
+                selectedList.add(itemLists[i]);
+        }
+
+        System.out.println(selectedList);
+
         double total = 0.0;
 
         try {
@@ -47,9 +60,12 @@ public class OrderServlet extends HttpServlet {
             ResultSet rs = stmt.executeQuery("SELECT * FROM item");
 
             while (rs.next()) {
-                for (int i = 0; i < itemLists.length; i++)
-                    if (rs.getString("name").equals(itemLists[i]))
+                for (int i = 0; i < selectedList.size(); i++) {
+                    if (selectedList.contains(rs.getString("name"))) {
                         total += rs.getDouble("price");
+                        selectedList.remove(rs.getString("name"));
+                    }
+                }
             }
             rs.close();
             stmt.close();
