@@ -53,6 +53,7 @@
 
         <input type="button" value="提交" onClick="placeOrder()">
     </form>
+    <jsp:include page="numberStatistic.jsp"/>
 </div>
 
 <script language="JavaScript" type="text/JavaScript">
@@ -67,6 +68,24 @@
       e.checked = !checkedAll;
     }
     checkedAll = !checkedAll;
+    // if (checkedAll) {
+    //   // 判断是不是在里面，不在的话就加进去
+    //   for (var i = 1; i < form.length - 1; i++) {
+    //     var e = form[i].id;
+    //     if (selected.indexOf(e, 0) == -1)
+    //       selected.push(e);
+    //   }
+    //   console.log(selected)
+    // } else {
+    //   // 判断是不是在里面，在的话就拿进去
+    //   for (var i = 1; i < form.length - 1; i++) {
+    //     var e = form[i].id;
+    //     var start = selected.indexOf(e, 0);
+    //     if (start != -1)
+    //       selected.slice(start, start + 1);
+    //   }
+    //   console.log(selected)
+    // }
     if (checkedAll) {
       // 先清空，然后一个一个加
       selected = [];

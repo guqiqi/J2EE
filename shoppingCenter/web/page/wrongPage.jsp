@@ -11,5 +11,6 @@
 <form method='GET' action='<%=response.encodeURL(request.getContextPath())%>/login'>
     <input type='submit' name='return' value='return'>
 </form>
+<jsp:include page="numberStatistic.jsp"/>
 </body>
 </html>

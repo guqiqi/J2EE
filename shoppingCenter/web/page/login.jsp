@@ -15,5 +15,6 @@
     用户名: <input type='text' name='username' value=''>
     密码: <input type='password' name='password' value=''>
     <input type='submit' name='Submit' value='提交'>
+    <jsp:include page="numberStatistic.jsp"/>
 </body>
 </html>

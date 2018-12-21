@@ -16,5 +16,6 @@
 <form method='GET' action='<%=response.encodeURL(request.getContextPath())%>/showItemList'>
     <input type='submit' name='返回' value='return'>
 </form>
+<jsp:include page="numberStatistic.jsp"/>
 </body>
 </html>
