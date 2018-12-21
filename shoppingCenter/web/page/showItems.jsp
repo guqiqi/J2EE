@@ -1,6 +1,7 @@
 <%@ page import="entity.Item" %>
 <%@ page import="java.util.List" %>
 <%@ page import="entity.ItemListBean" %>
+<%@ page import="java.util.ArrayList" %>
 <%--
   Created by IntelliJ IDEA.
   User: kiki
@@ -28,10 +29,24 @@
             <%
                 ItemListBean bean = (ItemListBean) session.getAttribute("itemList");
                 List<Item> list = bean.getItemList();
-                for (Item item : list) {%>
+                ArrayList<String> se = (ArrayList<String>) session.getAttribute("selected");
+                boolean isChecked;
+                for (Item item : list) {
+                    isChecked = false;
+                    for (String s: se){
+                        if(s.equals(item.getName())){
+                            isChecked = true;
+                            break;
+                        }
+                    }
+            %>
             <tr>
                 <td><input type="checkbox" id="<%=item.getName()%>"
-                           onClick="selectOne(<%=item.getName()%>)"></td>
+                           onClick="selectOne(<%=item.getName()%>)"
+                           <%if(isChecked){%>
+                                checked
+                           <%}%>
+                ></td>
                 <td><%=item.getName()%>
                 </td>
                 <td><%=item.getPrice()%>
@@ -170,10 +185,10 @@
   /* 检查是否选择内容
   */
   function placeOrder() {
-    if (selected.length === 0) {
-      alert("您的购物车为空, 请添加物品后提交!");
-      return
-    }
+    // if (selected.length === 0) {
+    //   alert("您的购物车为空, 请添加物品后提交!");
+    //   return
+    // }
     var myForm = document.createElement("form");
     var params = {"itemList": selected};
     myForm.method = "POST";

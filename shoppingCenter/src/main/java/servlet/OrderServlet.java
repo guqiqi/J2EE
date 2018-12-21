@@ -38,6 +38,11 @@ public class OrderServlet extends HttpServlet {
 
         String username = (String) session.getAttribute("username");
 
+        if(request.getParameter("itemList").equals("")){
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/page/failPlaceOrderPage.jsp");
+            dispatcher.forward(request, response);
+        }
+
         String[] itemLists = request.getParameter("itemList").split(",");
 
         ArrayList<String> selectedList = new ArrayList<String>();
@@ -49,8 +54,6 @@ public class OrderServlet extends HttpServlet {
             if(!selectedList.contains(itemLists[i]))
                 selectedList.add(itemLists[i]);
         }
-
-        System.out.println(selectedList);
 
         double total = 0.0;
 
@@ -92,6 +95,9 @@ public class OrderServlet extends HttpServlet {
         }
 
         if (null != orderBean) {
+            session.removeAttribute("selectedList");
+            session.removeAttribute("selected");
+
             session.setAttribute("orderBean", orderBean);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/page/successPlaceOrderPage.jsp");
             dispatcher.forward(request, response);

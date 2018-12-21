@@ -78,6 +78,11 @@ public class ShowItemListServlet extends HttpServlet {
             page = Integer.parseInt(temp_pageNow);
         }
 
+        ArrayList<String> selectedList = new ArrayList<String>();
+        if(session.getAttribute("selectedList")!=null){
+            selectedList = (ArrayList<String>)session.getAttribute("selectedList");
+        }
+
         List<Item> list = new ArrayList<Item>();
         try {
             Connection connection = ds.getConnection();
@@ -96,15 +101,20 @@ public class ShowItemListServlet extends HttpServlet {
 
         pageCount = (list.size() - 1) / pageSize + 1;
 
+        ArrayList<String> selected = new ArrayList<String>();
+
         List<Item> tempList = new ArrayList<Item>();
         for(int i = 0; i < pageSize; i++){
             if((page-1)*pageSize + i < list.size()){
                 tempList.add(list.get((page-1)*pageSize + i));
+                if(selectedList.contains(list.get((page-1)*pageSize + i).getName()))
+                    selected.add(list.get((page-1)*pageSize + i).getName());
             }
         }
 
         ItemListBean itemListBean = new ItemListBean(tempList);
 
+        session.setAttribute("selected", selected);
         session.setAttribute("itemList", itemListBean);
         session.setAttribute("page", page);
         session.setAttribute("pageCount", pageCount);
