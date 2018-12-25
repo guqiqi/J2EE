@@ -8,9 +8,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
-    <title>$Title$</title>
+    <title>首页</title>
   </head>
   <body>
-  $END$
+  <p>您尚未登录，请前往登录本网站</p>
+  <form method='GET' action='<%=response.encodeURL(request.getContextPath())%>/login'>
+    <input type='submit' name='return' value='登录'>
+  </form>
   </body>
 </html>
