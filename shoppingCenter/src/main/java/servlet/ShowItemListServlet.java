@@ -2,40 +2,25 @@ package servlet;
 
 import entity.Item;
 import entity.ItemListBean;
+import serviceImpl.OrderServiceImpl;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/showItemList")
 public class ShowItemListServlet extends HttpServlet {
-    private DataSource ds;
     private static int pageSize = 6;
-
 
     @Override
     public void init() throws ServletException {
         super.init();
-        try {
-            Context ctx = new InitialContext();
-            ds= (DataSource) ctx.lookup("java:comp/env/jdbc/orders");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -83,21 +68,7 @@ public class ShowItemListServlet extends HttpServlet {
             selectedList = (ArrayList<String>)session.getAttribute("selectedList");
         }
 
-        List<Item> list = new ArrayList<Item>();
-        try {
-            Connection connection = ds.getConnection();
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM item");
-
-            while (rs.next()){
-                list.add(new Item(rs.getString("name"), rs.getDouble("price")));
-            }
-            rs.close();
-            stmt.close();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<Item> list = new OrderServiceImpl().getItems();
 
         pageCount = (list.size() - 1) / pageSize + 1;
 
