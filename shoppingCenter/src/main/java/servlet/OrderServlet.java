@@ -1,7 +1,7 @@
 package servlet;
 
 import entity.OrderBean;
-import serviceImpl.OrderServiceImpl;
+import factory.ServiceFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
+    private ServiceFactory serviceFactory = new ServiceFactory();
+
     @Override
     public void init() throws ServletException {
         super.init();
@@ -43,7 +45,7 @@ public class OrderServlet extends HttpServlet {
                 selectedList.add(itemLists[i]);
         }
 
-        OrderBean orderBean = new OrderServiceImpl().placeOrder(selectedList, username);
+        OrderBean orderBean = serviceFactory.getOrderService().placeOrder(selectedList, username);
 
         if (null != orderBean) {
             session.removeAttribute("selectedList");

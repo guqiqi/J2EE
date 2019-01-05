@@ -2,7 +2,7 @@ package servlet;
 
 import entity.Item;
 import entity.ItemListBean;
-import serviceImpl.OrderServiceImpl;
+import factory.ServiceFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +17,7 @@ import java.util.List;
 @WebServlet("/showItemList")
 public class ShowItemListServlet extends HttpServlet {
     private static int pageSize = 6;
+    private ServiceFactory serviceFactory = new ServiceFactory();
 
     @Override
     public void init() throws ServletException {
@@ -68,7 +69,7 @@ public class ShowItemListServlet extends HttpServlet {
             selectedList = (ArrayList<String>)session.getAttribute("selectedList");
         }
 
-        List<Item> list = new OrderServiceImpl().getItems();
+        List<Item> list = serviceFactory.getOrderService().getItems();
 
         pageCount = (list.size() - 1) / pageSize + 1;
 

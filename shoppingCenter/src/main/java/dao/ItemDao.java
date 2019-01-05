@@ -5,6 +5,6 @@ import factory.DaoFactory;
 
 import java.util.List;
 
-public abstract class ItemDao extends DaoFactory {
-    public abstract List<Item> getAllItem();
+public interface ItemDao{
+    List<Item> getAllItem();
 }

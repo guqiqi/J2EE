@@ -1,24 +1,24 @@
 package factory;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
+import dao.ItemDao;
+import dao.OrderDao;
+import dao.UserDao;
+import daoImpl.ItemDaoImpl;
+import daoImpl.OrderDaoImpl;
+import daoImpl.UserDaoImpl;
 
 public class DaoFactory {
-    private DataSource ds;
-    private Context ctx;
+    public DaoFactory(){}
 
-    public DaoFactory(){
-        try {
-            ctx = new InitialContext();
-            ds= (DataSource) ctx.lookup("java:comp/env/jdbc/orders");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
+    public ItemDao getItemDao(){
+        return new ItemDaoImpl();
     }
 
-    public DataSource getDs() {
-        return ds;
+    public OrderDao getOrderDao(){
+        return new OrderDaoImpl();
+    }
+
+    public UserDao getUserDao(){
+        return new UserDaoImpl();
     }
 }

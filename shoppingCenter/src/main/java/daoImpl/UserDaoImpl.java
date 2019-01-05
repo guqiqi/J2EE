@@ -7,10 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class UserDaoImpl extends UserDao {
+public class UserDaoImpl implements UserDao {
     public boolean findUserByName(String username, String password) {
         try {
-            Connection connection = super.getDs().getConnection();
+            Connection connection = DaoSingleton.getDs().getConnection();
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM user");
 

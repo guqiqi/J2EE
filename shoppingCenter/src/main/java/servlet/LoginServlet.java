@@ -1,6 +1,6 @@
 package servlet;
 
-import serviceImpl.UserServiceImpl;
+import factory.ServiceFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +10,8 @@ import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+    private ServiceFactory serviceFactory = new ServiceFactory();
+
     @Override
     public void init() throws ServletException {
         super.init();
@@ -20,7 +22,7 @@ public class LoginServlet extends HttpServlet {
         // match user and password
         System.out.println(request.getParameter("username"));
 
-        boolean isCorrectPassword = new UserServiceImpl().Login(request.getParameter("username"), request.getParameter(
+        boolean isCorrectPassword = serviceFactory.getUserService().Login(request.getParameter("username"), request.getParameter(
                 "password"));
 
         if (isCorrectPassword) {

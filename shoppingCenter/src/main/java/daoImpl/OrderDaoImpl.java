@@ -7,10 +7,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class OrderDaoImpl extends OrderDao {
+public class OrderDaoImpl implements OrderDao {
     public boolean insertOrderBean(OrderBean orderBean) {
         try {
-            Connection connection = super.getDs().getConnection();
+            Connection connection = DaoSingleton.getDs().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO orders.order (username, " +
                     "total, discount, pay) VALUES(?,?,?,?);");
             preparedStatement.setString(1, orderBean.getUsername());

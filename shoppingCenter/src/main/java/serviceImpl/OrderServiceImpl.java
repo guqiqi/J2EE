@@ -1,17 +1,18 @@
 package serviceImpl;
 
-import daoImpl.ItemDaoImpl;
-import daoImpl.OrderDaoImpl;
 import entity.Item;
 import entity.OrderBean;
+import factory.DaoFactory;
 import service.OrderService;
 
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
+    private DaoFactory daoFactory = new DaoFactory();
+
     // 成功返回一个orderBean对象，失败返回null
     public OrderBean placeOrder(List<String> selectedList, String username) {
-        List<Item> itemList = new ItemDaoImpl().getAllItem();
+        List<Item> itemList = daoFactory.getItemDao().getAllItem();
 
         double total = 0.0;
 
@@ -27,7 +28,7 @@ public class OrderServiceImpl implements OrderService {
 
         OrderBean orderBean = new OrderBean(total, total > 15 ? total * 0.05 : 0.0, username);
 
-        if (new OrderDaoImpl().insertOrderBean(orderBean))
+        if (daoFactory.getOrderDao().insertOrderBean(orderBean))
             return orderBean;
 
         return null;
@@ -35,6 +36,6 @@ public class OrderServiceImpl implements OrderService {
 
     // 得到所有商品列表
     public List<Item> getItems() {
-        return new ItemDaoImpl().getAllItem();
+        return daoFactory.getItemDao().getAllItem();
     }
 }

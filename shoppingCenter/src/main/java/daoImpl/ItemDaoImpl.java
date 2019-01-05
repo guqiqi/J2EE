@@ -10,11 +10,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemDaoImpl extends ItemDao {
+public class ItemDaoImpl implements ItemDao{
     public List<Item> getAllItem() {
         List<Item> itemList = new ArrayList<Item>();
         try {
-            Connection connection = super.getDs().getConnection();
+            Connection connection = DaoSingleton.getDs().getConnection();
             Statement stmt = connection.createStatement();
 
             ResultSet rs = stmt.executeQuery("SELECT * FROM item");
