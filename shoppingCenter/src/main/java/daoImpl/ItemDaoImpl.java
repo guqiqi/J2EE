@@ -2,34 +2,23 @@ package daoImpl;
 
 import dao.ItemDao;
 import entity.Item;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDaoImpl implements ItemDao{
     public List<Item> getAllItem() {
-        List<Item> itemList = new ArrayList<Item>();
-        try {
-            Connection connection = DaoSingleton.getDs().getConnection();
-            Statement stmt = connection.createStatement();
+        Session session = MySessionFactory.getInstance().openSession();
+        Transaction tx = session.beginTransaction();
 
-            ResultSet rs = stmt.executeQuery("SELECT * FROM item");
+        String hql = "SELECT entity.Item FROM entity.Item";
+        Query query = session.createQuery(hql);
+        List<Item> list = query.list();
 
-            while (rs.next()) {
-                itemList.add(new Item(rs.getString("name"), rs.getDouble("price")));
-            }
-            rs.close();
-            stmt.close();
-            connection.close();
+        tx.commit();
 
-            return itemList;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return new ArrayList<Item>();
-        }
+        return list;
     }
 }

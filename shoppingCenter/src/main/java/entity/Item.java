@@ -1,7 +1,18 @@
 package entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "item")
 public class Item {
+    @Id
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "price")
     private double price;
 
     public Item() {

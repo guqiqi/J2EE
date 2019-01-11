@@ -1,12 +1,32 @@
 package entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
+@Entity
+@Table(name = "order")
 public class OrderBean {
+    @Id
+    @Column(name = "id")
+    private int id;
+
+    @Column(name = "total")
     private double total;
+
+    @Column(name = "discount")
     private double discount;
+
+    @Column(name = "pay")
     private double pay;
+
+    @Column(name = "username")
     private String username;
+
+    public OrderBean() {
+    }
 
     public OrderBean(double total, double discount, String username) {
         this.total = total;

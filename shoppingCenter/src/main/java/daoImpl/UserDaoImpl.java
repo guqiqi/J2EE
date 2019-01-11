@@ -1,34 +1,22 @@
 package daoImpl;
 
 import dao.UserDao;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import entity.User;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 public class UserDaoImpl implements UserDao {
     public boolean findUserByName(String username, String password) {
-        try {
-            Connection connection = DaoSingleton.getDs().getConnection();
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM user");
+        Session session = MySessionFactory.getInstance().openSession();
+        Transaction tx = session.beginTransaction();
 
-            while (rs.next()){
-                if(rs.getString("username").equals(username) && rs.getString("password").equals(password)) {
-                    rs.close();
-                    stmt.close();
-                    connection.close();
-                    return true;
-                }
-            }
-            rs.close();
-            stmt.close();
-            connection.close();
-            return false;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        String hql = "SELECT entity.User FROM entity.User WHERE username = " + username;
+        Query query = session.createQuery(hql);
+        User user = (User) query.list().get(0);
+
+        if (user.getPassword().equals(password))
+            return true;
+        return false;
     }
 }
