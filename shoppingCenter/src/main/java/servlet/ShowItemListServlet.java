@@ -2,7 +2,9 @@ package servlet;
 
 import entity.Item;
 import entity.ItemListBean;
-import factory.ServiceFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import service.OrderService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,12 +19,17 @@ import java.util.List;
 @WebServlet("/showItemList")
 public class ShowItemListServlet extends HttpServlet {
     private static int pageSize = 6;
-    private ServiceFactory serviceFactory = new ServiceFactory();
+    private static OrderService orderService;
+    private static ApplicationContext applicationContext;
 
     @Override
     public void init() throws ServletException {
         super.init();
+
+        applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        orderService = (OrderService) applicationContext.getBean("orderService");
     }
+
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
@@ -69,7 +76,7 @@ public class ShowItemListServlet extends HttpServlet {
             selectedList = (ArrayList<String>)session.getAttribute("selectedList");
         }
 
-        List<Item> list = serviceFactory.getOrderService().getItems();
+        List<Item> list = orderService.getItems();
 
         pageCount = (list.size() - 1) / pageSize + 1;
 

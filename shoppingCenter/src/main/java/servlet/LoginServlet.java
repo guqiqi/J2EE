@@ -1,6 +1,9 @@
 package servlet;
 
 import factory.ServiceFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import service.UserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,11 +13,16 @@ import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-    private ServiceFactory serviceFactory = new ServiceFactory();
+    private UserService userService;
+    private static ApplicationContext applicationContext;
+
 
     @Override
     public void init() throws ServletException {
         super.init();
+
+        applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
+        userService = (UserService) applicationContext.getBean("userService");
     }
 
     @Override
@@ -22,7 +30,7 @@ public class LoginServlet extends HttpServlet {
         // match user and password
         System.out.println(request.getParameter("username"));
 
-        boolean isCorrectPassword = serviceFactory.getUserService().Login(request.getParameter("username"), request.getParameter(
+        boolean isCorrectPassword = userService.Login(request.getParameter("username"), request.getParameter(
                 "password"));
 
         if (isCorrectPassword) {

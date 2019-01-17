@@ -1,18 +1,25 @@
 package serviceImpl;
 
+import dao.ItemDao;
+import dao.OrderDao;
 import entity.Item;
 import entity.OrderBean;
-import factory.DaoFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import service.OrderService;
 
 import java.util.List;
 
+@Service
 public class OrderServiceImpl implements OrderService {
-    private DaoFactory daoFactory = new DaoFactory();
+    @Autowired
+    private ItemDao itemDao;
+    @Autowired
+    private OrderDao orderDao;
 
     // 成功返回一个orderBean对象，失败返回null
     public OrderBean placeOrder(List<String> selectedList, String username) {
-        List<Item> itemList = daoFactory.getItemDao().getAllItem();
+        List<Item> itemList = itemDao.getAllItem();
 
         double total = 0.0;
 
@@ -28,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
 
         OrderBean orderBean = new OrderBean(total, total > 15 ? total * 0.05 : 0.0, username);
 
-        if (daoFactory.getOrderDao().insertOrderBean(orderBean))
+        if (orderDao.insertOrderBean(orderBean))
             return orderBean;
 
         return null;
@@ -36,6 +43,6 @@ public class OrderServiceImpl implements OrderService {
 
     // 得到所有商品列表
     public List<Item> getItems() {
-        return daoFactory.getItemDao().getAllItem();
+        return itemDao.getAllItem();
     }
 }

@@ -1,7 +1,9 @@
 package servlet;
 
 import entity.OrderBean;
-import factory.ServiceFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import service.OrderService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,11 +14,15 @@ import java.util.ArrayList;
 
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
-    private ServiceFactory serviceFactory = new ServiceFactory();
+    private static OrderService orderService;
+    private static ApplicationContext applicationContext;
 
     @Override
     public void init() throws ServletException {
         super.init();
+
+        applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        orderService = (OrderService) applicationContext.getBean("orderService");
     }
 
     @Override
@@ -45,7 +51,7 @@ public class OrderServlet extends HttpServlet {
                 selectedList.add(itemLists[i]);
         }
 
-        OrderBean orderBean = serviceFactory.getOrderService().placeOrder(selectedList, username);
+        OrderBean orderBean = orderService.placeOrder(selectedList, username);
 
         if (null != orderBean) {
             session.removeAttribute("selectedList");
