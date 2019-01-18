@@ -13,6 +13,17 @@ public class AddressEntity {
     private String receiver;
     private Integer label;
 
+    public AddressEntity() {
+    }
+
+    public AddressEntity(String email, String detail, String phone, String receiver, Integer label) {
+        this.email = email;
+        this.detail = detail;
+        this.phone = phone;
+        this.receiver = receiver;
+        this.label = label;
+    }
+
     @Id
     @Column(name = "addressId")
     public Integer getAddressId() {

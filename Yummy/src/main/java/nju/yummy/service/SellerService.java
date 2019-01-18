@@ -4,7 +4,6 @@ import nju.yummy.entity.DiscountTableEntity;
 import nju.yummy.entity.FoodEntity;
 import nju.yummy.entity.SellerEntity;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Date;
 import java.util.List;
 

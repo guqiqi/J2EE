@@ -15,6 +15,20 @@ public class CustomerEntity {
     private Byte status;
     private Double leftMoney;
 
+    public CustomerEntity() {
+    }
+
+    public CustomerEntity(String email, String username, String password, String avatar, String phone) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.avatar = avatar;
+        this.phone = phone;
+        this.status = 1;
+        this.leftMoney = 1000.0;
+        this.point = 0.0;
+    }
+
     @Id
     @Column(name = "email")
     public String getEmail() {

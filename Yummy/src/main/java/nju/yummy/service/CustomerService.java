@@ -14,6 +14,17 @@ public interface CustomerService {
     public boolean register(String email);
 
     /**
+     * 初始化个人信息
+     * @param email 邮箱
+     * @param username 用户名
+     * @param password 密码
+     * @param avatar 头像url
+     * @param phone 电话
+     * @return 是否增加成功
+     */
+    public boolean addCustomerInfo(String email, String username, String password, String avatar, String phone);
+
+    /**
      * 修改个人信息
      * @param email 邮箱
      * @param username 用户名
@@ -53,6 +64,13 @@ public interface CustomerService {
      * @return 是否修改成功
      */
     public boolean modifyAddress(int addressId, String email, String receiver, String detail, String phone, int label);
+
+    /**
+     * 删除一个地址
+     * @param addressId 地址id
+     * @return 是否删除成功
+     */
+    public boolean deleteAddress(int addressId);
 
     /**
      * 得到用户全部送餐地址
