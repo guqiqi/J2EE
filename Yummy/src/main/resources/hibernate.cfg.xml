@@ -15,6 +15,7 @@
         <mapping class="nju.yummy.entity.OrderEntity"/>
         <mapping class="nju.yummy.entity.PayRecordEntity"/>
         <mapping class="nju.yummy.entity.SellerEntity"/>
+        <mapping class="nju.yummy.entity.DiscountTableEntity"/>
 
 
         <!-- DB schema will be updated if needed -->

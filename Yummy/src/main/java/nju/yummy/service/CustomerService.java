@@ -1,6 +1,9 @@
 package nju.yummy.service;
 
+import nju.yummy.entity.AddressEntity;
 import nju.yummy.entity.CustomerEntity;
+
+import java.util.List;
 
 public interface CustomerService {
     /**
@@ -50,6 +53,13 @@ public interface CustomerService {
      * @return 是否修改成功
      */
     public boolean modifyAddress(int addressId, String email, String receiver, String detail, String phone, int label);
+
+    /**
+     * 得到用户全部送餐地址
+     * @param email 用户邮箱
+     * @return 地址列表
+     */
+    public List<AddressEntity> getAddressByEmail(String email);
 
     /**
      * 用户注销

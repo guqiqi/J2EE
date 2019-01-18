@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "food", schema = "yummy")
+@Table(name = "food", schema = "yummy", catalog = "")
 public class FoodEntity {
     private Integer foodId;
     private String sellId;
@@ -17,6 +17,7 @@ public class FoodEntity {
     private Timestamp startTime;
     private Timestamp endTime;
     private Integer stock;
+    private String description;
 
     @Id
     @Column(name = "foodId")
@@ -116,6 +117,16 @@ public class FoodEntity {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    @Basic
+    @Column(name = "description")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

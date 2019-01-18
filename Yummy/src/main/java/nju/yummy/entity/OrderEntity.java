@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "order", schema = "yummy")
+@Table(name = "order", schema = "yummy", catalog = "")
 public class OrderEntity {
     private String orderId;
     private String email;
@@ -15,6 +15,7 @@ public class OrderEntity {
     private Timestamp finishTime;
     private Double totalMoney;
     private Double payMoney;
+    private Timestamp reachTime;
 
     @Id
     @Column(name = "orderId")
@@ -114,5 +115,15 @@ public class OrderEntity {
     @Override
     public int hashCode() {
         return Objects.hash(orderId, email, sellerId, status, placeTime, finishTime, totalMoney, payMoney);
+    }
+
+    @Basic
+    @Column(name = "reachTime")
+    public Timestamp getReachTime() {
+        return reachTime;
+    }
+
+    public void setReachTime(Timestamp reachTime) {
+        this.reachTime = reachTime;
     }
 }
