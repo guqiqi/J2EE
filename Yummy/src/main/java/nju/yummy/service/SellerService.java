@@ -103,7 +103,7 @@ public interface SellerService {
      * @param description   描述
      * @return 是否修改成功
      */
-    public boolean addFood(int foodId, String sellerId, String name, String photo, String foodType, double money,
+    public boolean modifyFood(int foodId, String sellerId, String name, String photo, String foodType, double money,
                            double discountMonty, Date startTime, Date endTime, int stock, String description);
 
 

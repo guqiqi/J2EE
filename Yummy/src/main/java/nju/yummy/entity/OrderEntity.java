@@ -9,13 +9,32 @@ import java.util.Objects;
 public class OrderEntity {
     private String orderId;
     private String email;
-    private Integer sellerId;
+    private String sellerId;
     private Integer status;
     private Timestamp placeTime;
     private Timestamp finishTime;
     private Double totalMoney;
     private Double payMoney;
     private Timestamp reachTime;
+
+    public OrderEntity() {
+    }
+
+    public OrderEntity(String orderId, String email, String sellerId, Double totalMoney, Double payMoney, Timestamp reachTime) {
+        this.orderId = orderId;
+        this.email = email;
+        this.sellerId = sellerId;
+        this.status = 0;
+        this.placeTime = new Timestamp(System.currentTimeMillis());
+        this.totalMoney = totalMoney;
+        this.payMoney = payMoney;
+        this.reachTime = reachTime;
+    }
+
+    public OrderEntity(Double totalMoney, Double payMoney) {
+        this.totalMoney = totalMoney;
+        this.payMoney = payMoney;
+    }
 
     @Id
     @Column(name = "orderId")
@@ -39,11 +58,11 @@ public class OrderEntity {
 
     @Basic
     @Column(name = "sellerId")
-    public Integer getSellerId() {
+    public String getSellerId() {
         return sellerId;
     }
 
-    public void setSellerId(Integer sellerId) {
+    public void setSellerId(String sellerId) {
         this.sellerId = sellerId;
     }
 

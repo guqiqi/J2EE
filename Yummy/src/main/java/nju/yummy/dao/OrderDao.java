@@ -15,4 +15,6 @@ public interface OrderDao {
     public List<OrderEntity> getOrderByEmail(String email);
 
     public List<OrderEntity> getOrderBySellerId(String sellerId);
+
+    public List<OrderEntity> getAllOrders();
 }

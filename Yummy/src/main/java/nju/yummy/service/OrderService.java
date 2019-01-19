@@ -12,9 +12,9 @@ public interface OrderService {
      * @param sellerId 餐厅编号
      * @param foods 食物id列表
      * @param amount 食物数量列表
-     * @return 订单实际价格
+     * @return 订单，主要需要总价和折扣价
      */
-    public double prePlaceOrder(String email, String sellerId, List<Integer> foods, List<Integer> amount);
+    public OrderEntity prePlaceOrder(String email, String sellerId, List<Integer> foods, List<Integer> amount);
 
     /**
      * 用户下单
@@ -55,7 +55,7 @@ public interface OrderService {
      * @param orderId 订单编号
      * @return 是否成功
      */
-    public boolean startDelive(String orderId);
+    public boolean startDeliver(String orderId);
 
     /**
      * 得到用户所有订单

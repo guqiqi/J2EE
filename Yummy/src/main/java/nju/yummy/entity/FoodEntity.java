@@ -19,6 +19,22 @@ public class FoodEntity {
     private Integer stock;
     private String description;
 
+    public FoodEntity() {
+    }
+
+    public FoodEntity(String sellId, String name, String photo, String foodType, Double money, Double discountMoney, Timestamp startTime, Timestamp endTime, Integer stock, String description) {
+        this.sellId = sellId;
+        this.name = name;
+        this.photo = photo;
+        this.foodType = foodType;
+        this.money = money;
+        this.discountMoney = discountMoney;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.stock = stock;
+        this.description = description;
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "foodId")

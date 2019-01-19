@@ -11,6 +11,15 @@ public class DiscountTableEntity {
     private Double discountMoney;
     private String foodIds;
 
+    public DiscountTableEntity() {
+    }
+
+    public DiscountTableEntity(String sellerId, Double discountMoney, String foodIds) {
+        this.sellerId = sellerId;
+        this.discountMoney = discountMoney;
+        this.foodIds = foodIds;
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "discountId")

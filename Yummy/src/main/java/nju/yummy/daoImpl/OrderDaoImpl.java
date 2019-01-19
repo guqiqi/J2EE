@@ -90,4 +90,19 @@ public class OrderDaoImpl implements OrderDao {
 
         return orderEntities;
     }
+
+    @Override
+    public List<OrderEntity> getAllOrders() {
+        Session session = MySessionFactory.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("select order from OrderEntity order");
+
+        List<OrderEntity> orderEntities = query.list();
+
+        tx.commit();
+        session.close();
+
+        return orderEntities;
+    }
 }

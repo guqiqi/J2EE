@@ -20,6 +20,25 @@ public class SellerEntity {
     private String discount;
     private String icon;
 
+    public SellerEntity() {
+    }
+
+    public SellerEntity(String sellerId, String password, String name, Integer type, String address, String phone, String startHour, String endHour, Integer status, String foodType, String discount, String icon) {
+        this.sellerId = sellerId;
+        this.password = password;
+        this.name = name;
+        this.type = type;
+        this.address = address;
+        this.phone = phone;
+        this.startHour = startHour;
+        this.endHour = endHour;
+        this.status = status;
+        this.foodType = foodType;
+        this.orderCount = 0;
+        this.discount = discount;
+        this.icon = icon;
+    }
+
     @Id
     @Column(name = "sellerId")
     public String getSellerId() {
