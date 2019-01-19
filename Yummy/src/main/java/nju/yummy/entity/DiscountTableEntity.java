@@ -7,6 +7,7 @@ import java.util.Objects;
 @Table(name = "discountTable", schema = "yummy")
 public class DiscountTableEntity {
     private Integer discountId;
+    private String sellerId;
     private Double discountMoney;
     private String foodIds;
 
@@ -19,6 +20,15 @@ public class DiscountTableEntity {
 
     public void setDiscountId(Integer discountId) {
         this.discountId = discountId;
+    }
+
+    @Column(name = "sellerId")
+    public String getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerId = sellerId;
     }
 
     @Basic
@@ -55,4 +65,5 @@ public class DiscountTableEntity {
     public int hashCode() {
         return Objects.hash(discountId, discountMoney, foodIds);
     }
+
 }
