@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "food", schema = "yummy", catalog = "")
+@Table(name = "food", schema = "yummy")
 public class FoodEntity {
     private Integer foodId;
     private String sellId;
@@ -20,6 +20,7 @@ public class FoodEntity {
     private String description;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "foodId")
     public Integer getFoodId() {
         return foodId;

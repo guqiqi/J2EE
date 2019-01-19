@@ -13,6 +13,7 @@ public class PayRecordEntity {
     private Byte userType;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "recordId")
     public Integer getRecordId() {
         return recordId;

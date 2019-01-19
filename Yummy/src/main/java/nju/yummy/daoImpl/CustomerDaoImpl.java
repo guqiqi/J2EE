@@ -5,36 +5,43 @@ import nju.yummy.entity.AddressEntity;
 import nju.yummy.entity.CustomerEntity;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
-public class CustomerDaoImpl implements CustomerDao {
+public class CustomerDaoImpl implements CustomerDao{
+    private DaoUtil daoUtil = new DaoUtil();
+
     @Override
     public boolean addCustomer(CustomerEntity customer) {
+        return daoUtil.add(customer);
+    }
+
+    @Override
+    public boolean updateCustomer(CustomerEntity customer) {
+        return daoUtil.update(customer);
+    }
+
+    @Override
+    public boolean writeOffCustomer(String email) {
         Session session = MySessionFactory.getSession();
         Transaction tx = session.beginTransaction();
 
-        session.save(customer);
+        Query query = session.createQuery("update CustomerEntity c set c.status = :newStatus where email = :email");
+        query.setParameter("newStatus", (byte)0);
+        query.setParameter("email", email);
+
+        query.executeUpdate();
 
         tx.commit();
-
         session.close();
 
         return true;
     }
 
     @Override
-    public boolean updateCustomer(CustomerEntity customer) {
-        return false;
-    }
-
-    @Override
-    public boolean writeOffCustomer(String email) {
-        return false;
-    }
-
-    @Override
     public CustomerEntity getCustomer(String email) {
+        /* 如果用户不存在则返回null */
         Session session = MySessionFactory.getSession();
         Transaction tx = session.beginTransaction();
 
@@ -48,21 +55,43 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public boolean addAddress(AddressEntity addressEntity) {
-        return false;
+        return daoUtil.add(addressEntity);
     }
 
     @Override
     public boolean updateAddress(AddressEntity addressEntity) {
-        return false;
+        return daoUtil.update(addressEntity);
     }
 
     @Override
     public boolean deleteAddress(int addressId) {
-        return false;
+        Session session = MySessionFactory.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("delete AddressEntity where addressId=:addressId");
+        query.setParameter("addressId", addressId);
+
+        query.executeUpdate();
+
+        tx.commit();
+        session.close();
+
+        return true;
     }
 
     @Override
     public List<AddressEntity> getAddressByEmail(String email) {
-        return null;
+        Session session = MySessionFactory.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("select add from AddressEntity add where email=:email");
+        query.setParameter("email", email);
+
+        List<AddressEntity> addressEntities = (List<AddressEntity>)query.list();
+
+        tx.commit();
+        session.close();
+
+        return addressEntities;
     }
 }

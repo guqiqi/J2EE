@@ -12,6 +12,7 @@ public class CustomerEntity {
     private String avatar;
     private String phone;
     private Double point;
+    /* 0表示已注销，1表示可以使用 */
     private Byte status;
     private Double leftMoney;
 

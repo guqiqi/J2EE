@@ -27,5 +27,6 @@ public interface CustomerDao {
 
     public List<AddressEntity> getAddressByEmail(String email);
 
+    // TODO 统计
 
 }
