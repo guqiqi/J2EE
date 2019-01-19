@@ -5,6 +5,7 @@ import nju.yummy.daoImpl.CustomerDaoImpl;
 import nju.yummy.entity.AddressEntity;
 import nju.yummy.entity.CustomerEntity;
 import nju.yummy.service.CustomerService;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean register(String email) {
-        return new MailServiceImpl().sendEmail(email);
+    public boolean register(String email, JavaMailSender mailSender) {
+        return new MailServiceImpl().sendEmail(email, mailSender);
     }
 
     @Override
