@@ -159,7 +159,7 @@
           </el-col>
           <el-col :span="8"
                   style="background-color: rgba(68,169,66,0.75); color: white; font-weight: bold; font-size: 20px; padding-top: 15px; padding-bottom: 9px">
-            去结算
+            <span @click="checkout">去结算</span>
           </el-col>
         </el-row>
       </el-card>
@@ -466,6 +466,9 @@
         }
 
         this.totalCount = total
+      },
+      checkout: function () {
+        this.$router.push({name: 'checkout', params: {foodList: this.shoppingCart}})
       }
     }
 

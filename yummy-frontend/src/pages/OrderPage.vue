@@ -34,8 +34,8 @@
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button v-if="scope.row.status === 0" type="text" size="small" @click="pay(scope.row.orderId)">付款</el-button>
-                <el-button v-if="scope.row.status === 2" type="text" size="small" @click="confirm(scope.row.orderId)">确认收货</el-button>
+                <el-button v-if="scope.row.status === 0" type="text" @click="pay(scope.row.orderId)">付款</el-button>
+                <el-button v-if="scope.row.status === 2" type="text" @click="confirm(scope.row.orderId)">确认收货</el-button>
               </template>
             </el-table-column>
           </el-table>

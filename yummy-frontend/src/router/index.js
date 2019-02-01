@@ -9,6 +9,7 @@ import AddressPage from '../pages/AddressPage'
 import SellerDetailPage from '../pages/SellerDetail'
 import PersonalPage from '../pages/PersonalInfo'
 import CustomerStatisticPage from '../pages/CustomerStatistic'
+import CheckOutPage from '../pages/CheckOut'
 
 Vue.use(Router)
 
@@ -53,6 +54,11 @@ export default new Router({
       path: '/customer/statistic',
       name: 'customerStatistic',
       component: CustomerStatisticPage
+    },
+    {
+      path: 'checkout',
+      name: 'checkout',
+      component: CheckOutPage
     }
   ]
 })
