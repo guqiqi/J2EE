@@ -1,7 +1,21 @@
 <template>
   <div>
     <navigation default_active="/home"/>
-    <el-row>
+    <!--<img src="./../../static/images/banner.png" style="width: 100%; "/>-->
+    <el-row style="">
+      <el-col :span="20" :offset="2">
+        <el-col :span="4">
+          <img :src="photo" width="100%" height="100%"/>
+        </el-col>
+        <el-col :span="20">
+          <el-row style="text-align: right; margin-right: 30px; margin-top: 40px; font-weight: bold; font-size: 25px">
+            {{sellerName}}
+          </el-row>
+          <el-row style="text-align: right; margin-right: 30px; margin-top: 60px;"> 销量: {{orderCount}}</el-row>
+        </el-col>
+      </el-col>
+    </el-row>
+    <el-row style="margin-top: 10px">
       <el-col :span="20" :offset="2" style="margin-top: 10px">
         <el-tabs v-model="type">
           <el-tab-pane label="所有商品" name="all">
@@ -56,7 +70,48 @@
             </div>
 
           </el-tab-pane>
-          <el-tab-pane label="商家资质" name="info">商家资质</el-tab-pane>
+          <el-tab-pane label="商家介绍" name="info">
+            <el-row>
+              <el-col :span="10" class="title">
+                商家名称
+              </el-col>
+              <el-col :span="14" class="content">
+                {{sellerName}}
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="10" class="title">
+                经营地址
+              </el-col>
+              <el-col :span="14" class="content">
+                {{address}}
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="10" class="title">
+                商家编号
+              </el-col>
+              <el-col :span="14" class="content">
+                {{sellerId}}
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="10" class="title">
+                联系电话
+              </el-col>
+              <el-col :span="14" class="content">
+                {{phone}}
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="10" class="title">
+                营业时间
+              </el-col>
+              <el-col :span="14" class="content">
+                {{startHour}} : 00 - {{endHour}} : 00
+              </el-col>
+            </el-row>
+          </el-tab-pane>
         </el-tabs>
       </el-col>
     </el-row>
@@ -121,6 +176,15 @@
     data() {
       return {
         type: 'all', //tab的type
+        sellerId: '1234566',
+        sellerName: '食其家',
+        photo: './../../static/images/logo.png',
+        address: '南京鼓楼广场',
+        phone: '1377777777777',
+        orderCount: 10,
+        startHour: 8,
+        endHour: 19,
+
         shoppingCart: [],
         totalMoney: 0.0,
         totalCount: 0,
@@ -409,5 +473,14 @@
 </script>
 
 <style scoped>
+  .title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+  }
 
+  .content {
+    font-size: 30px;
+    margin-top: 30px;
+  }
 </style>
