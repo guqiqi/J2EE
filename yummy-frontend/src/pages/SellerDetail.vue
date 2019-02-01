@@ -31,7 +31,14 @@
                       <el-row
                         style="text-align: left; color: #f72d20; font-weight: bold; font-size: 15px; margin-top: 15px">
                         <el-col :span="14" style="margin-top: 4px">
-                          ¥{{food.money}}
+                          ¥
+                          <span v-if="food.money === food.discountMoney">
+                            {{food.money.toFixed(2)}}
+                          </span>
+                          <span v-else>
+                            <s>{{food.money.toFixed(2)}}</s>
+                            {{food.discountMoney.toFixed(2)}}
+                          </span>
                         </el-col>
                         <el-col v-if="food.num === 0" :span="10">
                           <el-button size="mini" type="primary" @click="firstAddShoppingCart(food.foodId)">加入购物车
@@ -77,19 +84,23 @@
                              style="width: 100%; "/>
           </el-col>
           <el-col :span="5" :offset="1" style="color: red; margin-top: 2px">
-            {{food.discountMoney * food.num}}
+            {{(food.discountMoney * food.num).toFixed(2)}}
           </el-col>
         </el-row>
 
         <el-row style="padding: 0; margin: 0">
           <el-col :span="16"
-                  style="background-color: #595959; color: white; font-weight: bold; font-size: 20px; padding-top: 15px; text-align: left; padding-left: 10px">
-            <el-badge :value="12" class="item">
+                  style="background-color: #595959; color: white; font-weight: bold; font-size: 20px; text-align: left; padding-top: 15px; padding-left: 10px">
+            <span v-if="totalCount !== 0">
+              <el-badge :value="totalCount" class="item">
+                <img src="./../../static/images/cart.png" width="30px" height="30px"/>
+              </el-badge>
+              <span style="margin-left: 10px">¥ {{this.totalMoney.toFixed(2)}}</span>
+            </span>
+            <span v-else>
               <img src="./../../static/images/cart.png" width="30px" height="30px"/>
-            </el-badge>
-            <span style="margin-left: 10px">
-            ¥ {{this.totalMoney}}
-          </span>
+              <span style="margin-left: 10px; padding-top: -10px">¥ {{this.totalMoney.toFixed(2)}}</span>
+            </span>
           </el-col>
           <el-col :span="8"
                   style="background-color: rgba(68,169,66,0.75); color: white; font-weight: bold; font-size: 20px; padding-top: 15px; padding-bottom: 9px">
@@ -110,9 +121,9 @@
     data() {
       return {
         type: 'all', //tab的type
-        shoppingCart: [
-        ],
+        shoppingCart: [],
         totalMoney: 0.0,
+        totalCount: 0,
         foodList: [
           {
             type: '热销',
@@ -181,7 +192,7 @@
                 foodId: 7,
                 photo: './../static/images/logo.png',
                 money: 23.4,
-                discountMoney: 13,
+                discountMoney: 23.4,
                 description: '本店特色，欢迎品尝',
                 num: 0
               },
@@ -190,7 +201,7 @@
                 foodId: 8,
                 photo: './../static/images/logo.png',
                 money: 23.4,
-                discountMoney: 13,
+                discountMoney: 23.4,
                 description: '本店特色，欢迎品尝',
                 num: 0
               }
@@ -309,11 +320,12 @@
         })
 
         this.calculateTotalMoney()
+        this.calculateTotalCount()
       },
       addInDetail: function (id, num) {
         console.log(id)
         // 详情界面点击添加/删除
-        if(num !== 0) {
+        if (num !== 0) {
           for (let i = 0; i < this.shoppingCart.length; i++) {
             if (this.shoppingCart[i].foodId === id) {
               this.shoppingCart[i].num = num
@@ -325,13 +337,14 @@
         }
 
         this.calculateTotalMoney()
+        this.calculateTotalCount()
       },
       addInCart: function (id, num) {
         // 右下角购物车点击加/删除
-        if(num !== 0) {
+        if (num !== 0) {
           for (let i = 0; i < this.foodList.length; i++) {
             for (let j = 0; j < this.foodList[i].foods.length; j++) {
-              if(this.foodList[i].foods[j].foodId === id)
+              if (this.foodList[i].foods[j].foodId === id)
                 this.foodList[i].foods[j].num = num
             }
           }
@@ -341,6 +354,7 @@
         }
 
         this.calculateTotalMoney()
+        this.calculateTotalCount()
       },
       clearShoppingCart: function () {
         this.shoppingCart = []
@@ -352,20 +366,21 @@
         }
 
         this.totalMoney = 0.0
+        this.totalCount = 0
       },
-      removeFromCart(id){
+      removeFromCart(id) {
         for (let i = 0; i < this.foodList.length; i++) {
           for (let j = 0; j < this.foodList[i].foods.length; j++) {
-            if(this.foodList[i].foods[j].foodId === id){
+            if (this.foodList[i].foods[j].foodId === id) {
               this.foodList[i].foods[j].num = 0
               break
             }
           }
         }
 
-        for(let i = 0; i < this.shoppingCart.length; i++){
-          if(this.shoppingCart[i].foodId === id) {
-            this.shoppingCart.splice(i, 1);
+        for (let i = 0; i < this.shoppingCart.length; i++) {
+          if (this.shoppingCart[i].foodId === id) {
+            this.shoppingCart.splice(i, 1)
             break
           }
         }
@@ -373,11 +388,20 @@
       calculateTotalMoney: function () {
         let total = 0.0
 
-        for(let i = 0; i < this.shoppingCart.length; i++){
+        for (let i = 0; i < this.shoppingCart.length; i++) {
           total += this.shoppingCart[i].discountMoney * this.shoppingCart[i].num
         }
 
         this.totalMoney = total
+      },
+      calculateTotalCount: function () {
+        let total = 0
+
+        for (let i = 0; i < this.shoppingCart.length; i++) {
+          total += this.shoppingCart[i].num
+        }
+
+        this.totalCount = total
       }
     }
 
