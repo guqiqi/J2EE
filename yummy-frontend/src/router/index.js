@@ -21,6 +21,10 @@ import SellerInfoPage from '../pages/seller/SellerInfo'
 import SellerInProcessPage from '../pages/seller/SellerInProcess'
 import SellerEditPage from '../pages/seller/SellerEdit'
 
+import AdminStatisticPage from '../pages/admin/AdminStatistic'
+import VerifySellerPage from '../pages/admin/VerifySeller'
+import AdminCostPage from '../pages/admin/AdminCost'
+
 Vue.use(Router)
 
 export default new Router({
@@ -115,6 +119,21 @@ export default new Router({
       path: '/seller/edit',
       name: 'sellerEdit',
       component: SellerEditPage
+    },
+    {
+      path: '/admin/verify',
+      name: 'adminVerify',
+      component: VerifySellerPage
+    },
+    {
+      path: '/admin/cost',
+      name: 'adminCost',
+      component: AdminCostPage
+    },
+    {
+      path: '/admin/statistic',
+      name: 'adminStatistic',
+      component: AdminStatisticPage
     }
   ]
 })
