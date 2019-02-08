@@ -51,7 +51,8 @@
             <el-col :span="8" style="text-align: right; padding-right: 50px; margin-top: 4px; font-size: 15px">
               - ¥ {{yummyDiscount.toFixed(2)}}
             </el-col>
-            <el-col :span="24" style="text-align: right; padding-right: 50px; font-size: 30px; font-weight: bold; color: red; margin-top: 30px; margin-bottom: 10px">
+            <el-col :span="24"
+                    style="text-align: right; padding-right: 50px; font-size: 30px; font-weight: bold; color: red; margin-top: 30px; margin-bottom: 10px">
               ¥ {{(total - sellerDiscount - yummyDiscount).toFixed(2)}}
             </el-col>
           </el-row>
@@ -78,16 +79,29 @@
           </el-row>
 
           <el-row>
-          <el-button type="danger" style="width: 90%; margin-bottom: 10px" @click="placeOrder">确认下单</el-button>
+            <el-button type="danger" style="width: 90%; margin-bottom: 10px" @click="placeOrder">确认下单</el-button>
           </el-row>
         </el-card>
       </el-col>
     </el-col>
+
+    <el-dialog
+      title="支付提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      center="false"
+    >
+      <span style="font-size: 20px; text-align: left">您需要支付 ¥{{(total - sellerDiscount - yummyDiscount).toFixed(2)}}</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelPay">取 消</el-button>
+        <el-button type="primary" @click="payMoney">立即付款</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  const navigation = () => import('../components/Navigation.vue')
+  const navigation = () => import('../../components/Navigation.vue')
 
   export default {
     name: "check-out",
@@ -96,8 +110,9 @@
       return {
         foodList: [],
         total: 34.4,
-        sellerDiscount : 0.94,
-        yummyDiscount: 0.34
+        sellerDiscount: 0.94,
+        yummyDiscount: 0.34,
+        dialogVisible: false
       }
     },
     methods: {
@@ -111,7 +126,7 @@
         this.total = total
       },
       addInCart: function (id, num) {
-        if(num === 0) {
+        if (num === 0) {
           for (let i = 0; i < this.foodList.length; i++) {
             if (this.foodList[i].foodId === id) {
               this.foodList.splice(i, 1)
@@ -123,7 +138,29 @@
         this.calculateTotalMoney()
       },
       placeOrder: function () {
-        // TODO
+        this.dialogVisible = true
+      },
+      payMoney: function () {
+        // TODO 付款
+        this.dialogVisible = false
+
+        this.$message({
+          message: '您已成功付款，请等待商家准备商品并配送',
+          type: 'success'
+        });
+
+        this.$router.push('/home')
+      },
+      cancelPay: function () {
+        // TODO 取消付款，此时已经下单，但是需要去我的订单那边付款
+        this.dialogVisible = false
+
+        this.$message({
+          message: '您已取消付款，如需进行付款，请至「我的订单」处进行付款',
+          type: 'warning'
+        });
+
+        this.$router.push('/order')
       }
     },
     mounted() {

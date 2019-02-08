@@ -39,7 +39,7 @@
 </template>
 
 <script>
-  const navigation = () => import('../components/Navigation.vue')
+  const navigation = () => import('../../components/Navigation.vue')
   // import {navigation} from '../components/Navigation'
   export default {
     data() {

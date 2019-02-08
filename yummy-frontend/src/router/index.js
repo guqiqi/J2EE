@@ -1,28 +1,38 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import SignUpPage from '../pages/SignUp'
-import SignInPage from '../pages/SignIn'
-import HomePage from '../pages/Home'
-import OrderPage from '../pages/OrderPage'
-import AddressPage from '../pages/AddressPage'
-import SellerDetailPage from '../pages/SellerDetail'
-import PersonalPage from '../pages/PersonalInfo'
-import CustomerStatisticPage from '../pages/CustomerStatistic'
-import CheckOutPage from '../pages/CheckOut'
+import SignUpPage from '../pages/customer/SignUp'
+import SignInPage from '../pages/customer/SignIn'
+import HomePage from '../pages/customer/Home'
+import OrderPage from '../pages/customer/OrderPage'
+import AddressPage from '../pages/customer/AddressPage'
+import SellerDetailPage from '../pages/customer/SellerDetail'
+import PersonalPage from '../pages/customer/PersonalInfo'
+import CustomerStatisticPage from '../pages/customer/CustomerStatistic'
+import CheckOutPage from '../pages/customer/CheckOut'
+
+import SellerSignInPage from '../pages/seller/SellerSignIn'
+import SellerSignUpPage from '../pages/seller/SellerSignUp'
+import SellerHomePage from '../pages/seller/SellerHome'
+import SellerPromptPage from '../pages/seller/SellerSignPrompt'
+import SellerOrderPage from '../pages/seller/SellerOrder'
+import SellerStatisticPage from '../pages/seller/SellerStatistic'
+import SellerInfoPage from '../pages/seller/SellerInfo'
+import SellerInProcessPage from '../pages/seller/SellerInProcess'
+import SellerEditPage from '../pages/seller/SellerEdit'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/signup',
+      path: '/signUp',
       name: 'SignUpPage',
       component: SignUpPage
     },
     {
       path: '/',
-      name: 'SignUpPage',
+      name: 'SignInPage',
       component: SignInPage
     },
     {
@@ -56,9 +66,55 @@ export default new Router({
       component: CustomerStatisticPage
     },
     {
-      path: 'checkout',
+      path: '/checkout',
       name: 'checkout',
       component: CheckOutPage
+    },
+
+    {
+      path: '/seller/signIn',
+      name: 'sellerSignIn',
+      component: SellerSignInPage
+    },
+    {
+      path: '/seller/home',
+      name: 'sellerHome',
+      component: SellerHomePage
+    },
+    {
+      path: '/seller/signUp',
+      name: 'sellerSignUp',
+      component: SellerSignUpPage
+    },
+    {
+      path: '/seller/prompt',
+      name: 'sellerPrompt',
+      component: SellerPromptPage
+    },
+    {
+      path: '/seller/order',
+      name: 'sellerOrder',
+      component: SellerOrderPage
+    },
+    {
+      path: '/seller/statistic',
+      name: 'sellerStatistic',
+      component: SellerStatisticPage
+    },
+    {
+      path: '/seller/info',
+      name: 'sellerInfo',
+      component: SellerInfoPage
+    },
+    {
+      path: '/seller/process',
+      name: 'sellerInProcess',
+      component: SellerInProcessPage
+    },
+    {
+      path: '/seller/edit',
+      name: 'sellerEdit',
+      component: SellerEditPage
     }
   ]
 })

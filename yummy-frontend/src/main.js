@@ -9,6 +9,12 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
+import axios from 'axios' //引入axios
+
+Vue.prototype.$axios=axios
+axios.defaults.baseURL = '/api'
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

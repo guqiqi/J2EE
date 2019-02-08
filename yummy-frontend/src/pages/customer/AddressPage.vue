@@ -63,9 +63,9 @@
 </template>
 
 <script>
-  import UserNavigation from "../components/UserNavigation"
+  import UserNavigation from "../../components/UserNavigation"
 
-  const navigation = () => import('../components/Navigation.vue')
+  const navigation = () => import('../../components/Navigation.vue')
   // import {navigation} from '../components/Navigation'
   export default {
     name: "address-page",

@@ -1,12 +1,12 @@
 <template>
   <div class="sign-in">
     <el-row>
-      <img src="../assets/logo.png">
+      <img src="../../assets/logo.png">
     </el-row>
     <el-row>
       <el-input
-        placeholder="邮箱"
-        v-model="email"
+        placeholder="商户号"
+        v-model="sellerId"
         clearable
         class="text-input">
       </el-input>
@@ -14,6 +14,7 @@
     <el-row>
       <el-input
         placeholder="密码"
+        type="password"
         v-model="password"
         clearable
         class="text-input">
@@ -26,7 +27,7 @@
       <span style="color: gray">
         没有账号？立即
       </span>
-      <router-link to="/signup">注册</router-link>
+      <router-link to="/seller/signUp">注册</router-link>
     </el-row>
   </div>
 </template>
@@ -35,14 +36,14 @@
   export default {
     data() {
       return {
-        email: '',
+        sellerId: '',
         password: ''
       }
     },
     methods:{
       signIn: function(){
-        // TODO,验证登陆
-        this.$router.push('/home')
+        // TODO 验证登陆
+        this.$router.push('/seller/home')
       }
     }
   }

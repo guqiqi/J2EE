@@ -36,6 +36,7 @@
               <template slot-scope="scope">
                 <el-button v-if="scope.row.status === 0" type="text" @click="pay(scope.row.orderId)">付款</el-button>
                 <el-button v-if="scope.row.status === 2" type="text" @click="confirm(scope.row.orderId)">确认收货</el-button>
+                <el-button v-if="scope.row.status !== 3 && scope.row.status !== -1" type="text" @click="cancel(scope.row.orderId)">取消订单</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -46,8 +47,8 @@
 </template>
 
 <script>
-  import UserNavigation from "../components/UserNavigation"
-  const navigation = () => import('../components/Navigation.vue')
+  import UserNavigation from "../../components/UserNavigation"
+  const navigation = () => import('../../components/Navigation.vue')
   // import {navigation} from '../components/Navigation'
   export default {
     name: "order-page",
@@ -62,28 +63,28 @@
             payMoney: 200.10
           },
           {
-            orderId: '203948586596',
+            orderId: '203948586595',
             sellerName: '食其家',
             placeTime: '20190102',
             status: 1,
             payMoney: 200.10
           },
           {
-            orderId: '203948586596',
+            orderId: '203948586593',
             sellerName: '食其家',
             placeTime: '20190102',
             status: 3,
             payMoney: 200.10
           },
           {
-            orderId: '203948586596',
+            orderId: '203948586597',
             sellerName: '食其家',
             placeTime: '20190102',
             status: 2,
             payMoney: 200.10
           },
           {
-            orderId: '203948586596',
+            orderId: '203948586598',
             sellerName: '食其家',
             placeTime: '20190102',
             status: -1,
@@ -121,6 +122,15 @@
         for(let i = 0; i < this.orderList.length; i++){
           if(this.orderList[i].orderId === id){
             this.orderList[i].status = 3
+            break
+          }
+        }
+      },
+      cancel: function (id) {
+        // TODO 取消订单
+        for(let i = 0; i < this.orderList.length; i++){
+          if(this.orderList[i].orderId === id){
+            this.orderList[i].status = -1
             break
           }
         }

@@ -35,6 +35,14 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="10" class="title">
+            等级
+          </el-col>
+          <el-col :span="14" class="content">
+            {{level}}
+          </el-col>
+        </el-row>
+        <el-row>
           <el-button type="primary" style="width: 70%; margin-top: 30px" @click="modifyInfo">编辑信息</el-button>
         </el-row>
         <el-row>
@@ -63,10 +71,10 @@
 </template>
 
 <script>
-  import UserNavigation from "../components/UserNavigation"
+  import UserNavigation from "../../components/UserNavigation"
   import ElRow from "element-ui/packages/row/src/row"
 
-  const navigation = () => import('../components/Navigation.vue')
+  const navigation = () => import('../../components/Navigation.vue')
   // import {navigation} from '../components/Navigation'
   export default {
     name: "personal-info",
@@ -75,6 +83,7 @@
         username: 'kiki',
         phone: '137000000000',
         point: 2300,
+        level: '黄金会员',
         dialogFormVisible: false,
         tempUsername: this.username,
         tempPhone: this.phone

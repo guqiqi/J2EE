@@ -17,9 +17,9 @@
 </template>
 
 <script>
-  import UserNavigation from "../components/UserNavigation"
+  import UserNavigation from "../../components/UserNavigation"
 
-  const navigation = () => import('../components/Navigation.vue')
+  const navigation = () => import('../../components/Navigation.vue')
 
   export default {
     name: "customer-statistic",

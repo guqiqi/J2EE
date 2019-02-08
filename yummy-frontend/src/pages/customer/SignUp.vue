@@ -1,7 +1,7 @@
 <template>
   <div class="sign-up">
     <el-row>
-      <img src="../assets/logo.png">
+      <img src="../../assets/logo.png">
     </el-row>
     <el-row>
       <el-input

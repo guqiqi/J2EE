@@ -148,12 +148,12 @@
                   style="background-color: #595959; color: white; font-weight: bold; font-size: 20px; text-align: left; padding-top: 15px; padding-left: 10px">
             <span v-if="totalCount !== 0">
               <el-badge :value="totalCount" class="item">
-                <img src="./../../static/images/cart.png" width="30px" height="30px"/>
+                <img src="../../../static/images/cart.png" width="30px" height="30px"/>
               </el-badge>
               <span style="margin-left: 10px">¥ {{this.totalMoney.toFixed(2)}}</span>
             </span>
             <span v-else>
-              <img src="./../../static/images/cart.png" width="30px" height="30px"/>
+              <img src="../../../static/images/cart.png" width="30px" height="30px"/>
               <span style="margin-left: 10px; padding-top: -10px">¥ {{this.totalMoney.toFixed(2)}}</span>
             </span>
           </el-col>
@@ -168,7 +168,7 @@
 </template>
 
 <script>
-  const navigation = () => import('../components/Navigation.vue')
+  const navigation = () => import('../../components/Navigation.vue')
 
   export default {
     components: {navigation},
