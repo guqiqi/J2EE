@@ -91,7 +91,8 @@
       width="30%"
       center="false"
     >
-      <span style="font-size: 20px; text-align: left">您需要支付 ¥{{(total - sellerDiscount - yummyDiscount).toFixed(2)}}</span>
+      <span
+        style="font-size: 20px; text-align: left">您需要支付 ¥{{(total - sellerDiscount - yummyDiscount).toFixed(2)}}</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancelPay">取 消</el-button>
         <el-button type="primary" @click="payMoney">立即付款</el-button>
@@ -147,7 +148,7 @@
         this.$message({
           message: '您已成功付款，请等待商家准备商品并配送',
           type: 'success'
-        });
+        })
 
         this.$router.push('/home')
       },
@@ -158,7 +159,7 @@
         this.$message({
           message: '您已取消付款，如需进行付款，请至「我的订单」处进行付款',
           type: 'warning'
-        });
+        })
 
         this.$router.push('/order')
       }
