@@ -1,9 +1,9 @@
 <template>
-  <div class="sign-up">
-    <el-row>
+  <div class="sign-up" :v-loading="isLoading">
+    <el-row :v-loading="isLoading">
       <img src="../../assets/logo.png">
     </el-row>
-    <el-row>
+    <el-row :v-loading="isLoading">
       <el-input
         placeholder="邮箱"
         v-model="email"
@@ -11,8 +11,8 @@
         class="text-input">
       </el-input>
     </el-row>
-    <el-row style="margin-top: 40px">
-      <el-button type="primary" style="width: 300px">发送邮件</el-button>
+    <el-row style="margin-top: 40px" :v-loading="isLoading">
+      <el-button type="primary" style="width: 300px" @click="sendEmail">发送邮件</el-button>
     </el-row>
   </div>
 </template>
@@ -21,7 +21,32 @@
   export default {
     data() {
       return {
-        email: ''
+        email: '',
+        isLoading: false
+      }
+    },
+    methods: {
+      sendEmail: function () {
+        this.isLoading = true
+        this.$axios({
+          method: 'post',
+          url: '/mail/send',
+          data:{
+            email: this.email
+          }
+        }).then(response=>{
+          this.isLoading = false
+          if(response.data.isSuccess){
+            this.$alert('邮件已发送到您到邮箱，请点击链接进行验证', '提示', {
+              confirmButtonText: '确定',
+            });
+          }
+          else {
+            alert('发送失败')
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
       }
     }
   }

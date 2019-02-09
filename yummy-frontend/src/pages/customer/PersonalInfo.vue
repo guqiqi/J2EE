@@ -73,6 +73,7 @@
 <script>
   import UserNavigation from "../../components/UserNavigation"
   import ElRow from "element-ui/packages/row/src/row"
+  import global from "../../../static/Global"
 
   const navigation = () => import('../../components/Navigation.vue')
   // import {navigation} from '../components/Navigation'
@@ -80,10 +81,11 @@
     name: "personal-info",
     data() {
       return {
-        username: 'kiki',
-        phone: '137000000000',
-        point: 2300,
-        level: '黄金会员',
+        username: '',
+        phone: '',
+        point: 0,
+        level: '',
+        password: '',
         dialogFormVisible: false,
         tempUsername: this.username,
         tempPhone: this.phone
@@ -96,6 +98,8 @@
     methods: {
       modifyInfo: function () {
         this.dialogFormVisible = true
+        this.tempUsername = this.username
+        this.tempPhone = this.phone
       },
       cancelModify: function () {
         this.dialogFormVisible = false
@@ -103,18 +107,80 @@
         this.tempPhone = this.phone
       },
       confirmModify: function () {
-        // TODO save
-        this.username = this.tempUsername
-        this.phone = this.tempPhone
         this.dialogFormVisible = false
+
+        this.$axios({
+          method: 'post',
+          url: '/user/modify',
+          data:{
+            email: global.userId,
+            username: this.username,
+            phone: this.phone,
+            password: this.password
+          }
+        }).then(response=>{
+          console.log(response)
+          let data_ = response.data
+
+          this.username = this.tempUsername
+          this.phone = this.tempPhone
+
+          if(data_.isSuccess){
+            this.$alert('个人信息修改成功', '成功', {
+              confirmButtonText: '确定',
+              type: 'success'
+            });
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
       },
       writeOff: function () {
-        // TODO save
+        this.$axios({
+          method: 'get',
+          url: '/user/writeOff',
+          params:{
+            email: global.userId
+          }
+        }).then(response=>{
+          let data_ = response.data
+
+          if(data_.isSuccess){
+            this.$alert('注销用户成功', '成功', {
+              confirmButtonText: '确定',
+              type: 'success',
+              callback: action => {
+                this.$router.push("/")
+              }
+            });
+          }
+
+        }).catch(function(err){
+          console.log(err)
+        })
       }
     },
     mounted() {
-      this.tempUsername = this.username
-      this.tempPhone = this.phone
+      console.log(global.userId)
+
+      this.$axios({
+        method: 'get',
+        url: '/user/info',
+        params:{
+          email: global.userId
+        }
+      }).then(response=>{
+        let data_ = response.data
+        this.username = data_.username
+        this.phone = data_.phone
+        this.point = data_.point
+        this.password = data_.password
+
+        this.level = global.getLevel(this.point)
+
+      }).catch(function(err){
+        console.log(err)
+      })
     }
   }
 </script>
@@ -128,6 +194,6 @@
 
   .content {
     font-size: 20px;
-    margin-top: 30px;
+    margin-top: 20px;
   }
 </style>

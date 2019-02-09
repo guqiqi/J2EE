@@ -33,6 +33,8 @@
 </template>
 
 <script>
+  import global from '../../../static/Global'
+
   export default {
     data() {
       return {
@@ -42,22 +44,28 @@
     },
     methods:{
       signIn: function(){
-        // TODO,验证登陆
+        // 验证登陆
         this.$axios({
           method: 'post',
-          // url:'../static/test/getInfo.json', //<---本地地址
           url: '/user/login',
           data:{
-            userId: this.email,
+            email: this.email,
             password: this.password
           }
         }).then(response=>{
-          console.log(response)
+          if(response.data.isValid) {
+            global.setUserId(this.email)
+            this.$router.push('/home')
+          }
+          else {
+            this.$alert(response.data.mes, '错误', {
+              confirmButtonText: '确定',
+              type: 'error'
+            });
+          }
         }).catch(function(err){
           console.log(err)
         })
-
-        // this.$router.push('/home')
       }
     }
   }

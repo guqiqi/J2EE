@@ -8,6 +8,7 @@ import OrderPage from '../pages/customer/OrderPage'
 import AddressPage from '../pages/customer/AddressPage'
 import SellerDetailPage from '../pages/customer/SellerDetail'
 import PersonalPage from '../pages/customer/PersonalInfo'
+import EditPersonalInfoPage from '../pages/customer/EditPersonalInfo'
 import CustomerStatisticPage from '../pages/customer/CustomerStatistic'
 import CheckOutPage from '../pages/customer/CheckOut'
 
@@ -63,6 +64,11 @@ export default new Router({
       path: '/info',
       name: 'info',
       component: PersonalPage
+    },
+    {
+      path: '/confirm',
+      name: 'confirm',
+      component: EditPersonalInfoPage
     },
     {
       path: '/customer/statistic',

@@ -24,6 +24,15 @@ public class AddressEntity {
         this.label = label;
     }
 
+    public AddressEntity(Integer addressId, String email, String detail, String phone, String receiver, Integer label) {
+        this.addressId = addressId;
+        this.email = email;
+        this.detail = detail;
+        this.phone = phone;
+        this.receiver = receiver;
+        this.label = label;
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "addressId")

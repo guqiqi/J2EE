@@ -6,8 +6,8 @@
     <session-factory>
         <property name="connection.url">jdbc:mysql://localhost:3306/yummy</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <!--连接数据库是用户名-->
-        <!--连接数据库是密码-->
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">123456</property>
 
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>

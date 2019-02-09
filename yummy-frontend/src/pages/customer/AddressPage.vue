@@ -14,12 +14,12 @@
           <el-col :span="8" v-for="address in addressList">
             <el-card shadow="never" body-style="padding: 10px" style="margin: 5px">
               <el-row style="text-align: left; margin-left: 5px; margin-top: 5px">
-                <el-col :span="16">{{address.receiver}}</el-col>
-                <el-col :span="4">
-                  <span @click="modifyAddress(address.addressId)" style="color: #9e9e9e">修改</span>
+                <el-col :span="14">{{address.receiver}}</el-col>
+                <el-col :span="5">
+                  <el-button @click="modifyAddress(address.addressId)" size="mini" type="primary">修改</el-button>
                 </el-col>
-                <el-col :span="4">
-                  <span @click="deleteAddress(address.addressId)" style="color: #9e9e9e">删除</span>
+                <el-col :span="5">
+                  <el-button @click="deleteAddress(address.addressId)" size="mini" type="danger">删除</el-button>
                 </el-col>
               </el-row>
               <el-row style="text-align: left; margin-left: 5px; margin-top: 5px">
@@ -30,12 +30,12 @@
               </el-row>
             </el-card>
           </el-col>
-
-          <el-col :span="8">
-            <el-card shadow="never" body-style="padding: 10px" style="margin: 5px; padding-top: 17px; padding-bottom: 17px">
-              <span style="font-weight: bold; font-size: 35px;" @click="addAddress">新增</span>
-            </el-card>
-          </el-col>
+        </el-row>
+        <el-row>
+          <el-card shadow="never" body-style="padding: 10px"
+                   style="margin: 5px; padding-top: 17px; padding-bottom: 17px">
+            <span style="font-weight: bold; font-size: 35px;" @click="addAddress">新增</span>
+          </el-card>
         </el-row>
       </el-col>
     </el-col>
@@ -64,6 +64,7 @@
 
 <script>
   import UserNavigation from "../../components/UserNavigation"
+  import global from '../../../static/Global'
 
   const navigation = () => import('../../components/Navigation.vue')
   // import {navigation} from '../components/Navigation'
@@ -77,36 +78,7 @@
         tempDetail: '',
         tempPhone: '',
         tempReceiver: '',
-        addressList: [
-          {
-            addressId: 1,
-            detail: '南京大学',
-            phone: '1283949455',
-            label: 1,
-            receiver: 'kiki'
-          },
-          {
-            addressId: 2,
-            detail: '南京大学',
-            phone: '1283949455',
-            label: 1,
-            receiver: 'kiki'
-          },
-          {
-            addressId: 3,
-            detail: '南京大学',
-            phone: '1283949455',
-            label: 1,
-            receiver: 'kiki'
-          },
-          {
-            addressId: 4,
-            detail: '南京大学',
-            phone: '1283949455',
-            label: 1,
-            receiver: 'kiki'
-          }
-        ]
+        addressList: []
       }
     },
     components: {
@@ -129,27 +101,45 @@
         this.dialogFormVisible = true
       },
       deleteAddress: function (id) {
-        for (let i = 0; i < this.addressList.length; i++) {
-          if (this.addressList[i].addressId === id) {
-            this.addressList.splice(i, 1)
-            console.log(this.addressList)
+        this.$axios({
+          method: 'delete',
+          url: '/user/address/delete',
+          params: {
+            addressId: id
           }
-        }
-        console.log(id)
-        // TODO delete
+        }).then(response => {
+          let data_ = response.data
+
+          if (data_.isSuccess) {
+            this.getAllAddress()
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
       },
       cancel: function () {
         this.dialogFormVisible = false
       },
       confirmModify: function () {
-        for (let i = 0; i < this.addressList.length; i++) {
-          if (this.addressList[i].addressId === this.tempId) {
-            this.addressList[i].detail = this.tempDetail
-            this.addressList[i].phone = this.tempPhone
-            this.addressList[i].receiver = this.tempReceiver
+        this.$axios({
+          method: 'post',
+          url: '/user/address/modify',
+          data: {
+            email: global.userId,
+            receiver: this.tempReceiver,
+            phone: this.tempPhone,
+            detail: this.tempDetail,
+            addressId: this.tempId
           }
-        }
-        // TODO 修改
+        }).then(response => {
+          let data_ = response.data
+
+          if (data_.isSuccess) {
+            this.getAllAddress()
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
         this.dialogFormVisible = false
       },
       addAddress: function () {
@@ -162,17 +152,47 @@
         this.dialogFormVisible = true
       },
       confirmAdd: function () {
-      //  TODO add
+        // add
         this.dialogFormVisible = false
 
-        this.addressList.push({
-          addressId: 10,
-          detail: this.tempDetail,
-          phone: this.tempPhone,
-          label: 1,
-          receiver: this.tempReceiver
+        this.$axios({
+          method: 'post',
+          url: '/user/address/add',
+          data: {
+            email: global.userId,
+            receiver: this.tempReceiver,
+            phone: this.tempPhone,
+            detail: this.tempDetail,
+          }
+        }).then(response => {
+          let data_ = response.data
+
+          if (data_.isSuccess) {
+            this.getAllAddress()
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
+      },
+      getAllAddress: function () {
+        this.$axios({
+          method: 'get',
+          url: '/user/address/all',
+          params: {
+            email: global.userId
+          }
+        }).then(response => {
+          let data_ = response.data
+
+          this.addressList = data_.addressList
+
+        }).catch(function (err) {
+          console.log(err)
         })
       }
+    },
+    mounted() {
+      this.getAllAddress()
     }
   }
 </script>

@@ -29,6 +29,14 @@ public interface CustomerService {
     public boolean addCustomerInfo(String email, String username, String password, String avatar, String phone);
 
     /**
+     * 登陆验证账号密码
+      * @param email 邮箱
+     * @param password 密码
+     * @return 是否成功
+     */
+    public String login(String email, String password);
+
+    /**
      * 修改个人信息
      *
      * @param email    邮箱
