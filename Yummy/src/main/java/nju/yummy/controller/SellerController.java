@@ -1,6 +1,8 @@
 package nju.yummy.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import nju.yummy.entity.DiscountTableEntity;
 import nju.yummy.entity.SellerEntity;
 import nju.yummy.service.SellerService;
 import nju.yummy.serviceImpl.SellerServiceImpl;
@@ -16,7 +18,7 @@ import java.util.List;
 public class SellerController {
     private SellerService sellerService;
 
-    public SellerController(){
+    public SellerController() {
         sellerService = new SellerServiceImpl();
     }
 
@@ -80,7 +82,7 @@ public class SellerController {
 
     @ResponseBody
     @RequestMapping(value = "/modify", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String modifyCustomerInfo(@RequestBody JSONObject jsonParam) {
+    public String modifySellerInfo(@RequestBody JSONObject jsonParam) {
         String sellerId = jsonParam.getString("sellerId");
 
         String name = jsonParam.getString("name");
@@ -92,13 +94,10 @@ public class SellerController {
         String endHour = jsonParam.getString("endHour");
         String icon = jsonParam.getString("icon");
 
-        String foodType = Const.convertJSONArrayToString(jsonParam.getJSONArray("foodType"));
-        String discount = Const.convertJSONArrayToString(jsonParam.getJSONArray("discount"));
-
         JSONObject result = new JSONObject();
 
         result.put("isSuccess", sellerService.modifyInfo(sellerId, password, name, type, address, phone, startHour,
-                endHour, foodType, discount, icon));
+                endHour, icon, 3));
 
         return result.toJSONString();
     }
@@ -196,6 +195,108 @@ public class SellerController {
         JSONObject result = new JSONObject();
 
         result.put("isSuccess", sellerService.modifyCustomerDiscount(sellerId, discount));
+
+        return result.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/discount/composition/all", method = RequestMethod.GET,
+            produces = "application/json;charset=UTF-8")
+    public String getCompositionDiscount(String sellerId) {
+        JSONObject result = new JSONObject();
+
+        List<DiscountTableEntity> discountTableEntities = sellerService.getDiscountBySeller(sellerId);
+
+        JSONArray composedDiscounts = new JSONArray();
+        for (int i = 0; i < discountTableEntities.size(); i++) {
+            JSONObject jsonpObject = new JSONObject();
+            DiscountTableEntity discountTableEntity = discountTableEntities.get(i);
+            jsonpObject.put("discountId", discountTableEntity.getDiscountId());
+            jsonpObject.put("discountMoney", discountTableEntity.getDiscountMoney());
+            jsonpObject.put("money", discountTableEntity.getMoney());
+
+            JSONArray date = new JSONArray();
+            date.add(discountTableEntity.getStartTime());
+            date.add(discountTableEntity.getEndTime());
+            jsonpObject.put("date", date);
+
+            jsonpObject.put("startTime", discountTableEntity.getStartTime());
+            jsonpObject.put("endTime", discountTableEntity.getEndTime());
+            jsonpObject.put("foodIds", discountTableEntity.getFoodIds().split(Const.regix));
+            jsonpObject.put("foodNames", discountTableEntity.getFoodNames().split(Const.regix));
+
+            composedDiscounts.add(jsonpObject);
+        }
+
+        result.put("composedDiscounts", composedDiscounts);
+
+        return result.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/discount/composition/add", method = RequestMethod.POST,
+            produces = "application/json;charset=UTF-8")
+    public String addCompositionDiscount(@RequestBody JSONObject jsonParam) {
+        System.out.println(jsonParam);
+
+        double discountMoney = jsonParam.getDouble("discountMoney");
+        double money = jsonParam.getDouble("money");
+        String sellerId = jsonParam.getString("sellerId");
+        String foodIds = Const.convertJSONArrayToString(jsonParam.getJSONArray("foodIds"));
+        Date startTime = jsonParam.getDate("startTime");
+        Date endTime = jsonParam.getDate("endTime");
+
+        JSONArray foodNames = new JSONArray();
+        for (int i = 0; i < jsonParam.getJSONArray("foodIds").size(); i++) {
+            foodNames.add(sellerService.getFoodInfo(Integer.parseInt(jsonParam.getJSONArray("foodIds").get(i).toString())).getName());
+        }
+
+        JSONObject result = new JSONObject();
+
+        result.put("isSuccess", sellerService.addGroupDiscount(sellerId, foodIds, Const.convertJSONArrayToString(foodNames),
+                discountMoney, money,
+                startTime, endTime));
+
+        return result.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/discount/composition/modify", method = RequestMethod.POST,
+            produces = "application/json;charset=UTF-8")
+    public String modifyCompositionDiscount(@RequestBody JSONObject jsonParam) {
+        System.out.println(jsonParam);
+        Integer discountId = jsonParam.getInteger("discountId");
+        double discountMoney = jsonParam.getDouble("discountMoney");
+        double money = jsonParam.getDouble("money");
+        String sellerId = jsonParam.getString("sellerId");
+        String foodIds = Const.convertJSONArrayToString(jsonParam.getJSONArray("foodIds"));
+
+        JSONArray foodNames = new JSONArray();
+        for (int i = 0; i < jsonParam.getJSONArray("foodIds").size(); i++) {
+            foodNames.add(sellerService.getFoodInfo(Integer.parseInt(jsonParam.getJSONArray("foodIds").get(i).toString())).getName());
+        }
+
+        Date startTime = jsonParam.getDate("startTime");
+        Date endTime = jsonParam.getDate("endTime");
+
+        JSONObject result = new JSONObject();
+
+        result.put("isSuccess", sellerService.modifyGroupDiscount(discountId, sellerId, foodIds,
+                Const.convertJSONArrayToString(foodNames), discountMoney, money, startTime, endTime));
+
+        return result.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/discount/composition/delete", method = RequestMethod.DELETE,
+            produces = "application/json;charset=UTF-8")
+    public String deleteGroupDiscount(Integer discountId) {
+        JSONObject result = new JSONObject();
+
+        List<Integer> list = new ArrayList<>();
+        list.add(discountId);
+
+        result.put("isSuccess", sellerService.deleteGroupDiscount(list));
 
         return result.toJSONString();
     }

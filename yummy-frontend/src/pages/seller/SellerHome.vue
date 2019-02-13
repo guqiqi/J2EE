@@ -304,30 +304,19 @@
         foodList: [],
         customerDiscount: [1, 0.9, 0.8], //店铺会员优惠价
         composedDiscounts: [ //店铺组合优惠列表
-          {
-            discountId: 1,
-            foodIds: [12, 14],
-            foodNames: ['鱼香肉丝饭', '鱼香肉丝饭'],
-            money: 20,
-            discountMoney: 13
-          },
-          {
-            discountId: 1,
-            foodIds: [12, 13],
-            foodNames: ['鱼香肉丝饭', '鱼香肉丝饭aaaaaaa'],
-            money: 20,
-            discountMoney: 14
-          },
+
         ],
         inputVisible: false,
         tempFoodType: [], //原来的子分类
         tempType: '', //用户填写的子分类
         tempComposedDiscount: {//临时组合优惠
-          discountId: 1,
-          foodIds: [12, 13],
-          foodNames: ['鱼香肉丝饭', '鱼香肉丝饭aaaaaaa'],
-          money: 20,
-          discountMoney: 14
+          discountId: 0,
+          foodIds: [],
+          foodNames: [],
+          money: 0,
+          discountMoney: 0,
+          startTime: new Date(),
+          endTime: new Date()
         },
         tempCustomerDiscount: [], //用户希望修改的会员优惠
         tempFoodDetail: {
@@ -407,7 +396,7 @@
         this.$axios({
           method: 'post',
           url: '/seller/food/add',
-          data:{
+          data: {
             sellerId: global.userId,
             name: this.tempFoodDetail.name,
             description: this.tempFoodDetail.description,
@@ -419,21 +408,21 @@
             stock: this.tempFoodDetail.stock,
             foodType: this.tempFoodDetail.type,
           }
-        }).then(response=>{
+        }).then(response => {
           this.isLoading = false
-          if(response.data.isSuccess){
+          if (response.data.isSuccess) {
             this.getAllFoods()
             this.$message({
               message: '商品添加成功',
               type: 'success'
-            });
+            })
           }
           else {
             this.$alert('系统繁忙，请稍后再试', '提示', {
               confirmButtonText: '确定',
-            });
+            })
           }
-        }).catch(function(err){
+        }).catch(function (err) {
           console.log(err)
         })
 
@@ -444,7 +433,7 @@
         this.$axios({
           method: 'post',
           url: '/seller/food/modify',
-          data:{
+          data: {
             sellerId: global.userId,
             foodId: this.tempFoodDetail.foodId,
             name: this.tempFoodDetail.name,
@@ -457,22 +446,22 @@
             stock: this.tempFoodDetail.stock,
             foodType: this.tempFoodDetail.foodType,
           }
-        }).then(response=>{
+        }).then(response => {
           this.isLoading = false
-          if(response.data.isSuccess){
+          if (response.data.isSuccess) {
             this.foodFormVisible = false
             this.getAllFoods()
             this.$message({
               message: '商品修改成功',
               type: 'success'
-            });
+            })
           }
           else {
             this.$alert('系统繁忙，请稍后再试', '提示', {
               confirmButtonText: '确定',
-            });
+            })
           }
-        }).catch(function(err){
+        }).catch(function (err) {
           console.log(err)
         })
       },
@@ -481,24 +470,24 @@
         this.$axios({
           method: 'delete',
           url: '/seller/food/delete',
-          params:{
+          params: {
             foodId: foodId
           }
-        }).then(response=>{
+        }).then(response => {
           this.isLoading = false
-          if(response.data.isSuccess){
+          if (response.data.isSuccess) {
             this.getAllFoods()
             this.$message({
               message: '商品删除成功',
               type: 'success'
-            });
+            })
           }
           else {
             this.$alert('系统繁忙，请稍后再试', '提示', {
               confirmButtonText: '确定',
-            });
+            })
           }
-        }).catch(function(err){
+        }).catch(function (err) {
           console.log(err)
         })
       },
@@ -551,12 +540,17 @@
       startModifyComposedDiscount: function (discountId) {
         for (let i = 0; i < this.composedDiscounts.length; i++) {
           if (this.composedDiscounts[i].discountId === discountId) {
+            let foods = []
+            for(let j = 0; j < this.composedDiscounts[i].foodIds.length; j++){
+              foods.push(parseInt(this.composedDiscounts[i].foodIds[j]))
+            }
             this.tempComposedDiscount = {
               discountId: this.composedDiscounts[i].discountId,
-              foodIds: this.composedDiscounts[i].foodIds,
+              foodIds: foods,
               foodNames: this.composedDiscounts[i].foodNames,
               money: this.composedDiscounts[i].money,
-              discountMoney: this.composedDiscounts[i].discountMoney
+              discountMoney: this.composedDiscounts[i].discountMoney,
+              date: this.composedDiscounts[i].date
             }
             break
           }
@@ -576,31 +570,107 @@
             sellerId: global.userId,
             foodType: this.subType
           }
-        }).then(response=>{
-          if(response.data.isSuccess){
+        }).then(response => {
+          if (response.data.isSuccess) {
             this.foodTypeFormVisible = false
             this.getSubTypes()
             this.getAllFoods()
           }
-        }).catch(function(err){
+        }).catch(function (err) {
           console.log(err)
         })
       },
       deleteComposedDiscount: function (discountId) {
-        // TODO 删除组合优惠
+        // 删除组合优惠
+        this.$axios({
+          method: 'delete',
+          url: '/seller/discount/composition/delete',
+          params: {
+            discountId: discountId
+          }
+        }).then(response => {
+          if (response.data.isSuccess) {
+            this.getComposedDiscount()
+            this.$message({
+              message: '成功删除组合优惠',
+              type: 'success'
+            })
+          }
+          else {
+            this.$alert('系统繁忙，请稍后再试', '提示', {
+              confirmButtonText: '确定',
+            })
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
 
-        this.getComposedDiscount()
       },
       addComposedDiscount: function () {
-        // TODO 增加组合优惠
-
-        this.composedDiscountFormVisible = false
-        this.getComposedDiscount()
+        // 增加组合优惠
+        this.$axios({
+          method: 'post',
+          url: '/seller/discount/composition/add',
+          data: {
+            foodIds: this.tempComposedDiscount.foodIds,
+            foodNames: this.tempComposedDiscount.foodNames,
+            money: this.tempComposedDiscount.money,
+            discountMoney: this.tempComposedDiscount.discountMoney,
+            startTime: this.tempComposedDiscount.date[0],
+            endTime: this.tempComposedDiscount.date[1],
+            sellerId: global.userId
+          }
+        }).then(response => {
+          this.getComposedDiscount()
+          if (response.data.isSuccess) {
+            this.getComposedDiscount()
+            this.$message({
+              message: '成功添加组合优惠',
+              type: 'success'
+            })
+            this.composedDiscountFormVisible = false
+          }
+          else {
+            this.$alert('系统繁忙，请稍后再试', '提示', {
+              confirmButtonText: '确定',
+            })
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
       },
       modifyComposedDiscount: function () {
-        // TODO 修改组合优惠
-        this.composedDiscountFormVisible = false
-        this.getComposedDiscount()
+        // 修改组合优惠
+        this.$axios({
+          method: 'post',
+          url: '/seller/discount/composition/modify',
+          data: {
+            foodIds: this.tempComposedDiscount.foodIds,
+            foodNames: this.tempComposedDiscount.foodNames,
+            money: this.tempComposedDiscount.money,
+            discountMoney: this.tempComposedDiscount.discountMoney,
+            startTime: this.tempComposedDiscount.date[0],
+            endTime: this.tempComposedDiscount.date[1],
+            sellerId: global.userId,
+            discountId: this.tempComposedDiscount.discountId
+          }
+        }).then(response => {
+          if (response.data.isSuccess) {
+            this.getComposedDiscount()
+            this.$message({
+              message: '成功修改组合优惠',
+              type: 'success'
+            })
+            this.composedDiscountFormVisible = false
+          }
+          else {
+            this.$alert('系统繁忙，请稍后再试', '提示', {
+              confirmButtonText: '确定',
+            })
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
       },
       changeMoney: function () {
         let money = 0.0
@@ -624,13 +694,13 @@
             sellerId: global.userId,
             discount: this.tempCustomerDiscount
           }
-        }).then(response=>{
-          if(response.data.isSuccess){
+        }).then(response => {
+          if (response.data.isSuccess) {
             this.customerDiscount = [this.tempCustomerDiscount[0], this.tempCustomerDiscount[1], this.tempCustomerDiscount[2]]
             this.customerDiscountFormVisible = false
             this.getCustomerDiscount()
           }
-        }).catch(function(err){
+        }).catch(function (err) {
           console.log(err)
         })
       },
@@ -642,10 +712,10 @@
           params: {
             sellerId: global.userId
           }
-        }).then(response=>{
+        }).then(response => {
           let data_ = response.data
           this.subType = data_.foodType
-        }).catch(function(err){
+        }).catch(function (err) {
           console.log(err)
         })
       },
@@ -671,15 +741,32 @@
           params: {
             sellerId: global.userId
           }
-        }).then(response=>{
+        }).then(response => {
           let data_ = response.data
           this.customerDiscount = data_.discount
-        }).catch(function(err){
+        }).catch(function (err) {
           console.log(err)
         })
       },
       getComposedDiscount: function () {
-        // TODO 加载店铺组合优惠
+        // 加载店铺组合优惠
+        this.$axios({
+          method: 'get',
+          url: '/seller/discount/composition/all',
+          params: {
+            sellerId: global.userId
+          }
+        }).then(response => {
+          let data_ = response.data
+          this.composedDiscounts = data_.composedDiscounts
+
+          for (let i = 0; i < this.composedDiscounts.length; i++) {
+            this.composedDiscounts[i].date = [new Date(this.composedDiscounts[i].date[0]),
+              new Date(this.composedDiscounts[i].date[0])]
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
       },
       getAllFoods: function () {
         // 得到本店所有商品
@@ -689,11 +776,11 @@
           params: {
             sellerId: global.userId
           }
-        }).then(response=>{
+        }).then(response => {
           let data_ = response.data
           this.foodList = data_.foodList
           this.getFoodsBySubType()
-        }).catch(function(err){
+        }).catch(function (err) {
           console.log(err)
         })
       }

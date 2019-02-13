@@ -1,6 +1,7 @@
 package nju.yummy.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -9,19 +10,40 @@ public class DiscountTableEntity {
     private Integer discountId;
     private String sellerId;
     private Double discountMoney;
+    private Double money;
     private String foodIds;
+    private String foodNames;
+    private Date startTime;
+    private Date endTime;
 
     public DiscountTableEntity() {
     }
 
-    public DiscountTableEntity(String sellerId, Double discountMoney, String foodIds) {
+    public DiscountTableEntity(String sellerId, Double discountMoney, Double money, String foodIds, String foodNames,
+                               Date startTime, Date endTime) {
         this.sellerId = sellerId;
         this.discountMoney = discountMoney;
+        this.money = money;
         this.foodIds = foodIds;
+        this.foodNames = foodNames;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public DiscountTableEntity(Integer discountId, String sellerId, double discountMoney, double money, String foodIds,
+                               String foodNames, Date startTime, Date endTime) {
+        this.discountId = discountId;
+        this.sellerId = sellerId;
+        this.discountMoney = discountMoney;
+        this.money = money;
+        this.foodIds = foodIds;
+        this.foodNames = foodNames;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "discountId")
     public Integer getDiscountId() {
         return discountId;
@@ -51,6 +73,16 @@ public class DiscountTableEntity {
     }
 
     @Basic
+    @Column(name = "money")
+    public Double getMoney() {
+        return money;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
+    }
+
+    @Basic
     @Column(name = "foodIds")
     public String getFoodIds() {
         return foodIds;
@@ -58,6 +90,36 @@ public class DiscountTableEntity {
 
     public void setFoodIds(String foodIds) {
         this.foodIds = foodIds;
+    }
+
+    @Basic
+    @Column(name = "foodNames")
+    public String getFoodNames() {
+        return foodNames;
+    }
+
+    public void setFoodNames(String foodNames) {
+        this.foodNames = foodNames;
+    }
+
+    @Basic
+    @Column(name = "startTime")
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    @Basic
+    @Column(name = "endTime")
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     @Override

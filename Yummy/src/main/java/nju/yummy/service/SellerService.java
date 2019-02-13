@@ -53,13 +53,12 @@ public interface SellerService {
      * @param phone     联系电话
      * @param startHour 营业开始时间
      * @param endHour   营业结束时间
-     * @param foodType  食物分类
-     * @param discount  餐厅优惠政策
      * @param icon      餐厅图标
+     * @param status    修改后的餐厅状态，大部分改成1，修改重要信息改成3
      * @return 是否提交
      */
     public boolean modifyInfo(String sellerId, String password, String name, String type, String address, String phone,
-                              String startHour, String endHour, String foodType, String discount, String icon);
+                              String startHour, String endHour, String icon, int status);
 
     /**
      * 得到餐厅信息
@@ -169,10 +168,32 @@ public interface SellerService {
      *
      * @param sellerId      餐厅编号
      * @param foodIds       食物列表
+     * @param foodNames     食物名称
      * @param discountMoney 组合折后价
+     * @param money         原价
+     * @param startTime     促销开始时间
+     * @param endTime       促销结束时间
      * @return 是否添加成功
      */
-    public boolean addGroupDiscount(String sellerId, List<Integer> foodIds, double discountMoney);
+    public boolean addGroupDiscount(String sellerId, String foodIds, String foodNames, double discountMoney,
+                                    double money, Date startTime, Date endTime);
+
+
+    /**
+     * 增加一个组合优惠
+     *
+     * @param discountId    促销编号
+     * @param sellerId      餐厅编号
+     * @param foodIds       食物列表
+     * @param foodNames     食物名称
+     * @param discountMoney 组合折后价
+     * @param money         原价
+     * @param startTime     促销开始时间
+     * @param endTime       促销结束时间
+     * @return 是否添加成功
+     */
+    public boolean modifyGroupDiscount(Integer discountId, String sellerId, String foodIds, String foodNames,
+                                       double discountMoney, double money, Date startTime, Date endTime);
 
     /**
      * 删除组合优惠

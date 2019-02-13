@@ -32,5 +32,7 @@ public interface SellerDao {
 
     public boolean addGroupDiscount(DiscountTableEntity discountTableEntity);
 
+    public boolean updateGroupDiscount(DiscountTableEntity discountTableEntity);
+
     public boolean deleteGroupDiscount(List<Integer> discountIds);
 }

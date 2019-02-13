@@ -94,14 +94,6 @@
     name: "seller-edit-info",
     data() {
       return {
-        // name: '',
-        // type: '快餐便当',
-        // address: '',
-        // phone: '',
-        // startHour: '8:00 : 00',
-        // endHour: '20:00 : 00',
-        // icon: '../../static/uploadImages/347454.jpg',
-        // password: '',
         typeOption: [
           {
             value: '快餐便当',
@@ -201,7 +193,6 @@
       },
       modify: function () {
         // TODO 修改
-        this.isLoading = true
         this.$axios({
           method: 'post',
           url: '/seller/modify',
@@ -258,12 +249,30 @@
         }
         return isJPG && isLt2M
       },
-      // change(value){
-      //   console.log(value)
-      // }
     },
     mounted() {
       console.log(this.isSignUp)
+      if(!this.isSignUp){
+        this.$axios({
+          method: 'get',
+          url: '/seller/info',
+          params: {
+            sellerId: Global.userId
+          }
+        }).then(response => {
+          let data_ = response.data
+          this.name = data_.name
+          this.type = data_.type
+          this.address = data_.address
+          this.phone = data_.phone
+          this.startHour = data_.startHour
+          this.endHour = data_.endHour
+          this.icon = data_.icon
+          this.password = data_.password
+        }).catch(function (err) {
+          console.log(err)
+        })
+      }
     }
   }
 </script>

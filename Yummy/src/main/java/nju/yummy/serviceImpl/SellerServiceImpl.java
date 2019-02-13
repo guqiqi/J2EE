@@ -6,7 +6,6 @@ import nju.yummy.entity.DiscountTableEntity;
 import nju.yummy.entity.FoodEntity;
 import nju.yummy.entity.SellerEntity;
 import nju.yummy.service.SellerService;
-import nju.yummy.util.Const;
 import nju.yummy.util.DateToTimestamp;
 import nju.yummy.util.SellerStatus;
 
@@ -85,11 +84,12 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public boolean modifyInfo(String sellerId, String password, String name, String type, String address, String phone,
-                              String startHour, String endHour, String foodType, String discount, String icon) {
+                              String startHour, String endHour, String icon, int status) {
+        SellerEntity sellerEntity1 = sellerDao.getSellerEntity(sellerId);
         SellerEntity sellerEntity = new SellerEntity(sellerId, password, name, type, address, phone, startHour,
-                endHour, 1, foodType, discount, icon);
+                endHour, status, sellerEntity1.getFoodType(), sellerEntity1.getDiscount(), icon);
 
-        sellerEntity.setOrderCount(sellerDao.getSellerEntity(sellerId).getOrderCount());
+        sellerEntity.setOrderCount(sellerEntity1.getOrderCount());
         return sellerDao.updateSeller(sellerEntity);
     }
 
@@ -156,14 +156,19 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public boolean addGroupDiscount(String sellerId, List<Integer> foodIds, double discountMoney) {
-        String foods = "";
-        for (Integer i : foodIds) {
-            foods = foods + Const.regix;
-        }
-        foods = foods.substring(0, foods.length() - Const.regix.length());
-        DiscountTableEntity discountTableEntity = new DiscountTableEntity(sellerId, discountMoney, foods);
+    public boolean addGroupDiscount(String sellerId, String foodIds, String foodNames, double discountMoney,
+                                    double money, Date startTime, Date endTime) {
+        DiscountTableEntity discountTableEntity = new DiscountTableEntity(sellerId, discountMoney, money, foodIds,
+                foodNames, startTime, endTime);
         return sellerDao.addGroupDiscount(discountTableEntity);
+    }
+
+    @Override
+    public boolean modifyGroupDiscount(Integer discountId, String sellerId, String foodIds, String foodNames, double discountMoney, double money, Date startTime, Date endTime) {
+        DiscountTableEntity discountTableEntity = new DiscountTableEntity(discountId, sellerId, discountMoney, money,
+                foodIds, foodNames, startTime, endTime);
+
+        return sellerDao.updateGroupDiscount(discountTableEntity);
     }
 
     @Override

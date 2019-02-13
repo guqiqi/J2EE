@@ -61,6 +61,7 @@
 </template>
 
 <script>
+  import global from '../../../static/Global'
   import SellerNavigation from "../../components/SellerNavigation"
 
   export default {
@@ -69,12 +70,12 @@
     data() {
       return {
         name: '',
-        type: '快餐便当',
+        type: '',
         address: '',
         phone: '',
-        startHour: '8:00 : 00',
-        endHour: '20:00 : 00',
-        icon: '../../static/uploadImages/347454.jpg',
+        startHour: '',
+        endHour: '',
+        icon: '',
         password: ''
       }
     },
@@ -82,6 +83,27 @@
       modifyInfo: function () {
         this.$router.push('/seller/edit')
       }
+    },
+    mounted() {
+      this.$axios({
+        method: 'get',
+        url: '/seller/info',
+        params: {
+          sellerId: global.userId
+        }
+      }).then(response => {
+        let data_ = response.data
+        this.name = data_.name
+        this.type = data_.type
+        this.address = data_.address
+        this.phone = data_.phone
+        this.startHour = data_.startHour.split('T')[1].split('.')[0]
+        this.endHour = data_.endHour.split('T')[1].split('.')[0]
+        this.icon = data_.icon
+        this.password = data_.password
+      }).catch(function (err) {
+        console.log(err)
+      })
     }
   }
 </script>

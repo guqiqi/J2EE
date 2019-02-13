@@ -148,6 +148,11 @@ public class SellerDaoImpl implements SellerDao {
     }
 
     @Override
+    public boolean updateGroupDiscount(DiscountTableEntity discountTableEntity) {
+        return daoUtil.update(discountTableEntity);
+    }
+
+    @Override
     public boolean deleteGroupDiscount(List<Integer> discountIds) {
         Session session = MySessionFactory.getSession();
         Transaction tx = session.beginTransaction();
