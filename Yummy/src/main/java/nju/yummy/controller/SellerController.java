@@ -237,8 +237,6 @@ public class SellerController {
     @RequestMapping(value = "/discount/composition/add", method = RequestMethod.POST,
             produces = "application/json;charset=UTF-8")
     public String addCompositionDiscount(@RequestBody JSONObject jsonParam) {
-        System.out.println(jsonParam);
-
         double discountMoney = jsonParam.getDouble("discountMoney");
         double money = jsonParam.getDouble("money");
         String sellerId = jsonParam.getString("sellerId");
@@ -264,7 +262,6 @@ public class SellerController {
     @RequestMapping(value = "/discount/composition/modify", method = RequestMethod.POST,
             produces = "application/json;charset=UTF-8")
     public String modifyCompositionDiscount(@RequestBody JSONObject jsonParam) {
-        System.out.println(jsonParam);
         Integer discountId = jsonParam.getInteger("discountId");
         double discountMoney = jsonParam.getDouble("discountMoney");
         double money = jsonParam.getDouble("money");
