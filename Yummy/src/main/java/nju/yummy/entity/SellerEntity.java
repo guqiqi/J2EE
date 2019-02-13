@@ -9,7 +9,7 @@ public class SellerEntity {
     private String sellerId;
     private String password;
     private String name;
-    private Integer type;
+    private String type;
     private String address;
     private String phone;
     private String startHour;
@@ -23,7 +23,8 @@ public class SellerEntity {
     public SellerEntity() {
     }
 
-    public SellerEntity(String sellerId, String password, String name, Integer type, String address, String phone, String startHour, String endHour, Integer status, String foodType, String discount, String icon) {
+    public SellerEntity(String sellerId, String password, String name, String type, String address, String phone,
+                        String startHour, String endHour, Integer status, String foodType, String discount, String icon) {
         this.sellerId = sellerId;
         this.password = password;
         this.name = name;
@@ -71,11 +72,11 @@ public class SellerEntity {
 
     @Basic
     @Column(name = "type")
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 

@@ -107,7 +107,7 @@ public class SellerDaoImpl implements SellerDao {
         tx.commit();
         session.close();
 
-        return false;
+        return true;
     }
 
     @Override

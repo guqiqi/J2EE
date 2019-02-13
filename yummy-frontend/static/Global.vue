@@ -1,5 +1,14 @@
 <script>
   let userId = ''
+  let startHour = new Date()
+  startHour.setHours(8)
+  startHour.setMinutes(0)
+  startHour.setSeconds(0)
+
+  let endHour = new Date()
+  endHour.setHours(20)
+  endHour.setMinutes(0)
+  endHour.setSeconds(0)
 
   function setUserId(userId) {
     this.userId = userId
@@ -15,7 +24,7 @@
   }
 
   export default {
-    userId, getLevel, setUserId
+    userId, getLevel, setUserId, startHour, endHour
   }
 </script>
 

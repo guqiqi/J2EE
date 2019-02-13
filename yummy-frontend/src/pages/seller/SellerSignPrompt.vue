@@ -19,6 +19,10 @@
       return {
         sellerId: this.$route.params.sellerId,
       }
+    },
+    mounted(){
+      console.log(this.$route)
+      console.log(this.$route.params)
     }
   }
 </script>

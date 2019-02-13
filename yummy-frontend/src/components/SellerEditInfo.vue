@@ -89,6 +89,7 @@
 </template>
 
 <script>
+  import Global from '../../static/Global'
   export default {
     name: "seller-edit-info",
     data() {
@@ -148,11 +149,11 @@
       },
       startHour: {
         type: String,
-        default: '8:00 : 00'
+        default: Global.startHour
       },
       endHour: {
         type: String,
-        default: '20:00 : 00'
+        default: Global.endHour
       },
       icon: {
         type: String,
@@ -165,13 +166,72 @@
     },
     methods: {
       register: function () {
-        // TODO 注册
-
-        this.$router.push({name: 'sellerPrompt', params: {sellerId: '233455'}})
+        let sellerId = ''
+        this.isLoading = false
+        // 注册
+        this.$axios({
+          method: 'post',
+          url: '/seller/register',
+          data:{
+            name: this.name,
+            type: this.type,
+            address: this.address,
+            phone: this.phone,
+            startHour: this.startHour,
+            endHour: this.endHour,
+            icon: this.icon,
+            password: this.password,
+          }
+        }).then(response=>{
+          console.log(response)
+          this.isLoading = false
+          if(response.data.isSuccess){
+            console.log(response.data)
+            sellerId = response.data.sellerId
+            this.$router.push({name: 'sellerPrompt', params: {sellerId: sellerId}})
+          }
+          else {
+            this.$alert('系统繁忙，请稍后再试', '提示', {
+              confirmButtonText: '确定',
+            });
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
       },
       modify: function () {
         // TODO 修改
-        console.log(this.name)
+        this.isLoading = true
+        this.$axios({
+          method: 'post',
+          url: '/seller/modify',
+          data:{
+            name: this.name,
+            type: this.type,
+            address: this.address,
+            phone: this.phone,
+            startHour: this.startHour,
+            endHour: this.endHour,
+            icon: this.icon,
+            password: this.password,
+            sellerId: Global.userId
+          }
+        }).then(response=>{
+          this.isLoading = false
+          if(response.data.isSuccess){
+            this.$alert('信息已提交，请耐心等待系统审核', '提示', {
+              confirmButtonText: '确定',
+            });
+            this.$router.push("/seller/home")
+          }
+          else {
+            this.$alert('系统繁忙，请稍后再试', '提示', {
+              confirmButtonText: '确定',
+            });
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
       },
       handleAvatarSuccess(res, file) {
         let now = new Date()

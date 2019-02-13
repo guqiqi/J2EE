@@ -23,10 +23,29 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public String register(String password, String name, int type, String address, String phone, String startHour, String endHour, String foodType, String discount, String icon) {
+    public String login(String sellerId, String password) {
+        SellerEntity sellerEntity = sellerDao.getSellerEntity(sellerId);
+        if (sellerEntity == null)
+            return "该账号不存在";
+        else if (sellerEntity.getPassword().equals(password)) {
+            switch (sellerEntity.getStatus()) {
+                case 0:
+                    return "您的信息没有初始化,请先初始化商家信息";
+                case 1:
+                    return "您的信息正在加速审核中，请耐心等待";
+                default:
+                    return "成功登陆";
+            }
+        } else
+            return "账号密码不匹配";
+    }
+
+    @Override
+    public String register(String password, String name, String type, String address, String phone, String startHour,
+                           String endHour, String icon) {
         String sellerId = generateSellerId();
         SellerEntity sellerEntity = new SellerEntity(sellerId, password, name, type, address, phone, startHour,
-                endHour, 1, foodType, discount, icon);
+                endHour, 1, "", "", icon);
         sellerDao.addSeller(sellerEntity);
         return sellerId;
     }
@@ -65,7 +84,8 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public boolean modifyInfo(String sellerId, String password, String name, int type, String address, String phone, String startHour, String endHour, String foodType, String discount, String icon) {
+    public boolean modifyInfo(String sellerId, String password, String name, String type, String address, String phone,
+                              String startHour, String endHour, String foodType, String discount, String icon) {
         SellerEntity sellerEntity = new SellerEntity(sellerId, password, name, type, address, phone, startHour,
                 endHour, 1, foodType, discount, icon);
 
@@ -96,7 +116,7 @@ public class SellerServiceImpl implements SellerService {
         FoodEntity foodEntity = new FoodEntity(sellerId, name, photo, foodType, money, discountMonty,
                 DateToTimestamp.toTimeStamp(startTime), DateToTimestamp.toTimeStamp(endTime), stock, description);
         foodEntity.setFoodId(foodId);
-        return sellerDao.addFood(foodEntity);
+        return sellerDao.updateFood(foodEntity);
     }
 
     @Override
@@ -112,6 +132,22 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public List<FoodEntity> getFoodListBySeller(String sellerId) {
         return sellerDao.getFoodListBySeller(sellerId);
+    }
+
+    @Override
+    public boolean modifyFoodType(String sellerId, String foodType) {
+        SellerEntity sellerEntity = sellerDao.getSellerEntity(sellerId);
+        sellerEntity.setFoodType(foodType);
+
+        return sellerDao.updateSeller(sellerEntity);
+    }
+
+    @Override
+    public boolean modifyCustomerDiscount(String sellerId, String discount) {
+        SellerEntity sellerEntity = sellerDao.getSellerEntity(sellerId);
+        sellerEntity.setDiscount(discount);
+
+        return sellerDao.updateSeller(sellerEntity);
     }
 
     @Override

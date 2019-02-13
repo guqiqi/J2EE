@@ -19,7 +19,7 @@
             <el-radio-button v-for="title in this.subType" :label="title"/>
           </el-radio-group>
 
-          <el-col :span="12" v-for="food in foodList">
+          <el-col :span="12" v-for="food in tempFoodList">
             <el-card shadow="always"
                      style="margin-top: 10px; padding: 0 0 10px;margin-left: 10px; margin-right: 10px">
               <el-col :span="10">
@@ -135,7 +135,7 @@
           <el-input v-model="tempFoodDetail.description" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="商品分类" label-width="80px">
-          <el-select v-model="tempFoodDetail.type" placeholder="请选择" style="width: 100%">
+          <el-select v-model="tempFoodDetail.foodType" placeholder="请选择" style="width: 100%">
             <el-option
               v-for="item in this.subType"
               :key="item"
@@ -207,7 +207,7 @@
         @blur="handleInputConfirm"
       >
       </el-input>
-      <el-button v-else class="button-new-tag" style="margin-top: 10px" size="small" @click="showInput">+ New Tag
+      <el-button v-else class="button-new-tag" style="margin-top: 10px" size="small" @click="showInput">新增分类
       </el-button>
 
       <div slot="footer" class="dialog-footer">
@@ -283,6 +283,7 @@
 <script>
   import SellerNavigation from "../../components/SellerNavigation"
   import ElRow from "element-ui/packages/row/src/row"
+  import global from '../../../static/Global'
 
   export default {
     components: {
@@ -298,46 +299,9 @@
         customerDiscountFormVisible: false,
         composedDiscountFormVisible: false,
         foodType: '全部商品',
-        subType: ['热销', '优惠', '面', '盖浇饭', '套餐'],
+        subType: [],
         tempFoodList: [],
-        foodList: [
-          {
-            foodId: 12,
-            name: '鱼香肉丝饭',
-            description: '好吃',
-            photo: '../../static/images/logo.png',
-            money: 20,
-            discountMoney: 13,
-            startTime: new Date(2019, 1, 20, 20, 20, 23),
-            endTime: '15:30',
-            type: '热销',
-            stock: 20
-          },
-          {
-            foodId: 13,
-            name: '鱼香肉丝饭',
-            description: '好吃',
-            photo: '../../static/images/logo.png',
-            money: 20,
-            discountMoney: 13,
-            startTime: new Date(2019, 1, 20, 20, 20, 23),
-            endTime: '1 : 10:00',
-            type: '热销',
-            stock: 20
-          },
-          {
-            foodId: 14,
-            name: '鱼香肉丝饭',
-            description: '好吃',
-            photo: '../../static/images/logo.png',
-            money: 20,
-            discountMoney: 13,
-            startTime: new Date(2019, 1, 20, 20, 20),
-            endTime: '20:00',
-            type: '热销',
-            stock: 20
-          }
-        ],
+        foodList: [],
         customerDiscount: [1, 0.9, 0.8], //店铺会员优惠价
         composedDiscounts: [ //店铺组合优惠列表
           {
@@ -367,16 +331,16 @@
         },
         tempCustomerDiscount: [], //用户希望修改的会员优惠
         tempFoodDetail: {
-          foodId: 14,
-          name: '鱼香肉丝饭',
-          description: '好吃',
-          photo: '../../static/images/logo.png',
-          money: 20,
-          type: '热销',
-          discountMoney: 13,
-          startTime: new Date(2019, 1, 20, 20, 20, 23),
-          endTime: '12 : 2:00',
-          stock: 20
+          foodId: 0,
+          name: '',
+          description: '',
+          photo: '',
+          money: 0,
+          foodType: '',
+          discountMoney: 0,
+          startTime: global.startHour,
+          endTime: global.endHour,
+          stock: 0
         }
       }
     },
@@ -439,27 +403,104 @@
         this.getFoodsBySubType()
       },
       addFood: function () {
-        // TODO 增加商品
+        // 增加商品
+        this.$axios({
+          method: 'post',
+          url: '/seller/food/add',
+          data:{
+            sellerId: global.userId,
+            name: this.tempFoodDetail.name,
+            description: this.tempFoodDetail.description,
+            photo: this.tempFoodDetail.photo,
+            money: this.tempFoodDetail.money,
+            discountMoney: this.tempFoodDetail.discountMoney,
+            startTime: this.tempFoodDetail.startTime,
+            endTime: this.tempFoodDetail.endTime,
+            stock: this.tempFoodDetail.stock,
+            foodType: this.tempFoodDetail.type,
+          }
+        }).then(response=>{
+          this.isLoading = false
+          if(response.data.isSuccess){
+            this.getAllFoods()
+            this.$message({
+              message: '商品添加成功',
+              type: 'success'
+            });
+          }
+          else {
+            this.$alert('系统繁忙，请稍后再试', '提示', {
+              confirmButtonText: '确定',
+            });
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
 
         this.foodFormVisible = false
-        this.getFoodsBySubType()
       },
       modifyFood: function (foodId) {
-        // TODO 修改商品
-
-        this.foodFormVisible = false
-        this.getFoodsBySubType()
+        // 修改商品
+        this.$axios({
+          method: 'post',
+          url: '/seller/food/modify',
+          data:{
+            sellerId: global.userId,
+            foodId: this.tempFoodDetail.foodId,
+            name: this.tempFoodDetail.name,
+            description: this.tempFoodDetail.description,
+            photo: this.tempFoodDetail.photo,
+            money: this.tempFoodDetail.money,
+            discountMoney: this.tempFoodDetail.discountMoney,
+            startTime: this.tempFoodDetail.startTime,
+            endTime: this.tempFoodDetail.endTime,
+            stock: this.tempFoodDetail.stock,
+            foodType: this.tempFoodDetail.foodType,
+          }
+        }).then(response=>{
+          this.isLoading = false
+          if(response.data.isSuccess){
+            this.foodFormVisible = false
+            this.getAllFoods()
+            this.$message({
+              message: '商品修改成功',
+              type: 'success'
+            });
+          }
+          else {
+            this.$alert('系统繁忙，请稍后再试', '提示', {
+              confirmButtonText: '确定',
+            });
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
       },
       deleteFood: function (foodId) {
-        // TODO 删除商品
-        for (let i = 0; i < this.foodList.length; i++) {
-          if (this.foodList[i].foodId === foodId) {
-            this.foodList.splice(i, 1)
-            break
+        // 删除商品
+        this.$axios({
+          method: 'delete',
+          url: '/seller/food/delete',
+          params:{
+            foodId: foodId
           }
-        }
-
-        this.getFoodsBySubType()
+        }).then(response=>{
+          this.isLoading = false
+          if(response.data.isSuccess){
+            this.getAllFoods()
+            this.$message({
+              message: '商品删除成功',
+              type: 'success'
+            });
+          }
+          else {
+            this.$alert('系统繁忙，请稍后再试', '提示', {
+              confirmButtonText: '确定',
+            });
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
       },
       startModifyFood: function (foodId) {
         this.foodFormVisible = true
@@ -482,10 +523,10 @@
           photo: '',
           money: 0.0,
           discountMoney: 0.0,
-          startTime: new Date(),
-          endTime: new Date(),
+          startTime: global.startHour,
+          endTime: global.endHour,
           stock: 99,
-          type: this.subType[0],
+          foodType: this.subType[0],
         }
       },
       startModifyType: function () {
@@ -525,13 +566,25 @@
         this.isAdd = false
       },
       modifyType: function () {
-        // TODO 修改子分类
-
-        this.foodTypeFormVisible = false
+        // 修改子分类
         this.subType = this.tempFoodType
 
-        this.getSubTypes()
-        this.getFoodsBySubType()
+        this.$axios({
+          method: 'post',
+          url: '/seller/type/modify',
+          data: {
+            sellerId: global.userId,
+            foodType: this.subType
+          }
+        }).then(response=>{
+          if(response.data.isSuccess){
+            this.foodTypeFormVisible = false
+            this.getSubTypes()
+            this.getAllFoods()
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
       },
       deleteComposedDiscount: function (discountId) {
         // TODO 删除组合优惠
@@ -563,19 +616,40 @@
         this.tempComposedDiscount.money = money
       },
       modifyCustomerDiscount: function () {
-        console.log(this.customerDiscount)
-        // TODO 修改店铺会员优惠
-        this.customerDiscount = [this.tempCustomerDiscount[0], this.tempCustomerDiscount[1], this.tempCustomerDiscount[2]]
-        this.customerDiscountFormVisible = false
-
-        this.getCustomerDiscount()
+        // 修改店铺会员优惠
+        this.$axios({
+          method: 'post',
+          url: '/seller/discount/customer/modify',
+          data: {
+            sellerId: global.userId,
+            discount: this.tempCustomerDiscount
+          }
+        }).then(response=>{
+          if(response.data.isSuccess){
+            this.customerDiscount = [this.tempCustomerDiscount[0], this.tempCustomerDiscount[1], this.tempCustomerDiscount[2]]
+            this.customerDiscountFormVisible = false
+            this.getCustomerDiscount()
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
       },
       getSubTypes: function () {
-        // TODO 加载子分类
+        // 加载子分类
+        this.$axios({
+          method: 'get',
+          url: '/seller/info',
+          params: {
+            sellerId: global.userId
+          }
+        }).then(response=>{
+          let data_ = response.data
+          this.subType = data_.foodType
+        }).catch(function(err){
+          console.log(err)
+        })
       },
       getFoodsBySubType: function () {
-        this.getAllFoods()
-
         if (this.foodType === '全部商品') {
           this.tempFoodList = this.foodList
         }
@@ -583,24 +657,52 @@
           this.tempFoodList = []
 
           for (let i = 0; i < this.foodList.length; i++) {
-            if (this.foodList[i].type === this.foodType) {
+            if (this.foodList[i].foodType === this.foodType) {
               this.tempFoodList.push(this.foodList[i])
             }
           }
         }
       },
       getCustomerDiscount: function () {
-        // TODO 加载店铺会员优惠
+        // 加载店铺会员优惠
+        this.$axios({
+          method: 'get',
+          url: '/seller/info',
+          params: {
+            sellerId: global.userId
+          }
+        }).then(response=>{
+          let data_ = response.data
+          this.customerDiscount = data_.discount
+        }).catch(function(err){
+          console.log(err)
+        })
       },
       getComposedDiscount: function () {
         // TODO 加载店铺组合优惠
       },
       getAllFoods: function () {
-        // TODO 得到本店所有商品
+        // 得到本店所有商品
+        this.$axios({
+          method: 'get',
+          url: '/seller/food/all',
+          params: {
+            sellerId: global.userId
+          }
+        }).then(response=>{
+          let data_ = response.data
+          this.foodList = data_.foodList
+          this.getFoodsBySubType()
+        }).catch(function(err){
+          console.log(err)
+        })
       }
     },
     mounted() {
-      this.tempFoodList = this.foodList
+      this.getAllFoods()
+      this.getCustomerDiscount()
+      this.getComposedDiscount()
+      this.getSubTypes()
     }
   }
 </script>

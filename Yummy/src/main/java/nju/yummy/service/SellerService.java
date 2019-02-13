@@ -9,6 +9,15 @@ import java.util.List;
 
 public interface SellerService {
     /**
+     * 登陆验证账号密码
+     *
+     * @param sellerId 编号
+     * @param password 密码
+     * @return 是否成功
+     */
+    public String login(String sellerId, String password);
+
+    /**
      * 餐厅注册
      *
      * @param password  登陆密码
@@ -18,13 +27,11 @@ public interface SellerService {
      * @param phone     联系电话
      * @param startHour 营业开始时间
      * @param endHour   营业结束时间
-     * @param foodType  食物分类
-     * @param discount  餐厅优惠政策
      * @param icon      餐厅图标
      * @return 餐厅编号
      */
-    public String register(String password, String name, int type, String address, String phone, String startHour,
-                           String endHour, String foodType, String discount, String icon);
+    public String register(String password, String name, String type, String address, String phone, String startHour,
+                           String endHour, String icon);
 
     /**
      * 审核餐厅
@@ -51,7 +58,7 @@ public interface SellerService {
      * @param icon      餐厅图标
      * @return 是否提交
      */
-    public boolean modifyInfo(String sellerId, String password, String name, int type, String address, String phone,
+    public boolean modifyInfo(String sellerId, String password, String name, String type, String address, String phone,
                               String startHour, String endHour, String foodType, String discount, String icon);
 
     /**
@@ -104,7 +111,7 @@ public interface SellerService {
      * @return 是否修改成功
      */
     public boolean modifyFood(int foodId, String sellerId, String name, String photo, String foodType, double money,
-                           double discountMonty, Date startTime, Date endTime, int stock, String description);
+                              double discountMonty, Date startTime, Date endTime, int stock, String description);
 
 
     /**
@@ -130,6 +137,24 @@ public interface SellerService {
      * @return 食物列表
      */
     public List<FoodEntity> getFoodListBySeller(String sellerId);
+
+    /**
+     * 修改餐厅商品分类
+     *
+     * @param sellerId 商家编号
+     * @param foodType 新的商品分类
+     * @return 是否修改成功
+     */
+    public boolean modifyFoodType(String sellerId, String foodType);
+
+    /**
+     * 修改会员优惠
+     *
+     * @param sellerId 商家编号
+     * @param discount 新的会员优惠
+     * @return 是否修改成功
+     */
+    public boolean modifyCustomerDiscount(String sellerId, String discount);
 
     /**
      * 得到一个餐厅的组合优惠列表
