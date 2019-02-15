@@ -6,10 +6,7 @@ import nju.yummy.dao.SellerDao;
 import nju.yummy.daoImpl.CustomerDaoImpl;
 import nju.yummy.daoImpl.OrderDaoImpl;
 import nju.yummy.daoImpl.SellerDaoImpl;
-import nju.yummy.entity.CustomerEntity;
-import nju.yummy.entity.DiscountTableEntity;
-import nju.yummy.entity.FoodEntity;
-import nju.yummy.entity.OrderEntity;
+import nju.yummy.entity.*;
 import nju.yummy.service.OrderService;
 import nju.yummy.util.Const;
 import nju.yummy.util.DateToTimestamp;
@@ -43,9 +40,15 @@ public class OrderServiceImpl implements OrderService {
                         int addressId) {
         String orderId = generateOrderId();
         OrderEntity orderEntity = new OrderEntity(orderId, email, sellerId, getTotalMoney(foods, amount),
-                getDiscountMoney(email, sellerId, foods, amount), DateToTimestamp.toTimeStamp(reachTime));
+                getDiscountMoney(email, sellerId, foods, amount), DateToTimestamp.toTimeStamp(reachTime), addressId);
 
         orderDao.addOrder(orderEntity);
+
+        // 店铺销量增加
+        SellerEntity sellerEntity = sellerDao.getSellerEntity(sellerId);
+        sellerEntity.setOrderCount(sellerEntity.getOrderCount() + 1);
+        sellerDao.updateSeller(sellerEntity);
+
         return orderEntity;
     }
 
@@ -73,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private double getDiscountMoney(String email, String sellerId, List<Integer> foods, List<Integer> amount) {
-        // TODO 计算折后价
+        // 计算折后价
         double total = 0.0;
 
         double point = customerDao.getCustomer(email).getPoint();
@@ -111,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
             for(int j = 0; j < foods.size(); j++){
                 if(toFindFoodIds.contains(foods.get(j))){
                     maxSize = maxSize > amount.get(j) ? maxSize : amount.get(j);
-                    // TODO 这边需要看看是删除索引还是数字
+                    // 这边需要看看是删除索引还是数字
                     toFindFoodIds.remove(toFindFoodIds.indexOf(foods.get(j)));
                 }
             }

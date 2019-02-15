@@ -54,6 +54,20 @@ public class CustomerDaoImpl implements CustomerDao{
     }
 
     @Override
+    public AddressEntity getAddress(int addressId) {
+        /* 如果用户不存在则返回null */
+        Session session = MySessionFactory.getSession();
+        Transaction tx = session.beginTransaction();
+
+        AddressEntity addressEntity = session.get(AddressEntity.class, addressId);
+
+        tx.commit();
+
+        session.close();
+        return addressEntity;
+    }
+
+    @Override
     public boolean addAddress(AddressEntity addressEntity) {
         return daoUtil.add(addressEntity);
     }

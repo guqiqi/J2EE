@@ -25,8 +25,8 @@ public class OrderDaoImpl implements OrderDao {
 
         Query query;
         if(orderStatus.equals(OrderStatus.FINISHED)){
-            query = session.createQuery("update OrderEntity o set o.status = :newStatus where orderId = :orderId and " +
-                    "o.finishTime = :finishTime");
+            query = session.createQuery("update OrderEntity o set o.status = :newStatus , " +
+                    "o.finishTime =:finishTime where orderId = :orderId");
             query.setParameter("newStatus", orderStatus.getIndex());
             query.setParameter("orderId", orderId);
             query.setParameter("finishTime", new Date());

@@ -2,9 +2,12 @@ package nju.yummy.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import nju.yummy.entity.AddressEntity;
 import nju.yummy.entity.OrderEntity;
+import nju.yummy.service.CustomerService;
 import nju.yummy.service.OrderService;
 import nju.yummy.service.SellerService;
+import nju.yummy.serviceImpl.CustomerServiceImpl;
 import nju.yummy.serviceImpl.OrderServiceImpl;
 import nju.yummy.serviceImpl.SellerServiceImpl;
 import nju.yummy.util.Const;
@@ -18,10 +21,12 @@ import java.util.List;
 public class OrderController {
     private OrderService orderService;
     private SellerService sellerService;
+    private CustomerService customerService;
 
     public OrderController() {
         orderService = new OrderServiceImpl();
         sellerService = new SellerServiceImpl();
+        customerService = new CustomerServiceImpl();
     }
 
     @ResponseBody
@@ -65,9 +70,8 @@ public class OrderController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/pay", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/pay", method = RequestMethod.PATCH, produces = "application/json;charset=UTF-8")
     public String payOrder(String orderId) {
-        // TODO
         JSONObject result = new JSONObject();
 
         result.put("isSuccess", orderService.pay(orderId));
@@ -76,9 +80,8 @@ public class OrderController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/cancel", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/cancel", method = RequestMethod.PATCH, produces = "application/json;charset=UTF-8")
     public String cancelOrder(String orderId) {
-        // TODO
         JSONObject result = new JSONObject();
 
         result.put("isSuccess", orderService.cancel(orderId));
@@ -87,9 +90,8 @@ public class OrderController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/deliver", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/deliver", method = RequestMethod.PATCH, produces = "application/json;charset=UTF-8")
     public String startDeliverOrder(String orderId) {
-        // TODO
         JSONObject result = new JSONObject();
 
         result.put("isSuccess", orderService.startDeliver(orderId));
@@ -98,9 +100,8 @@ public class OrderController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/finish", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/finish", method = RequestMethod.PATCH, produces = "application/json;charset=UTF-8")
     public String finishOrder(String orderId) {
-        // TODO
         JSONObject result = new JSONObject();
 
         result.put("isSuccess", orderService.confirmReceive(orderId));
@@ -111,8 +112,6 @@ public class OrderController {
     @ResponseBody
     @RequestMapping(value = "/customer/order", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String getCustomerOrder(String email) {
-        // TODO
-
         JSONObject result = new JSONObject();
 
         JSONArray jsonArray = new JSONArray();
@@ -140,7 +139,28 @@ public class OrderController {
     public String getSellerOrder(String sellerId) {
         JSONObject result = new JSONObject();
 
-        result.put("orders", orderService.getSellerOrders(sellerId));
+        JSONArray jsonArray = new JSONArray();
+
+        List<OrderEntity> orderEntities = orderService.getSellerOrders(sellerId);
+
+        for(OrderEntity orderEntity: orderEntities){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("orderId", orderEntity.getOrderId());
+            jsonObject.put("placeTime", orderEntity.getPlaceTime());
+            jsonObject.put("status", orderEntity.getStatus());
+            jsonObject.put("payMoney", orderEntity.getPayMoney());
+            jsonObject.put("receiveTime", orderEntity.getReachTime());
+
+            AddressEntity addressEntity = customerService.getAddressById(orderEntity.getAddressId());
+
+            jsonObject.put("receiver", addressEntity.getReceiver());
+            jsonObject.put("detail", addressEntity.getDetail());
+            jsonObject.put("phone", addressEntity.getPhone());
+
+            jsonArray.add(jsonObject);
+        }
+
+        result.put("orders", jsonArray);
 
         return result.toJSONString();
     }

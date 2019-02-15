@@ -71,6 +71,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public AddressEntity getAddressById(int addressId) {
+        return customerDao.getAddress(addressId);
+    }
+
+    @Override
     public List<AddressEntity> getAddressByEmail(String email) {
         return customerDao.getAddressByEmail(email);
     }

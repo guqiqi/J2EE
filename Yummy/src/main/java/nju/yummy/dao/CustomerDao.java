@@ -19,6 +19,8 @@ public interface CustomerDao {
 
     public CustomerEntity getCustomer(String email);
 
+    public AddressEntity getAddress(int addressId);
+
     public boolean addAddress(AddressEntity addressEntity);
 
     public boolean updateAddress(AddressEntity addressEntity);

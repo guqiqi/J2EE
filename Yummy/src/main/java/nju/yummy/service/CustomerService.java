@@ -90,6 +90,14 @@ public interface CustomerService {
     public boolean deleteAddress(int addressId);
 
     /**
+     * 得到某个送餐地址
+     *
+     * @param addressId 地址编号
+     * @return 地址详情
+     */
+    public AddressEntity getAddressById(int addressId);
+
+    /**
      * 得到用户全部送餐地址
      *
      * @param email 用户邮箱

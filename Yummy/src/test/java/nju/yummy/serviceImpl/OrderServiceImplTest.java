@@ -20,4 +20,9 @@ public class OrderServiceImplTest {
         amount.add(1);
         new OrderServiceImpl().prePlaceOrder("222", "XgZGiwT", foods, amount);
     }
+
+    @Test
+    public void confirmReceive() {
+        new OrderServiceImpl().confirmReceive("930001324810672107847242");
+    }
 }

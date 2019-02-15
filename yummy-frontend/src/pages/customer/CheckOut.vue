@@ -174,13 +174,12 @@
           num.push(this.foodList[i].num)
         }
 
-        // TODO 用户ID设置
         this.$axios({
           method: 'post',
           url: '/order/pre/place',
           data: {
             sellerId: this.$route.params.sellerId,
-            email: '222',
+            email: global.userId,
             foodIds: foodId,
             amount: num
           }
@@ -242,10 +241,9 @@
         })
       },
       payMoney: function () {
-        // TODO 付款
+        // 付款
         this.dialogVisible = false
 
-        // TODO 用户ID设置
         this.$axios({
           method: 'get',
           url: '/order/pay',
@@ -276,7 +274,7 @@
 
       },
       cancelPay: function () {
-        // TODO 取消付款，此时已经下单，但是需要去我的订单那边付款
+        // 取消付款，此时已经下单，但是需要去我的订单那边付款
         this.dialogVisible = false
 
         this.$message({
@@ -293,8 +291,6 @@
 
       // 计算优惠
       this.calculateTotalMoney()
-
-
     }
   }
 </script>

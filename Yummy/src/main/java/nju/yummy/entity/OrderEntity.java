@@ -16,11 +16,13 @@ public class OrderEntity {
     private Double totalMoney;
     private Double payMoney;
     private Timestamp reachTime;
+    private Integer addressId;
 
     public OrderEntity() {
     }
 
-    public OrderEntity(String orderId, String email, String sellerId, Double totalMoney, Double payMoney, Timestamp reachTime) {
+    public OrderEntity(String orderId, String email, String sellerId, Double totalMoney, Double payMoney,
+                       Timestamp reachTime, Integer addressId) {
         this.orderId = orderId;
         this.email = email;
         this.sellerId = sellerId;
@@ -29,6 +31,7 @@ public class OrderEntity {
         this.totalMoney = totalMoney;
         this.payMoney = payMoney;
         this.reachTime = reachTime;
+        this.addressId = addressId;
     }
 
     public OrderEntity(Double totalMoney, Double payMoney) {
@@ -144,5 +147,15 @@ public class OrderEntity {
 
     public void setReachTime(Timestamp reachTime) {
         this.reachTime = reachTime;
+    }
+
+    @Basic
+    @Column(name = "addressId")
+    public Integer getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Integer addressId) {
+        this.addressId = addressId;
     }
 }
