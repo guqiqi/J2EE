@@ -38,6 +38,7 @@
 
 <script>
   import SellerNavigation from "../../components/SellerNavigation"
+  import global from '../../../static/Global'
 
   export default {
     components: {SellerNavigation},
@@ -114,9 +115,25 @@
             break
           }
         }
+      },
+      getAllOrder: function () {
+        this.$axios({
+          method: 'get',
+          url: '/order/seller/order',
+          params: {
+            sellerId: global.userId
+          }
+        }).then(response => {
+          console.log(response.data.orders)
+          this.orderList = response.data.orders
+        }).catch(function (err) {
+          console.log(err)
+        })
       }
+    },
+    mounted(){
+      this.getAllOrder()
     }
-
   }
 </script>
 

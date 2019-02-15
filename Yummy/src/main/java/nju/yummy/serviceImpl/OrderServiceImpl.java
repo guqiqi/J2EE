@@ -7,16 +7,15 @@ import nju.yummy.daoImpl.CustomerDaoImpl;
 import nju.yummy.daoImpl.OrderDaoImpl;
 import nju.yummy.daoImpl.SellerDaoImpl;
 import nju.yummy.entity.CustomerEntity;
+import nju.yummy.entity.DiscountTableEntity;
 import nju.yummy.entity.FoodEntity;
 import nju.yummy.entity.OrderEntity;
 import nju.yummy.service.OrderService;
+import nju.yummy.util.Const;
 import nju.yummy.util.DateToTimestamp;
 import nju.yummy.util.OrderStatus;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class OrderServiceImpl implements OrderService {
     private OrderDao orderDao;
@@ -31,24 +30,37 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderEntity prePlaceOrder(String email, String sellerId, List<Integer> foods, List<Integer> amount) {
-        OrderEntity orderEntity = new OrderEntity(getTotalMoney(foods, amount),
-                getDiscountMoney(email, sellerId, foods, amount));
-
-        return orderEntity;
+        if (isFoodEnough(foods, amount)) {
+            return new OrderEntity(getTotalMoney(foods, amount),
+                    getDiscountMoney(email, sellerId, foods, amount));
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public String placeOrder(String email, String sellerId, List<Integer> foods, List<Integer> amount, Date reachTime, int addressId) {
+    public OrderEntity placeOrder(String email, String sellerId, List<Integer> foods, List<Integer> amount, Date reachTime,
+                        int addressId) {
         String orderId = generateOrderId();
         OrderEntity orderEntity = new OrderEntity(orderId, email, sellerId, getTotalMoney(foods, amount),
                 getDiscountMoney(email, sellerId, foods, amount), DateToTimestamp.toTimeStamp(reachTime));
 
         orderDao.addOrder(orderEntity);
-        return orderId;
+        return orderEntity;
+    }
+
+    private boolean isFoodEnough(List<Integer> foods, List<Integer> amount) {
+        FoodEntity foodEntity;
+        for (int i = 0; i < foods.size(); i++) {
+            foodEntity = sellerDao.getFoodById(foods.get(i));
+            if (foodEntity.getStock() < amount.get(i))
+                return false;
+        }
+        return true;
     }
 
     // 计算没有折扣的总价
-    private double getTotalMoney(List<Integer> foods, List<Integer> amount){
+    private double getTotalMoney(List<Integer> foods, List<Integer> amount) {
         double total = 0.0;
         FoodEntity foodEntity;
 
@@ -60,31 +72,91 @@ public class OrderServiceImpl implements OrderService {
         return total;
     }
 
-    private double getDiscountMoney(String email, String sellerId, List<Integer> foods, List<Integer> amount){
+    private double getDiscountMoney(String email, String sellerId, List<Integer> foods, List<Integer> amount) {
         // TODO 计算折后价
-        return 0.0;
+        double total = 0.0;
+
+        double point = customerDao.getCustomer(email).getPoint();
+
+        int level = 0;
+        if (point >= 100)
+            level = 1;
+        if (point >= 500)
+            level = 2;
+
+        // 店铺给相应等级的会员优惠
+        double customerDiscount =
+                Double.parseDouble(sellerDao.getSellerEntity(sellerId).getDiscount().split(Const.regix)[level]);
+
+        // yummy平台给用户的会员优惠
+        double yummyDiscount = Const.discount[level];
+
+        // 组合优惠
+        List<DiscountTableEntity> discountTableEntities = sellerDao.getDiscountBySeller(sellerId);
+
+        for (int i = 0; i < discountTableEntities.size(); i++) {
+            String[] ids = discountTableEntities.get(i).getFoodIds().split(Const.regix);
+
+            // 应该含有的商品编号列表
+            List<Integer> foodIds = new ArrayList<>();
+            // 每找到一个满足条件的就要删去一个，以此判断是否满足条件
+            List<Integer> toFindFoodIds = new ArrayList<>();
+            for(String str: ids){
+                foodIds.add(Integer.parseInt(str));
+                toFindFoodIds.add(Integer.parseInt(str));
+            }
+
+            // 最多有几组满足条件
+            int maxSize = 0;
+            for(int j = 0; j < foods.size(); j++){
+                if(toFindFoodIds.contains(foods.get(j))){
+                    maxSize = maxSize > amount.get(j) ? maxSize : amount.get(j);
+                    // TODO 这边需要看看是删除索引还是数字
+                    toFindFoodIds.remove(toFindFoodIds.indexOf(foods.get(j)));
+                }
+            }
+
+            // 查看是否有满足条件的商品组合
+            if(toFindFoodIds.isEmpty()){
+                total += discountTableEntities.get(i).getDiscountMoney() * maxSize;
+
+                for(int m = 0; m < foodIds.size(); m++){
+                    amount.set(foods.indexOf(foodIds.get(m)), amount.get(foods.indexOf(foodIds.get(m))) - maxSize);
+                }
+            }
+        }
+
+        // 没有使用组合优惠
+        FoodEntity foodEntity;
+        for (int i = 0; i < foods.size(); i++) {
+            foodEntity = sellerDao.getFoodById(foods.get(i));
+            total += foodEntity.getDiscountMoney() * amount.get(i);
+        }
+
+        // 组合优惠结束后使用店铺优惠和平台优惠
+        return total * customerDiscount * yummyDiscount;
     }
 
-    private String generateOrderId(){
+    private String generateOrderId() {
         String str = generate11alphabets();
         List<OrderEntity> orderEntities = orderDao.getAllOrders();
         Set<String> orderIds = new HashSet<>();
         for (OrderEntity orderEntity : orderEntities) {
             orderIds.add(orderEntity.getOrderId());
         }
-        while (orderIds.contains(str)){
+        while (orderIds.contains(str)) {
             str = generate11alphabets();
         }
 
         return str;
     }
 
-    private String generate11alphabets(){
+    private String generate11alphabets() {
         String str = "";
         for (int i = 0; i < 24; i++) {
             double random = Math.random() * 10;
 
-            str = str + (int)random;
+            str = str + (int) random;
         }
         return str;
     }

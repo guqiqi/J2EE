@@ -5,13 +5,28 @@
     <el-row style="">
       <el-col :span="20" :offset="2">
         <el-col :span="4">
-          <img :src="photo" width="100%" height="100%"/>
+          <img :src="photo" width="100%" height="100%" style="margin-top: 20px"/>
         </el-col>
         <el-col :span="20">
           <el-row style="text-align: right; margin-right: 30px; margin-top: 40px; font-weight: bold; font-size: 25px">
             {{sellerName}}
           </el-row>
-          <el-row style="text-align: right; margin-right: 30px; margin-top: 60px;"> 销量: {{orderCount}}</el-row>
+          <el-row v-if="this.discount !== [1, 1, 1]" style="text-align: right; margin-right: 30px; margin-top: 20px;">
+            <span style="background-color: red; color: white; font-weight: bold; padding-right: 2px; padding-left: 2px; border-radius: 5px">折</span>
+            <span v-if="this.discount[0] !== 1">店铺对普通会员{{(this.discount[0]*100).toFixed(0)}}折优惠,</span>
+            <span v-if="this.discount[1] !== 1">对白银会员{{(this.discount[1]*100).toFixed(0)}}折优惠,</span>
+            <span v-if="this.discount[2] !== 1">对黄金会员{{(this.discount[2]*100).toFixed(0)}}折优惠</span>
+          </el-row>
+          <el-row  v-for="item in groupDiscount" style="text-align: right; margin-right: 30px; margin-top: 10px;">
+            <span style="background-color: red; color: white; font-weight: bold; padding-right: 2px; padding-left: 2px; border-radius: 5px">惠</span>
+            <span>
+               <span v-for="(name, index) in item.foodNames">
+                 {{name}}
+                 <span v-if="index !== item.foodNames.length - 1">➕</span>
+               </span>仅需<span style="color: red; font-weight: bold"> {{item.discountMoney}}</span>
+            </span>
+          </el-row>
+          <el-row style="text-align: right; margin-right: 30px; margin-top: 10px">销量: {{orderCount}}</el-row>
         </el-col>
       </el-col>
     </el-row>
@@ -19,12 +34,6 @@
       <el-col :span="20" :offset="2" style="margin-top: 10px">
         <el-tabs v-model="type">
           <el-tab-pane label="所有商品" name="all">
-            <!--<el-row>-->
-            <!--<el-radio-group v-model="subTitle" @change="modifyType" size="small">-->
-            <!--<el-radio-button :label="subList.type" v-for="subList in foodList"/>-->
-            <!--</el-radio-group>-->
-            <!--</el-row>-->
-
             <div v-for="subList in foodList">
               <el-row style="font-size: 24px; font-weight: bold; text-align: left; margin-top: 15px; margin-left: 10px">
                 {{subList.type}}
@@ -32,7 +41,7 @@
               <el-row>
                 <el-col :span="8" v-for="food in subList.foods">
                   <el-card shadow="always"
-                           style="margin-top: 10px; padding: 0; margin-left: 5px; margin-right: 5px">
+                           style="margin-top: 10px; margin-left: 5px; margin-right: 5px; padding: 0px">
                     <el-col :span="8">
                       <img width="80%" height="80%" style="margin-left: -30%" :src="food.photo"/>
                     </el-col>
@@ -43,7 +52,7 @@
                       <el-row style="text-align: left; color: #626262; font-size: 10px">{{food.description}}
                       </el-row>
                       <el-row
-                        style="text-align: left; color: #f72d20; font-weight: bold; font-size: 15px; margin-top: 15px">
+                        style="text-align: left; color: #f72d20; font-weight: bold; font-size: 15px; margin-top: 5px">
                         <el-col :span="14" style="margin-top: 4px">
                           ¥
                           <span v-if="food.money === food.discountMoney">
@@ -54,11 +63,11 @@
                             {{food.discountMoney.toFixed(2)}}
                           </span>
                         </el-col>
-                        <el-col v-if="food.num === 0" :span="10">
+                        <el-col v-if="food.num === 0" :span="10" style="margin-bottom: 10px">
                           <el-button size="mini" type="primary" @click="firstAddShoppingCart(food.foodId)">加入购物车
                           </el-button>
                         </el-col>
-                        <el-col v-else :span="10">
+                        <el-col v-else :span="10" style="margin-bottom: 10px">
                           <el-input-number size="mini" v-model="food.num" @change="addInDetail(food.foodId, food.num)"
                                            style="width: 100%"/>
                         </el-col>
@@ -176,193 +185,26 @@
     data() {
       return {
         type: 'all', //tab的type
-        sellerId: '1234566',
-        sellerName: '食其家',
-        photo: './../../static/images/logo.png',
-        address: '南京鼓楼广场',
-        phone: '1377777777777',
-        orderCount: 10,
-        startHour: 8,
-        endHour: 19,
+        sellerId: this.$route.params.sellerId,
+        sellerName: '',
+        photo: '',
+        address: '',
+        phone: '',
+        orderCount: 0,
+        startHour: 0,
+        endHour: 0,
+
+        discount: [],
+        groupDiscount: [],
 
         shoppingCart: [],
         totalMoney: 0.0,
         totalCount: 0,
-        foodList: [
-          {
-            type: '热销',
-            foods: [
-              {
-                name: '鱼香肉丝',
-                foodId: 1,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 2,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 3,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 4,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              }
-            ]
-          },
-          {
-            type: '套餐',
-            foods: [
-              {
-                name: '鱼香肉末',
-                foodId: 5,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 6,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 7,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 23.4,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 8,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 23.4,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              }
-            ]
-          },
-          {
-            type: '小吃',
-            foods: [
-              {
-                name: '鱼香肉丝',
-                foodId: 9,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 10,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 11,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 12,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              }
-            ]
-          },
-          {
-            type: '饮料',
-            foods: [
-              {
-                name: '鱼香肉丝',
-                foodId: 13,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 14,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 15,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              },
-              {
-                name: '鱼香肉丝',
-                foodId: 16,
-                photo: './../static/images/logo.png',
-                money: 23.4,
-                discountMoney: 13,
-                description: '本店特色，欢迎品尝',
-                num: 0
-              }
-            ]
-          },
-        ]
+        foodList: []
       }
     },
     methods: {
-      modifyType: function () {
-        console.log(this.type)
-      },
       firstAddShoppingCart: function (foodId) {
-        console.log(foodId)
-
         let name = ''
         let discountMoney = 0.0
 
@@ -387,7 +229,6 @@
         this.calculateTotalCount()
       },
       addInDetail: function (id, num) {
-        console.log(id)
         // 详情界面点击添加/删除
         if (num !== 0) {
           for (let i = 0; i < this.shoppingCart.length; i++) {
@@ -468,8 +309,83 @@
         this.totalCount = total
       },
       checkout: function () {
-        this.$router.push({name: 'checkout', params: {foodList: this.shoppingCart}})
-      }
+        this.$router.push({name: 'checkout', params: {foodList: this.shoppingCart, sellerId: this.sellerId}})
+      },
+    },
+    mounted() {
+      console.log(this.$route.params.sellerId)
+
+      this.$axios({
+        method: 'get',
+        url: '/seller/discount/composition/all',
+        params: {
+          sellerId: this.sellerId
+        }
+      }).then(response => {
+        let data_ = response.data
+        this.groupDiscount = data_.composedDiscounts
+
+        for (let i = 0; i < this.groupDiscount.length; i++) {
+          if(new Date().getDate() < new Date(this.groupDiscount[i].date[0]).getDate() || new Date().getDate() > new Date(this.groupDiscount[i].date[1]).getDate())
+            this.groupDiscount.slice(i, 1)
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
+
+      this.$axios({
+        method: 'get',
+        url: '/seller/info',
+        params: {
+          sellerId: this.sellerId
+        }
+      }).then(response => {
+        this.sellerName = response.data.name
+        this.phone = response.data.phone
+        this.address = response.data.address
+        this.orderCount = response.data.orderCount
+        this.startHour = new Date(response.data.startHour).getHours()
+        this.endHour = new Date(response.data.endHour).getHours()
+        this.photo = response.data.icon
+        this.discount = [parseFloat(response.data.discount[0]), parseFloat(response.data.discount[1]), parseFloat(response.data.discount[2])]
+      }).catch(function (err) {
+        console.log(err)
+      })
+
+      this.$axios({
+        method: 'get',
+        url: '/seller/food/all',
+        params: {
+          sellerId: this.sellerId
+        }
+      }).then(response => {
+        let foodList = response.data.foodList
+        let foodType = []
+
+        for (let i = 0; i < foodList.length; i++) {
+          if (foodType.indexOf(foodList[i].foodType) === -1 && foodList[i].stock > 0) {
+            foodType.push(foodList[i].foodType)
+          }
+        }
+
+        let classificationFood = []
+        for (let i = 0; i < foodType.length; i++) {
+          let foods = []
+          for (let j = 0; j < foodList.length; j++) {
+            if(foodList[j].foodType === foodType[i] && foodList[i].stock > 0){
+              foodList[j].num = 0
+              foods.push(foodList[j])
+            }
+          }
+          classificationFood.push({
+            type: foodType[i],
+            foods: foods
+          })
+        }
+        this.foodList = classificationFood
+      }).catch(function (err) {
+        console.log(err)
+      })
     }
 
   }

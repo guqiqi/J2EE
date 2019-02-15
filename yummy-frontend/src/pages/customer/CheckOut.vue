@@ -40,46 +40,77 @@
               ¥ {{total.toFixed(2)}}
             </el-col>
             <el-col :span="16" style="text-align: left; padding-left: 10px; margin-top: 4px; font-size: 15px;">
-              店铺优惠
+              优惠
             </el-col>
             <el-col :span="8" style="text-align: right; padding-right: 50px; margin-top: 4px; font-size: 15px">
-              - ¥ {{sellerDiscount.toFixed(2)}}
-            </el-col>
-            <el-col :span="16" style="text-align: left; padding-left: 10px; margin-top: 4px; font-size: 15px;">
-              Yummy优惠
-            </el-col>
-            <el-col :span="8" style="text-align: right; padding-right: 50px; margin-top: 4px; font-size: 15px">
-              - ¥ {{yummyDiscount.toFixed(2)}}
+              - ¥ {{discount.toFixed(2)}}
             </el-col>
             <el-col :span="24"
                     style="text-align: right; padding-right: 50px; font-size: 30px; font-weight: bold; color: red; margin-top: 30px; margin-bottom: 10px">
-              ¥ {{(total - sellerDiscount - yummyDiscount).toFixed(2)}}
+              ¥ {{(total - discount).toFixed(2)}}
             </el-col>
           </el-row>
         </el-card>
       </el-col>
       <el-col :span="14">
         <el-card body-style="padding: 0" style="margin-left: 10px">
-          <el-row
-            style="text-align: left; padding-left: 10px; font-weight: bold; font-size: 20px; padding-top: 10px; padding-bottom: 10px;">
-            收货地址
-          </el-row>
-          <el-col :span="16" style="text-align: left; padding-left: 10px; font-weight: bold; font-size: 20px;">
-
-          </el-col>
-
-          <el-row
-            style="text-align: left; padding-left: 10px; font-weight: bold; font-size: 20px; padding-top: 10px; padding-bottom: 10px;">
-            支付方式
-          </el-row>
-
-          <el-row
-            style="text-align: left; padding-left: 10px; font-weight: bold; font-size: 20px; padding-top: 10px; padding-bottom: 10px;">
-            送达时间
+          <el-row>
+            <el-col
+              style="text-align: left; padding-left: 10px; font-weight: bold; font-size: 20px; padding-top: 10px; padding-bottom: 10px;"
+              :span="12">
+              收货地址
+            </el-col>
+            <el-col :span="10" style="text-align: right; margin-right: 30px; padding-top: 13px; font-size: 18px">
+              {{address.detail}} <span style="color: blue; font-size: 16px" @click="modifyAddress">[修改]</span>
+            </el-col>
           </el-row>
 
           <el-row>
-            <el-button type="danger" style="width: 90%; margin-bottom: 10px" @click="placeOrder">确认下单</el-button>
+            <el-col
+              style="text-align: left; padding-left: 10px; font-weight: bold; font-size: 20px; padding-top: 10px; padding-bottom: 10px;"
+              :span="12">
+              收货人
+            </el-col>
+            <el-col :span="10" style="text-align: right; margin-right: 30px; padding-top: 13px; font-size: 18px">
+              {{address.receiver}} <span style="color: blue; font-size: 16px" @click="modifyAddress">[修改]</span>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col
+              style="text-align: left; padding-left: 10px; font-weight: bold; font-size: 20px; padding-top: 10px; padding-bottom: 10px;"
+              :span="12">
+              联系电话
+            </el-col>
+            <el-col :span="10" style="text-align: right; margin-right: 30px; padding-top: 13px; font-size: 18px">
+              {{address.phone}} <span style="color: blue; font-size: 16px" @click="modifyAddress">[修改]</span>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col
+              style="text-align: left; padding-left: 10px; font-weight: bold; font-size: 20px; padding-top: 10px; padding-bottom: 10px;"
+              :span="10">支付方式
+            </el-col>
+            <el-col :span="12" style="text-align: right; margin-right: 30px; padding-top: 13px; font-size: 18px">
+              账户余额
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col
+              style="text-align: left; padding-left: 10px; font-weight: bold; font-size: 20px; padding-top: 10px; padding-bottom: 10px;"
+              :span="10">送达时间
+            </el-col>
+            <el-col :span="12" style="text-align: right; margin-right: 30px; padding-top: 13px; font-size: 18px">
+              {{deliverTime}}
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-button type="danger" style="width: 90%; margin-bottom: 10px; margin-top: 30px" @click="placeOrder">
+              确认下单
+            </el-button>
           </el-row>
         </el-card>
       </el-col>
@@ -89,10 +120,9 @@
       title="支付提示"
       :visible.sync="dialogVisible"
       width="30%"
-      center="false"
     >
       <span
-        style="font-size: 20px; text-align: left">您需要支付 ¥{{(total - sellerDiscount - yummyDiscount).toFixed(2)}}</span>
+        style="font-size: 20px; text-align: left">您需要支付 ¥{{(total - discount).toFixed(2)}}</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancelPay">取 消</el-button>
         <el-button type="primary" @click="payMoney">立即付款</el-button>
@@ -103,6 +133,7 @@
 
 <script>
   const navigation = () => import('../../components/Navigation.vue')
+  import global from '../../../static/Global'
 
   export default {
     name: "check-out",
@@ -110,9 +141,18 @@
     data() {
       return {
         foodList: [],
-        total: 34.4,
-        sellerDiscount: 0.94,
-        yummyDiscount: 0.34,
+        total: 0,
+        discount: 0,
+
+        address: {
+          addressId: 1,
+          detail: "南京大学",
+          receiver: 'kiki',
+          phone: '13770758178'
+        },
+        deliverTime: global.formatTime(new Date()),
+
+        orderId: '',
         dialogVisible: false
       }
     },
@@ -125,6 +165,33 @@
         }
 
         this.total = total
+
+        let foodId = []
+        let num = []
+
+        for (let i = 0; i < this.foodList.length; i++) {
+          foodId.push(this.foodList[i].foodId)
+          num.push(this.foodList[i].num)
+        }
+
+        // TODO 用户ID设置
+        this.$axios({
+          method: 'post',
+          url: '/order/pre/place',
+          data: {
+            sellerId: this.$route.params.sellerId,
+            email: '222',
+            foodIds: foodId,
+            amount: num
+          }
+        }).then(response => {
+          let data_ = response.data
+
+          this.total = data_.totalMoney
+          this.discount = data_.totalMoney - data_.payMoney
+        }).catch(function (err) {
+          console.log(err)
+        })
       },
       addInCart: function (id, num) {
         if (num === 0) {
@@ -138,19 +205,75 @@
 
         this.calculateTotalMoney()
       },
+      modifyAddress: function () {
+        // TODO
+        console.log("modify")
+      },
       placeOrder: function () {
         this.dialogVisible = true
+        // TODO 收货时间
+        let foodId = []
+        let num = []
+
+        for (let i = 0; i < this.foodList.length; i++) {
+          foodId.push(this.foodList[i].foodId)
+          num.push(this.foodList[i].num)
+        }
+
+        this.$axios({
+          method: 'post',
+          url: '/order/place',
+          data: {
+            sellerId: this.$route.params.sellerId,
+            email: '222',
+            foodIds: foodId,
+            amount: num,
+            reachTime: new Date(),
+            addressId: this.address.addressId
+          }
+        }).then(response => {
+          let data_ = response.data
+
+          this.total = data_.totalMoney
+          this.discount = data_.totalMoney - data_.payMoney
+          this.orderId = data_.orderId
+        }).catch(function (err) {
+          console.log(err)
+        })
       },
       payMoney: function () {
         // TODO 付款
         this.dialogVisible = false
 
-        this.$message({
-          message: '您已成功付款，请等待商家准备商品并配送',
-          type: 'success'
+        // TODO 用户ID设置
+        this.$axios({
+          method: 'get',
+          url: '/order/pay',
+          params: {
+            orderId: this.orderId
+          }
+        }).then(response => {
+          let data_ = response.data
+
+          if(data_.isSuccess){
+            this.$message({
+              message: '您已成功付款，请等待商家准备商品并配送',
+              type: 'success'
+            })
+
+            this.$router.push('/home')
+          }
+          else {
+            this.$message({
+              message: '抱歉，您的账户余额不足，请充钱后，请至「我的订单」处进行付款',
+              type: 'warning'
+            })
+            this.$router.push('/order')
+          }
+        }).catch(function (err) {
+          console.log(err)
         })
 
-        this.$router.push('/home')
       },
       cancelPay: function () {
         // TODO 取消付款，此时已经下单，但是需要去我的订单那边付款
@@ -168,7 +291,10 @@
       console.log(this.$route.params)
       this.foodList = this.$route.params.foodList
 
-      // TODO 计算优惠
+      // 计算优惠
+      this.calculateTotalMoney()
+
+
     }
   }
 </script>

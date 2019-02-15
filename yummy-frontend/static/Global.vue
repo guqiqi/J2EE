@@ -1,5 +1,5 @@
 <script>
-  let userId = 'nnnnnnn'
+  let userId = 'XgZGiwT'
   let startHour = new Date()
   startHour.setHours(8)
   startHour.setMinutes(0)
@@ -24,6 +24,13 @@
     return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second
   }
 
+  function formatTime(date) {
+    let h = date.getHours()
+    let minute = date.getMinutes()
+    minute = minute < 10 ? ('0' + minute) : minute
+    return h + ':' + minute + ':00'
+  }
+
   function setUserId(userId) {
     this.userId = userId
   }
@@ -38,7 +45,7 @@
   }
 
   export default {
-    userId, getLevel, setUserId, startHour, endHour, formatDate
+    userId, getLevel, setUserId, startHour, endHour, formatDate, formatTime
   }
 </script>
 

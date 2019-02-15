@@ -304,7 +304,6 @@
         foodList: [],
         customerDiscount: [1, 0.9, 0.8], //店铺会员优惠价
         composedDiscounts: [ //店铺组合优惠列表
-
         ],
         inputVisible: false,
         tempFoodType: [], //原来的子分类
@@ -349,16 +348,12 @@
         this.tempFoodDetail.photo = res.url
       },
       beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg'
         const isLt2M = file.size / 1024 / 1024 < 2
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!')
-        }
         if (!isLt2M) {
           this.$message.error('上传头像图片大小不能超过 2MB!')
         }
-        return isJPG && isLt2M
+        return isLt2M
       },
 
       // 标签编辑
@@ -406,7 +401,7 @@
             startTime: this.tempFoodDetail.startTime,
             endTime: this.tempFoodDetail.endTime,
             stock: this.tempFoodDetail.stock,
-            foodType: this.tempFoodDetail.type,
+            foodType: this.tempFoodDetail.foodType,
           }
         }).then(response => {
           this.isLoading = false
@@ -762,7 +757,7 @@
 
           for (let i = 0; i < this.composedDiscounts.length; i++) {
             this.composedDiscounts[i].date = [new Date(this.composedDiscounts[i].date[0]),
-              new Date(this.composedDiscounts[i].date[0])]
+              new Date(this.composedDiscounts[i].date[1])]
           }
         }).catch(function (err) {
           console.log(err)

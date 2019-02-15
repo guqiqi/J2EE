@@ -33,8 +33,10 @@
                   </el-form-item>
                 </el-form>
 
-                <el-button type="danger" style="width: 45%; margin-top: 20px" @click="reject(props.row.sellerId)">不通过</el-button>
-                <el-button type="primary" style="width: 45%; margin-top: 20px" @click="pass(props.row.sellerId)">通过</el-button>
+                <el-button type="danger" style="width: 45%; margin-top: 20px" @click="reject(props.row.sellerId)">不通过
+                </el-button>
+                <el-button type="primary" style="width: 45%; margin-top: 20px" @click="pass(props.row.sellerId)">通过
+                </el-button>
 
               </el-col>
             </div>
@@ -65,30 +67,68 @@
     name: "verify-seller",
     data() {
       return {
-        sellerList: [
-          {
-            sellerId: '123444',
-            name: '食其家',
-            type: '快餐便当',
-            address: '南京市鼓楼区',
-            phone: '13700000001',
-            startHour: "8:00",
-            endHour: "20:00",
-            icon: '../../static/uploadImages/347454.jpg',
-          }
-        ]
+        sellerList: []
       }
     },
     methods: {
       reject: function (sellerId) {
-        // TODO 拒绝
-        console.log(sellerId)
-
+        // 拒绝
+        this.$axios({
+          method: 'patch',
+          url: '/seller/verify',
+          params: {
+            sellerId: sellerId,
+            isPass: false
+          }
+        }).then(response => {
+          if(response.data.isSuccess){
+            this.$message.success('审核成功')
+            this.getAllSeller()
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
       },
       pass: function (sellerId) {
-        // TODO 通过
-        console.log(sellerId)
+        // 通过
+        this.$axios({
+          method: 'patch',
+          url: '/seller/verify',
+          params: {
+            sellerId: sellerId,
+            isPass: true
+          }
+        }).then(response => {
+          if(response.data.isSuccess){
+            this.$message.success('审核成功')
+            this.getAllSeller()
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
+      },
+      getAllSeller: function () {
+        this.$axios({
+          method: 'get',
+          url: '/seller/all',
+        }).then(response => {
+          let sellerList = response.data.sellerList
+
+          for(let i = 0 ; i < sellerList.length; i++){
+            if(!(sellerList[i].status === 1 || sellerList[i].status === 3)){
+              sellerList.splice(i, 1)
+            }
+          }
+
+          console.log(sellerList)
+          this.sellerList = sellerList
+        }).catch(function (err) {
+          console.log(err)
+        })
       }
+    },
+    mounted() {
+      this.getAllSeller()
     }
   }
 </script>

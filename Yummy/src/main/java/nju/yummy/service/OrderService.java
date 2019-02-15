@@ -12,7 +12,7 @@ public interface OrderService {
      * @param sellerId 餐厅编号
      * @param foods 食物id列表
      * @param amount 食物数量列表
-     * @return 订单，主要需要总价和折扣价
+     * @return 订单，主要需要总价和折扣价, 如果商品数量不够则返回null
      */
     public OrderEntity prePlaceOrder(String email, String sellerId, List<Integer> foods, List<Integer> amount);
 
@@ -24,9 +24,9 @@ public interface OrderService {
      * @param amount 食物数量列表
      * @param reachTime 预期送达时间
      * @param addressId 地址id
-     * @return 订单id，如果没有下单成功则返回null（可能是库存不够了）
+     * @return 订单，如果没有下单成功则返回null（可能是库存不够了）
      */
-    public String placeOrder(String email, String sellerId, List<Integer> foods, List<Integer> amount, Date reachTime,
+    public OrderEntity placeOrder(String email, String sellerId, List<Integer> foods, List<Integer> amount, Date reachTime,
                              int addressId);
 
     /**

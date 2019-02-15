@@ -184,6 +184,7 @@
         }).then(response => {
           let data_ = response.data
 
+          console.log(data_.addressList)
           this.addressList = data_.addressList
 
         }).catch(function (err) {

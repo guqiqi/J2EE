@@ -15,9 +15,11 @@
             :data="orderList"
             style="width: 100%">
             <el-table-column
+              width="260px"
               prop="orderId"
               label="订单编号"/>
             <el-table-column
+              width="200px"
               prop="placeTime"
               label="下单时间"/>
             <el-table-column
@@ -49,48 +51,13 @@
 <script>
   import UserNavigation from "../../components/UserNavigation"
   const navigation = () => import('../../components/Navigation.vue')
+  import global from '../../../static/Global'
   // import {navigation} from '../components/Navigation'
   export default {
     name: "order-page",
     data(){
       return{
-        orderList: [
-          {
-            orderId: '203948586596',
-            sellerName: '食其家',
-            placeTime: '20190102',
-            status: 0,
-            payMoney: 200.10
-          },
-          {
-            orderId: '203948586595',
-            sellerName: '食其家',
-            placeTime: '20190102',
-            status: 1,
-            payMoney: 200.10
-          },
-          {
-            orderId: '203948586593',
-            sellerName: '食其家',
-            placeTime: '20190102',
-            status: 3,
-            payMoney: 200.10
-          },
-          {
-            orderId: '203948586597',
-            sellerName: '食其家',
-            placeTime: '20190102',
-            status: 2,
-            payMoney: 200.10
-          },
-          {
-            orderId: '203948586598',
-            sellerName: '食其家',
-            placeTime: '20190102',
-            status: -1,
-            payMoney: 200.10
-          }
-        ]
+        orderList: []
       }
     },
     components:{navigation, UserNavigation},
@@ -125,6 +92,8 @@
             break
           }
         }
+
+
       },
       cancel: function (id) {
         // TODO 取消订单
@@ -134,7 +103,27 @@
             break
           }
         }
+      },
+      getAllOrder: function () {
+        this.$axios({
+          method: 'get',
+          url: '/order/customer/order',
+          params: {
+            email: "222",
+          }
+        }).then(response => {
+          this.orderList = response.data.orders
+
+          for(let i = 0; i < this.orderList.length; i++){
+            this.orderList[i].placeTime = global.formatDate(new Date(this.orderList[i].placeTime))
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
       }
+    },
+    mounted(){
+      this.getAllOrder()
     }
   }
 </script>

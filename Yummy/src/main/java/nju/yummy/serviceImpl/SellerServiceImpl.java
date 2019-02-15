@@ -6,6 +6,7 @@ import nju.yummy.entity.DiscountTableEntity;
 import nju.yummy.entity.FoodEntity;
 import nju.yummy.entity.SellerEntity;
 import nju.yummy.service.SellerService;
+import nju.yummy.util.Const;
 import nju.yummy.util.DateToTimestamp;
 import nju.yummy.util.SellerStatus;
 
@@ -44,7 +45,7 @@ public class SellerServiceImpl implements SellerService {
                            String endHour, String icon) {
         String sellerId = generateSellerId();
         SellerEntity sellerEntity = new SellerEntity(sellerId, password, name, type, address, phone, startHour,
-                endHour, 1, "", "", icon);
+                endHour, 1, "", "1"+ Const.regix + "1" + Const.regix + "1", icon);
         sellerDao.addSeller(sellerEntity);
         return sellerId;
     }

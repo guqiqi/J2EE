@@ -59,6 +59,38 @@ public class SellerController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/all", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public String getAllSeller() {
+        List<SellerEntity> sellerEntities = sellerService.getAllSellerEntities();
+
+        JSONObject result = new JSONObject();
+
+        JSONArray jsonArray = new JSONArray();
+        for(SellerEntity sellerEntity: sellerEntities) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("name", sellerEntity.getName());
+            jsonObject.put("type", sellerEntity.getType());
+            jsonObject.put("address", sellerEntity.getAddress());
+            jsonObject.put("password", sellerEntity.getPassword());
+            jsonObject.put("phone", sellerEntity.getPhone());
+            jsonObject.put("startHour", sellerEntity.getStartHour());
+            jsonObject.put("endHour", sellerEntity.getEndHour());
+            jsonObject.put("foodType", sellerEntity.getFoodType().split(Const.regix));
+            jsonObject.put("discount", sellerEntity.getDiscount().split(Const.regix));
+            jsonObject.put("icon", sellerEntity.getIcon());
+            jsonObject.put("orderCount", sellerEntity.getOrderCount());
+            jsonObject.put("status", sellerEntity.getStatus());
+            jsonObject.put("sellerId", sellerEntity.getSellerId());
+
+            jsonArray.add(jsonObject);
+        }
+
+        result.put("sellerList", jsonArray);
+
+        return result.toJSONString();
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/info", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String getSellerInfo(String sellerId) {
         SellerEntity sellerEntity = sellerService.getSellerInfo(sellerId);
@@ -110,6 +142,7 @@ public class SellerController {
         String name = jsonParam.getString("name");
         String description = jsonParam.getString("description");
         String foodType = jsonParam.getString("foodType");
+        System.out.println(foodType);
         String photo = jsonParam.getString("photo");
         Double money = jsonParam.getDouble("money");
         Double discountMoney = jsonParam.getDouble("discountMoney");
@@ -294,6 +327,18 @@ public class SellerController {
         list.add(discountId);
 
         result.put("isSuccess", sellerService.deleteGroupDiscount(list));
+
+        return result.toJSONString();
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/verify", method = RequestMethod.PATCH,
+            produces = "application/json;charset=UTF-8")
+    public String verifySeller(String sellerId, boolean isPass) {
+        JSONObject result = new JSONObject();
+
+        result.put("isSuccess", sellerService.verifySeller(sellerId, isPass));
 
         return result.toJSONString();
     }

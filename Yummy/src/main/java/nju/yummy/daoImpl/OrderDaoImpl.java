@@ -80,7 +80,7 @@ public class OrderDaoImpl implements OrderDao {
         Session session = MySessionFactory.getSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("select order from OrderEntity order where sellerId=:sellerId");
+        Query query = session.createQuery("select o1 from OrderEntity o1 where sellerId=:sellerId");
         query.setParameter("sellerId", sellerId);
 
         List<OrderEntity> orderEntities = query.list();
