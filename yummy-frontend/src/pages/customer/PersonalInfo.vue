@@ -31,7 +31,7 @@
             积分
           </el-col>
           <el-col :span="14" class="content">
-            {{point}}
+            {{point.toFixed(0)}}
           </el-col>
         </el-row>
         <el-row>

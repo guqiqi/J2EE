@@ -28,7 +28,8 @@
     let h = date.getHours()
     let minute = date.getMinutes()
     minute = minute < 10 ? ('0' + minute) : minute
-    return h + ':' + minute + ':00'
+    console.log(h + ':' + minute)
+    return h + ':' + minute
   }
 
   function setUserId(userId) {

@@ -13,6 +13,9 @@ import nju.yummy.serviceImpl.SellerServiceImpl;
 import nju.yummy.util.Const;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -49,19 +52,25 @@ public class OrderController {
 
     @ResponseBody
     @RequestMapping(value = "/place", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String placeOrder(@RequestBody JSONObject jsonParam) {
+    public String placeOrder(@RequestBody JSONObject jsonParam) throws ParseException {
         String email = jsonParam.getString("email");
         String sellerId = jsonParam.getString("sellerId");
 
         List<Integer> foodIds = Const.convertJSONArrayToIntegerList(jsonParam.getJSONArray("foodIds"));
         List<Integer> amounts = Const.convertJSONArrayToIntegerList(jsonParam.getJSONArray("amount"));
 
-        Date reachTime = jsonParam.getDate("reachTime");
+        String reachTime = jsonParam.getString("reachTime");
+        System.out.println(reachTime);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        Date time = sdf.parse(reachTime);
+        System.out.println(time);
+
         Integer addressId = jsonParam.getInteger("addressId");
 
         JSONObject result = new JSONObject();
 
-        OrderEntity orderEntity = orderService.placeOrder(email, sellerId, foodIds, amounts, reachTime, addressId);
+        OrderEntity orderEntity = orderService.placeOrder(email, sellerId, foodIds, amounts, time, addressId);
         result.put("totalMoney", orderEntity.getTotalMoney());
         result.put("payMoney", orderEntity.getPayMoney());
         result.put("orderId", orderEntity.getOrderId());
@@ -118,13 +127,13 @@ public class OrderController {
 
         List<OrderEntity> orderEntities = orderService.getCustomerOrders(email);
 
-        for(OrderEntity orderEntity: orderEntities){
+        for (OrderEntity orderEntity : orderEntities) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("orderId", orderEntity.getOrderId());
             jsonObject.put("sellerName", sellerService.getSellerInfo(orderEntity.getSellerId()).getName());
             jsonObject.put("placeTime", orderEntity.getPlaceTime());
             jsonObject.put("status", orderEntity.getStatus());
-            jsonObject.put("payMoney", orderEntity.getPayMoney());
+            jsonObject.put("payMoney", new BigDecimal(orderEntity.getPayMoney()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 
             jsonArray.add(jsonObject);
         }
@@ -143,12 +152,12 @@ public class OrderController {
 
         List<OrderEntity> orderEntities = orderService.getSellerOrders(sellerId);
 
-        for(OrderEntity orderEntity: orderEntities){
+        for (OrderEntity orderEntity : orderEntities) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("orderId", orderEntity.getOrderId());
             jsonObject.put("placeTime", orderEntity.getPlaceTime());
             jsonObject.put("status", orderEntity.getStatus());
-            jsonObject.put("payMoney", orderEntity.getPayMoney());
+            jsonObject.put("payMoney", new BigDecimal(orderEntity.getPayMoney()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
             jsonObject.put("receiveTime", orderEntity.getReachTime());
 
             AddressEntity addressEntity = customerService.getAddressById(orderEntity.getAddressId());
