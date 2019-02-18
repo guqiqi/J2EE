@@ -3,6 +3,7 @@ package nju.yummy.service;
 import nju.yummy.entity.DiscountTableEntity;
 import nju.yummy.entity.FoodEntity;
 import nju.yummy.entity.SellerEntity;
+import nju.yummy.vo.SellerCostVO;
 
 import java.util.Date;
 import java.util.List;
@@ -203,6 +204,47 @@ public interface SellerService {
      */
     public boolean deleteGroupDiscount(List<Integer> discountIds);
 
-    // TODO 餐厅信息统计
+    // 餐厅信息统计
+    /**
+     * 用户不同消费者的消费统计（所有）
+     * @param sellerId 商家编号
+     * @return 按消费者的统计
+     */
+    public List<SellerCostVO> getCostByCustomer(String sellerId);
 
+    /**
+     * 用户不同时间段的消费统计（所有）
+     * @param sellerId 商家编号
+     * @return 按小时的用户消费数组
+     */
+    public double[] getCostByHour(String sellerId);
+
+    /**
+     * 商家近一周、一个月、一年的消费
+     * @param sellerId 商家编号
+     * @return [一周消费、一月消费、一年消费]
+     */
+    public double[] getCostByTime(String sellerId);
+
+    /**
+     * 消费者数量
+     * @param sellerId 商家编号
+     * @return 消费者数量
+     */
+    public int getCustomerNumber(String sellerId);
+
+    /**
+     * 商家销售额
+     * @param sellerId 商家编号
+     * @return 销售总额
+     */
+    public double getTotalSeller(String sellerId);
+
+
+    /**
+     * 退订统计
+     * @param sellerId 商家编号
+     * @return 退订列表
+     */
+    public List<SellerCostVO> getCancelByUser(String sellerId);
 }

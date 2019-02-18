@@ -10,6 +10,8 @@ public class Const {
 
     public static double[] discount = new double[]{1, 0.98, 0.90};
 
+    public static String[] sellerType = new String[]{"快餐便当", "甜品饮品", "果蔬生鲜", "商店超市", "鲜花绿植"};
+
     public static String convertJSONArrayToString(JSONArray jsonArray) {
         Object[] array = jsonArray.toArray();
         String result = "";

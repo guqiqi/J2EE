@@ -1,25 +1,31 @@
 package nju.yummy.serviceImpl;
 
+import nju.yummy.dao.CustomerDao;
+import nju.yummy.dao.OrderDao;
 import nju.yummy.dao.SellerDao;
+import nju.yummy.daoImpl.CustomerDaoImpl;
+import nju.yummy.daoImpl.OrderDaoImpl;
 import nju.yummy.daoImpl.SellerDaoImpl;
-import nju.yummy.entity.DiscountTableEntity;
-import nju.yummy.entity.FoodEntity;
-import nju.yummy.entity.SellerEntity;
+import nju.yummy.entity.*;
 import nju.yummy.service.SellerService;
 import nju.yummy.util.Const;
 import nju.yummy.util.DateToTimestamp;
 import nju.yummy.util.SellerStatus;
+import nju.yummy.vo.SellerCostVO;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class SellerServiceImpl implements SellerService {
     private SellerDao sellerDao;
+    private OrderDao orderDao;
+    private CustomerDao customerDao;
 
     public SellerServiceImpl() {
         sellerDao = new SellerDaoImpl();
+        orderDao = new OrderDaoImpl();
+        customerDao = new CustomerDaoImpl();
     }
 
     @Override
@@ -45,7 +51,7 @@ public class SellerServiceImpl implements SellerService {
                            String endHour, String icon) {
         String sellerId = generateSellerId();
         SellerEntity sellerEntity = new SellerEntity(sellerId, password, name, type, address, phone, startHour,
-                endHour, 1, "", "1"+ Const.regix + "1" + Const.regix + "1", icon);
+                endHour, 1, "", "1" + Const.regix + "1" + Const.regix + "1", icon);
         sellerDao.addSeller(sellerEntity);
         return sellerId;
     }
@@ -175,5 +181,106 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public boolean deleteGroupDiscount(List<Integer> discountIds) {
         return sellerDao.deleteGroupDiscount(discountIds);
+    }
+
+    @Override
+    public List<SellerCostVO> getCostByCustomer(String sellerId) {
+        List<SellerCostVO> customerCostList = new ArrayList<>();
+        List<String> customerNames = new ArrayList<>();
+
+        List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);
+
+        for (OrderEntity orderEntity : orderEntityList) {
+            if (orderEntity.getStatus() != 0) {
+                CustomerEntity customerEntity = customerDao.getCustomer(orderEntity.getEmail());
+
+                if (customerCostList.contains(customerEntity.getUsername())) {
+                    SellerCostVO customerCostVO =
+                            customerCostList.get(customerNames.indexOf(customerEntity.getUsername()));
+                    customerCostVO.addCost(orderEntity.getPayMoney());
+                    customerCostList.set(customerCostList.indexOf(customerEntity.getUsername()), customerCostVO);
+                } else {
+                    customerNames.add(customerEntity.getUsername());
+                    customerCostList.add(new SellerCostVO(customerEntity.getUsername(), orderEntity.getPayMoney()));
+                }
+            }
+        }
+
+        return customerCostList;
+    }
+
+    @Override
+    public double[] getCostByHour(String sellerId) {
+        double[] result = new double[24];
+
+        List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);
+
+        for (OrderEntity orderEntity : orderEntityList) {
+            if (orderEntity.getStatus() != 0) {
+                Timestamp placeTime = orderEntity.getPlaceTime();
+                SimpleDateFormat sd = new SimpleDateFormat("HH");
+                int hour = Integer.parseInt(sd.format(placeTime)) - 1;
+                result[hour] += orderEntity.getPayMoney();
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public double[] getCostByTime(String sellerId) {
+        double[] result = new double[3];
+
+        List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);
+
+        for (OrderEntity orderEntity : orderEntityList) {
+            if (orderEntity.getStatus() != 0) {
+                long minutes = (System.currentTimeMillis() - orderEntity.getPlaceTime().getTime()) / (1000 * 60);
+
+                if (minutes <= 7 * 24 * 60)
+                    result[0] += orderEntity.getPayMoney();
+                if (minutes <= 30 * 24 * 60)
+                    result[1] += orderEntity.getPayMoney();
+                if (minutes <= 365 * 24 * 60)
+                    result[2] += orderEntity.getPayMoney();
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public int getCustomerNumber(String sellerId) {
+        List<String> customerEmails = new ArrayList<>();
+
+        List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);
+
+        for (OrderEntity orderEntity : orderEntityList) {
+            if (orderEntity.getStatus() != 0) {
+                if(!customerEmails.contains(orderEntity.getEmail()))
+                    customerEmails.add(orderEntity.getEmail());
+            }
+        }
+        return customerEmails.size();
+    }
+
+    @Override
+    public double getTotalSeller(String sellerId) {
+        double total = 0;
+
+        List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);
+
+        for (OrderEntity orderEntity : orderEntityList) {
+            if (orderEntity.getStatus() != 0) {
+                total += orderEntity.getPayMoney();
+            }
+        }
+        return total;
+    }
+
+    @Override
+    public List<SellerCostVO> getCancelByUser(String sellerId) {
+        // TODO
+        return null;
     }
 }

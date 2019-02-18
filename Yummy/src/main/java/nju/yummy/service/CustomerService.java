@@ -2,6 +2,7 @@ package nju.yummy.service;
 
 import nju.yummy.entity.AddressEntity;
 import nju.yummy.entity.CustomerEntity;
+import nju.yummy.vo.SellerCostVO;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.List;
@@ -113,5 +114,40 @@ public interface CustomerService {
      */
     public boolean writeOff(String email);
 
-    // TODO 用户的统计信息
+    //用户的统计信息
+
+    /**
+     * 用户不同时间段的消费统计（所有）
+     * @param email 用户编号（邮箱）
+     * @return 按小时的用户消费数组
+     */
+    public double[] getCostByHour(String email);
+
+    /**
+     * 用户在不同类型的商店消费情况
+     * @param email 用户邮箱
+     * @return 消费列表
+     */
+    public List<SellerCostVO> getCostClassifiedByType(String email);
+
+    /**
+     * 用户在不同商店消费情况
+     * @param email 用户邮箱
+     * @return 消费列表
+     */
+    public List<SellerCostVO> getCostBySeller(String email);
+
+    /**
+     * 用户近一周、一个月、一年的消费
+     * @param email 用户邮箱
+     * @return [一周消费、一月消费、一年消费]
+     */
+    public double[] getCostByTime(String email);
+
+    /**
+     * 退订统计
+     * @param email 用户邮箱
+     * @return 退订列表
+     */
+    public List<SellerCostVO> getCancelByUser(String email);
 }

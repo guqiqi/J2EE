@@ -108,4 +108,19 @@ public class CustomerDaoImpl implements CustomerDao{
 
         return addressEntities;
     }
+
+    @Override
+    public List<CustomerEntity> getAllCustomer() {
+        Session session = MySessionFactory.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("select customer from CustomerEntity customer");
+
+        List<CustomerEntity> customerEntities = (List<CustomerEntity>)query.list();
+
+        tx.commit();
+        session.close();
+
+        return customerEntities;
+    }
 }
