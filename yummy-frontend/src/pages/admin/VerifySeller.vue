@@ -17,19 +17,19 @@
                     <span>{{ props.row.sellerId }}</span>
                   </el-form-item>
                   <el-form-item label="商店名称">
-                    <span>{{ props.row.name }}</span>
+                    <span>{{ props.row.tempName }}</span>
                   </el-form-item>
                   <el-form-item label="商店类型">
-                    <span>{{ props.row.type }}</span>
+                    <span>{{ props.row.tempType }}</span>
                   </el-form-item>
                   <el-form-item label="联系电话">
-                    <span>{{ props.row.phone }}</span>
+                    <span>{{ props.row.tempPhone }}</span>
                   </el-form-item>
                   <el-form-item label="商店地址">
-                    <span>{{ props.row.address }}</span>
+                    <span>{{ props.row.tempAddress }}</span>
                   </el-form-item>
                   <el-form-item label="营业时间">
-                    <span>{{ props.row.startHour }} - {{ props.row.endHour }}</span>
+                    <span>{{ props.row.tempStartHour }} - {{ props.row.tempEndHour }}</span>
                   </el-form-item>
                 </el-form>
 
@@ -48,11 +48,11 @@
         </el-table-column>
         <el-table-column
           label="商品名称"
-          prop="name">
+          prop="tempName">
         </el-table-column>
         <el-table-column
           label="类型"
-          prop="type">
+          prop="tempType">
         </el-table-column>
       </el-table>
     </el-col>

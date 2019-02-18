@@ -1,16 +1,31 @@
 package nju.yummy.entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "payRecord", schema = "yummy")
 public class PayRecordEntity {
     private Integer recordId;
+    // 1为付款，0为收款
     private Byte payType;
     private String userId;
     private Double money;
+    // 1为客户，0为商家
     private Byte userType;
+    private Timestamp time;
+
+    public PayRecordEntity(Byte payType, String userId, Double money, Byte userType) {
+        this.payType = payType;
+        this.userId = userId;
+        this.money = money;
+        this.userType = userType;
+        this.time = new Timestamp(System.currentTimeMillis());
+    }
+
+    public PayRecordEntity() {
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -63,6 +78,16 @@ public class PayRecordEntity {
         this.userType = userType;
     }
 
+    @Basic
+    @Column(name = "time")
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,4 +104,6 @@ public class PayRecordEntity {
     public int hashCode() {
         return Objects.hash(recordId, payType, userId, money, userType);
     }
+
+
 }

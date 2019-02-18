@@ -52,6 +52,16 @@ public class SellerServiceImpl implements SellerService {
         String sellerId = generateSellerId();
         SellerEntity sellerEntity = new SellerEntity(sellerId, password, name, type, address, phone, startHour,
                 endHour, 1, "", "1" + Const.regix + "1" + Const.regix + "1", icon);
+
+        sellerEntity.setTempName(name);
+        sellerEntity.setTempPassword(password);
+        sellerEntity.setTempAddress(address);
+        sellerEntity.setStartHour(startHour);
+        sellerEntity.setTempEndHour(endHour);
+        sellerEntity.setTempIcon(icon);
+        sellerEntity.setTempPhone(phone);
+        sellerEntity.setTempType(type);
+
         sellerDao.addSeller(sellerEntity);
         return sellerId;
     }
@@ -83,8 +93,21 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public boolean verifySeller(String sellerId, boolean isPass) {
-        if (isPass)
-            return sellerDao.verifySeller(sellerId, SellerStatus.NORMAL);
+        if (isPass) {
+            SellerEntity sellerEntity = sellerDao.getSellerEntity(sellerId);
+
+            sellerEntity.setName(sellerEntity.getTempName());
+            sellerEntity.setPassword(sellerEntity.getTempPassword());
+            sellerEntity.setAddress(sellerEntity.getTempAddress());
+            sellerEntity.setStartHour(sellerEntity.getTempStartHour());
+            sellerEntity.setEndHour(sellerEntity.getTempEndHour());
+            sellerEntity.setIcon(sellerEntity.getTempIcon());
+            sellerEntity.setPhone(sellerEntity.getTempPhone());
+            sellerEntity.setType(sellerEntity.getTempType());
+            sellerEntity.setStatus(2);
+
+            return sellerDao.updateSeller(sellerEntity);
+        }
         else
             return sellerDao.verifySeller(sellerId, SellerStatus.TOMODIFY);
     }
@@ -92,11 +115,17 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public boolean modifyInfo(String sellerId, String password, String name, String type, String address, String phone,
                               String startHour, String endHour, String icon, int status) {
-        SellerEntity sellerEntity1 = sellerDao.getSellerEntity(sellerId);
-        SellerEntity sellerEntity = new SellerEntity(sellerId, password, name, type, address, phone, startHour,
-                endHour, status, sellerEntity1.getFoodType(), sellerEntity1.getDiscount(), icon);
+        SellerEntity sellerEntity = sellerDao.getSellerEntity(sellerId);
 
-        sellerEntity.setOrderCount(sellerEntity1.getOrderCount());
+        sellerEntity.setTempName(name);
+        sellerEntity.setTempPassword(password);
+        sellerEntity.setTempAddress(address);
+        sellerEntity.setTempStartHour(startHour);
+        sellerEntity.setTempEndHour(endHour);
+        sellerEntity.setTempIcon(icon);
+        sellerEntity.setTempPhone(phone);
+        sellerEntity.setTempType(type);
+
         return sellerDao.updateSeller(sellerEntity);
     }
 

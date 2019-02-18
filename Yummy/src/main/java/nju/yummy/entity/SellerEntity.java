@@ -20,6 +20,15 @@ public class SellerEntity {
     private String discount;
     private String icon;
 
+    private String tempPassword;
+    private String tempName;
+    private String tempType;
+    private String tempAddress;
+    private String tempPhone;
+    private String tempStartHour;
+    private String tempEndHour;
+    private String tempIcon;
+
     public SellerEntity() {
     }
 
@@ -168,6 +177,86 @@ public class SellerEntity {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    @Basic
+    @Column(name = "tempPassword")
+    public String getTempPassword() {
+        return tempPassword;
+    }
+
+    public void setTempPassword(String tempPassword) {
+        this.tempPassword = tempPassword;
+    }
+
+    @Basic
+    @Column(name = "tempName")
+    public String getTempName() {
+        return tempName;
+    }
+
+    public void setTempName(String tempName) {
+        this.tempName = tempName;
+    }
+
+    @Basic
+    @Column(name = "tempType")
+    public String getTempType() {
+        return tempType;
+    }
+
+    public void setTempType(String tempType) {
+        this.tempType = tempType;
+    }
+
+    @Basic
+    @Column(name = "tempAddress")
+    public String getTempAddress() {
+        return tempAddress;
+    }
+
+    public void setTempAddress(String tempAddress) {
+        this.tempAddress = tempAddress;
+    }
+
+    @Basic
+    @Column(name = "tempPhone")
+    public String getTempPhone() {
+        return tempPhone;
+    }
+
+    public void setTempPhone(String tempPhone) {
+        this.tempPhone = tempPhone;
+    }
+
+    @Basic
+    @Column(name = "tempStartHour")
+    public String getTempStartHour() {
+        return tempStartHour;
+    }
+
+    public void setTempStartHour(String tempStartHour) {
+        this.tempStartHour = tempStartHour;
+    }
+
+    @Basic
+    @Column(name = "tempEndHour")
+    public String getTempEndHour() {
+        return tempEndHour;
+    }
+
+    public void setTempEndHour(String tempEndHour) {
+        this.tempEndHour = tempEndHour;
+    }
+
+    @Basic
+    @Column(name = "tempIcon")
+    public String getTempIcon() {
+        return tempIcon;
+    }
+
+    public void setTempIcon(String tempIcon) {
+        this.tempIcon = tempIcon;
     }
 
     @Override

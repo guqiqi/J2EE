@@ -2,9 +2,11 @@ package nju.yummy.serviceImpl;
 
 import nju.yummy.dao.CustomerDao;
 import nju.yummy.dao.OrderDao;
+import nju.yummy.dao.RecordDao;
 import nju.yummy.dao.SellerDao;
 import nju.yummy.daoImpl.CustomerDaoImpl;
 import nju.yummy.daoImpl.OrderDaoImpl;
+import nju.yummy.daoImpl.RecordDaoImpl;
 import nju.yummy.daoImpl.SellerDaoImpl;
 import nju.yummy.entity.*;
 import nju.yummy.service.OrderService;
@@ -18,11 +20,13 @@ public class OrderServiceImpl implements OrderService {
     private OrderDao orderDao;
     private SellerDao sellerDao;
     private CustomerDao customerDao;
+    private RecordDao recordDao;
 
     public OrderServiceImpl() {
         orderDao = new OrderDaoImpl();
         sellerDao = new SellerDaoImpl();
         customerDao = new CustomerDaoImpl();
+        recordDao = new RecordDaoImpl();
     }
 
     @Override
@@ -37,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderEntity placeOrder(String email, String sellerId, List<Integer> foods, List<Integer> amount, Date reachTime,
-                        int addressId) {
+                                  int addressId) {
         String orderId = generateOrderId();
         OrderEntity orderEntity = new OrderEntity(orderId, email, sellerId, getTotalMoney(foods, amount),
                 getDiscountMoney(email, sellerId, foods, amount), DateToTimestamp.toTimeStamp(reachTime), addressId);
@@ -104,15 +108,15 @@ public class OrderServiceImpl implements OrderService {
             List<Integer> foodIds = new ArrayList<>();
             // 每找到一个满足条件的就要删去一个，以此判断是否满足条件
             List<Integer> toFindFoodIds = new ArrayList<>();
-            for(String str: ids){
+            for (String str : ids) {
                 foodIds.add(Integer.parseInt(str));
                 toFindFoodIds.add(Integer.parseInt(str));
             }
 
             // 最多有几组满足条件
             int maxSize = 0;
-            for(int j = 0; j < foods.size(); j++){
-                if(toFindFoodIds.contains(foods.get(j))){
+            for (int j = 0; j < foods.size(); j++) {
+                if (toFindFoodIds.contains(foods.get(j))) {
                     maxSize = maxSize > amount.get(j) ? maxSize : amount.get(j);
                     // 这边需要看看是删除索引还是数字
                     toFindFoodIds.remove(toFindFoodIds.indexOf(foods.get(j)));
@@ -120,10 +124,10 @@ public class OrderServiceImpl implements OrderService {
             }
 
             // 查看是否有满足条件的商品组合
-            if(toFindFoodIds.isEmpty()){
+            if (toFindFoodIds.isEmpty()) {
                 total += discountTableEntities.get(i).getDiscountMoney() * maxSize;
 
-                for(int m = 0; m < foodIds.size(); m++){
+                for (int m = 0; m < foodIds.size(); m++) {
                     amount.set(foods.indexOf(foodIds.get(m)), amount.get(foods.indexOf(foodIds.get(m))) - maxSize);
                 }
             }
@@ -177,7 +181,8 @@ public class OrderServiceImpl implements OrderService {
             customerEntity.setLeftMoney(leftMoney - payMoney);
             customerEntity.setPoint(customerEntity.getPoint() + payMoney);
             return customerDao.updateCustomer(customerEntity) &&
-                    orderDao.updateOrderStatus(orderId, OrderStatus.TOBEDELIVERED);
+                    orderDao.updateOrderStatus(orderId, OrderStatus.TOBEDELIVERED) &&
+                    recordDao.insertRecord(new PayRecordEntity((byte) 1, customerEntity.getEmail(), payMoney, (byte) 1));
         } else
             return false;
     }
@@ -196,11 +201,15 @@ public class OrderServiceImpl implements OrderService {
             case 1: // 尚未配送，返回95%钱
                 customerEntity = customerDao.getCustomer(orderEntity.getEmail());
                 customerEntity.setLeftMoney(customerEntity.getLeftMoney() + orderEntity.getPayMoney() * 0.95);
-                return customerDao.updateCustomer(customerEntity) && orderDao.updateOrderStatus(orderId, OrderStatus.CANCEL);
+                return customerDao.updateCustomer(customerEntity) && orderDao.updateOrderStatus(orderId,
+                        OrderStatus.CANCEL) && recordDao.insertRecord(new PayRecordEntity((byte) 1,
+                        customerEntity.getEmail(), orderEntity.getPayMoney() * 0.95, (byte) 0));
             case 2: // 开始配送，返回50%钱
                 customerEntity = customerDao.getCustomer(orderEntity.getEmail());
                 customerEntity.setLeftMoney(customerEntity.getLeftMoney() + orderEntity.getPayMoney() * 0.5);
-                return customerDao.updateCustomer(customerEntity) && orderDao.updateOrderStatus(orderId, OrderStatus.CANCEL);
+                return customerDao.updateCustomer(customerEntity) && orderDao.updateOrderStatus(orderId,
+                        OrderStatus.CANCEL) && recordDao.insertRecord(new PayRecordEntity((byte) 1,
+                        customerEntity.getEmail(), orderEntity.getPayMoney() * 0.5, (byte) 0));
             case 3: // 已经完成不能退订
                 return false;
         }
