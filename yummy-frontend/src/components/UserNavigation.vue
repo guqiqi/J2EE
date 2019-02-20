@@ -10,7 +10,7 @@
     </el-menu-item>
     <el-menu-item index="/customer/statistic" >
       <i class="el-icon-document"></i>
-      <span slot="title">消费统计</span>
+      <span slot="title">统计信息</span>
     </el-menu-item>
     <el-menu-item index="/info" >
       <i class="el-icon-setting"></i>

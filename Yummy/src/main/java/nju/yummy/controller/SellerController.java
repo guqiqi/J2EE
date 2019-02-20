@@ -7,6 +7,8 @@ import nju.yummy.entity.SellerEntity;
 import nju.yummy.service.SellerService;
 import nju.yummy.serviceImpl.SellerServiceImpl;
 import nju.yummy.util.Const;
+import nju.yummy.util.StatisticUtil;
+import nju.yummy.vo.SellerCostVO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -343,4 +345,30 @@ public class SellerController {
         return result.toJSONString();
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/statistic/cost", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public String getSellStatistic(String sellerId) {
+        double[] costByHour = sellerService.getCostByHour(sellerId);
+
+        JSONObject result = new JSONObject();
+
+        result.put("sellByHour", StatisticUtil.getCostBy2Hour(costByHour));
+
+        List<SellerCostVO> sellerCostVOList = sellerService.getCostByCustomer(sellerId);
+        result.put("sellTable", sellerCostVOList);
+
+        result.put("recentVolume", sellerService.getCostByTime(sellerId));
+
+        return result.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/statistic/cancel", method = RequestMethod.GET, produces = "application/json;" +
+            "charset=UTF-8")
+    public String getCancelStatistic(String email) {
+        JSONObject result = new JSONObject();
+        // TODO
+
+        return result.toJSONString();
+    }
 }

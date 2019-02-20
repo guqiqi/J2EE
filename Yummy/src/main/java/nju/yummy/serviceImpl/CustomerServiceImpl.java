@@ -12,6 +12,7 @@ import nju.yummy.entity.OrderEntity;
 import nju.yummy.entity.SellerEntity;
 import nju.yummy.service.CustomerService;
 import nju.yummy.util.Const;
+import nju.yummy.util.StatisticUtil;
 import nju.yummy.vo.SellerCostVO;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -174,24 +175,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public double[] getCostByTime(String email) {
-        double[] result = new double[3];
-
         List<OrderEntity> orderEntityList = orderDao.getOrderByEmail(email);
 
-        for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() != 0) {
-                long minutes = (System.currentTimeMillis() - orderEntity.getPlaceTime().getTime()) / (1000 * 60);
-
-                if (minutes <= 7 * 24 * 60)
-                    result[0] += orderEntity.getPayMoney();
-                if (minutes <= 30 * 24 * 60)
-                    result[1] += orderEntity.getPayMoney();
-                if (minutes <= 365 * 24 * 60)
-                    result[2] += orderEntity.getPayMoney();
-            }
-        }
-
-        return result;
+        return StatisticUtil.getCostByTime(orderEntityList);
     }
 
     @Override

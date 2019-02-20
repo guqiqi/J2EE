@@ -11,6 +11,7 @@ import nju.yummy.service.SellerService;
 import nju.yummy.util.Const;
 import nju.yummy.util.DateToTimestamp;
 import nju.yummy.util.SellerStatus;
+import nju.yummy.util.StatisticUtil;
 import nju.yummy.vo.SellerCostVO;
 
 import java.sql.Timestamp;
@@ -223,11 +224,11 @@ public class SellerServiceImpl implements SellerService {
             if (orderEntity.getStatus() != 0) {
                 CustomerEntity customerEntity = customerDao.getCustomer(orderEntity.getEmail());
 
-                if (customerCostList.contains(customerEntity.getUsername())) {
+                if (customerNames.contains(customerEntity.getUsername())) {
                     SellerCostVO customerCostVO =
                             customerCostList.get(customerNames.indexOf(customerEntity.getUsername()));
                     customerCostVO.addCost(orderEntity.getPayMoney());
-                    customerCostList.set(customerCostList.indexOf(customerEntity.getUsername()), customerCostVO);
+                    customerCostList.set(customerNames.indexOf(customerEntity.getUsername()), customerCostVO);
                 } else {
                     customerNames.add(customerEntity.getUsername());
                     customerCostList.add(new SellerCostVO(customerEntity.getUsername(), orderEntity.getPayMoney()));
@@ -258,24 +259,9 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public double[] getCostByTime(String sellerId) {
-        double[] result = new double[3];
-
         List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);
 
-        for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() != 0) {
-                long minutes = (System.currentTimeMillis() - orderEntity.getPlaceTime().getTime()) / (1000 * 60);
-
-                if (minutes <= 7 * 24 * 60)
-                    result[0] += orderEntity.getPayMoney();
-                if (minutes <= 30 * 24 * 60)
-                    result[1] += orderEntity.getPayMoney();
-                if (minutes <= 365 * 24 * 60)
-                    result[2] += orderEntity.getPayMoney();
-            }
-        }
-
-        return result;
+        return StatisticUtil.getCostByTime(orderEntityList);
     }
 
     @Override

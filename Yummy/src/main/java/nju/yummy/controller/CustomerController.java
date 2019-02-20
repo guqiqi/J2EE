@@ -5,7 +5,9 @@ import nju.yummy.entity.AddressEntity;
 import nju.yummy.entity.CustomerEntity;
 import nju.yummy.service.CustomerService;
 import nju.yummy.serviceImpl.CustomerServiceImpl;
+import nju.yummy.util.StatisticUtil;
 import nju.yummy.util.TokenProcessor;
+import nju.yummy.vo.SellerCostVO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -151,4 +153,35 @@ public class CustomerController {
 
         return result.toJSONString();
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/statistic/cost", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public String getCostStatistic(String email) {
+        double[] costByHour = customerService.getCostByHour(email);
+
+        JSONObject result = new JSONObject();
+
+        result.put("costByHour", StatisticUtil.getCostBy2Hour(costByHour));
+
+        List<SellerCostVO> sellerCostVOList = customerService.getCostClassifiedByType(email);
+        result.put("costByType", StatisticUtil.getMoneyByType(sellerCostVOList));
+        result.put("timesByType", StatisticUtil.getTimesByType(sellerCostVOList));
+
+        result.put("costTable", customerService.getCostBySeller(email));
+
+        result.put("recentVolume", customerService.getCostByTime(email));
+
+        return result.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/statistic/cancel", method = RequestMethod.GET, produces = "application/json;" +
+            "charset=UTF-8")
+    public String getCancelStatistic(String email) {
+        JSONObject result = new JSONObject();
+        // TODO
+
+        return result.toJSONString();
+    }
+
 }

@@ -48,4 +48,16 @@ public interface StatisticService {
      * @return 盈利列表（按月计算）
      */
     public List<ProfitVO> getProfit();
+
+    /**
+     * 用户数量增长情况
+     * @return 用户按月增长数量
+     */
+    public List<Integer> getCustomerIncrease();
+
+    /**
+     * 商户数量增长情况
+     * @return 商户按月增长数量
+     */
+    public List<Integer> getSellerIncrease();
 }

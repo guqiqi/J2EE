@@ -10,6 +10,7 @@ import nju.yummy.entity.OrderEntity;
 import nju.yummy.entity.SellerEntity;
 import nju.yummy.service.StatisticService;
 import nju.yummy.util.Const;
+import nju.yummy.util.StatisticUtil;
 import nju.yummy.vo.ProfitVO;
 import nju.yummy.vo.SellerCostVO;
 
@@ -84,24 +85,9 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public double[] getCostByTime() {
-        double[] result = new double[3];
-
         List<OrderEntity> orderEntityList = orderDao.getAllOrders();
 
-        for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() != 0) {
-                long minutes = (System.currentTimeMillis() - orderEntity.getPlaceTime().getTime()) / (1000 * 60);
-
-                if (minutes <= 7 * 24 * 60)
-                    result[0] += orderEntity.getPayMoney();
-                if (minutes <= 30 * 24 * 60)
-                    result[1] += orderEntity.getPayMoney();
-                if (minutes <= 365 * 24 * 60)
-                    result[2] += orderEntity.getPayMoney();
-            }
-        }
-
-        return result;
+        return StatisticUtil.getCostByTime(orderEntityList);
     }
 
     @Override
@@ -134,6 +120,18 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public List<ProfitVO> getProfit() {
+        // TODO
+        return null;
+    }
+
+    @Override
+    public List<Integer> getCustomerIncrease() {
+        // TODO
+        return null;
+    }
+
+    @Override
+    public List<Integer> getSellerIncrease() {
         // TODO
         return null;
     }
