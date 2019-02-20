@@ -42,6 +42,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderEntity placeOrder(String email, String sellerId, List<Integer> foods, List<Integer> amount, Date reachTime,
                                   int addressId) {
+        // 判断库存
+        if (!isFoodEnough(foods, amount)) {
+            return null;
+        }
+
         String orderId = generateOrderId();
         OrderEntity orderEntity = new OrderEntity(orderId, email, sellerId, getTotalMoney(foods, amount),
                 getDiscountMoney(email, sellerId, foods, amount), DateToTimestamp.toTimeStamp(reachTime), addressId);
@@ -52,6 +57,13 @@ public class OrderServiceImpl implements OrderService {
         SellerEntity sellerEntity = sellerDao.getSellerEntity(sellerId);
         sellerEntity.setOrderCount(sellerEntity.getOrderCount() + 1);
         sellerDao.updateSeller(sellerEntity);
+
+        // 相关库存减少
+        for(int i = 0; i < foods.size(); i++){
+            FoodEntity foodEntity = sellerDao.getFoodById(foods.get(i));
+            foodEntity.setStock(foodEntity.getStock() - amount.get(i));
+            sellerDao.updateFood(foodEntity);
+        }
 
         return orderEntity;
     }

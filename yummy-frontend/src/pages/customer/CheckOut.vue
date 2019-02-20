@@ -268,8 +268,17 @@
         }).then(response => {
           let data_ = response.data
 
-          this.total = data_.totalMoney
-          this.discount = data_.totalMoney - data_.payMoney
+          if (data_.totalMoney === undefined) {
+            this.$message({
+              message: '抱歉，库存不足，请重新选择商品',
+              type: 'warning'
+            })
+            this.$router.go(-1)
+          }
+          else {
+            this.total = data_.totalMoney
+            this.discount = data_.totalMoney - data_.payMoney
+          }
         }).catch(function (err) {
           console.log(err)
         })
@@ -322,9 +331,14 @@
         }).then(response => {
           let data_ = response.data
 
-          this.total = data_.totalMoney
-          this.discount = data_.totalMoney - data_.payMoney
-          this.orderId = data_.orderId
+          if (data_.totalMoney === undefined) {
+            this.$router.go(-1)
+          }
+          else {
+            this.total = data_.totalMoney
+            this.discount = data_.totalMoney - data_.payMoney
+            this.orderId = data_.orderId
+          }
         }).catch(function (err) {
           console.log(err)
         })
