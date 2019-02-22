@@ -11,24 +11,22 @@
   import SellerNavigation from "../../components/SellerNavigation"
   import SellerEditInfo from "../../components/SellerEditInfo"
 
-
   export default {
     components: {SellerNavigation, SellerEditInfo},
     name: "seller-edit",
     data(){
       return {
-        name: '食其家',
-        type: '快餐便当',
-        address: '南京市鼓楼广场',
-        phone: '12888883894',
-        startHour: '9:00 : 00',
-        endHour: '20:00 : 00',
-        icon: '../../static/uploadImages/347454.jpg',
-        password: '123'
+        name: '',
+        type: '',
+        address: '',
+        phone: '',
+        startHour: '',
+        endHour: '',
+        icon: '',
+        password: ''
       }
     },
     mounted(){
-      // TODO 初始化信息
     }
   }
 </script>
