@@ -134,6 +134,8 @@ public class SellerServiceImpl implements SellerService {
         sellerEntity.setTempPhone(phone);
         sellerEntity.setTempType(type);
 
+        sellerEntity.setStatus(3);
+
         return sellerDao.updateSeller(sellerEntity);
     }
 
@@ -228,7 +230,7 @@ public class SellerServiceImpl implements SellerService {
         List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);
 
         for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() != 0) {
+            if (orderEntity.getStatus() != -1) {
                 CustomerEntity customerEntity = customerDao.getCustomer(orderEntity.getEmail());
 
                 if (customerNames.contains(customerEntity.getUsername())) {
@@ -253,7 +255,7 @@ public class SellerServiceImpl implements SellerService {
         List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);
 
         for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() != 0) {
+            if (orderEntity.getStatus() != -1) {
                 Timestamp placeTime = orderEntity.getPlaceTime();
                 SimpleDateFormat sd = new SimpleDateFormat("HH");
                 int hour = Integer.parseInt(sd.format(placeTime)) - 1;
@@ -278,7 +280,7 @@ public class SellerServiceImpl implements SellerService {
         List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);
 
         for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() != 0) {
+            if (orderEntity.getStatus() != -1) {
                 if(!customerEmails.contains(orderEntity.getEmail()))
                     customerEmails.add(orderEntity.getEmail());
             }
@@ -302,7 +304,6 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public List<CancelOrderVO> getCancelByUser(String sellerId) {
-        // TODO
         List<CancelOrderVO> cancelOrderVOList = new ArrayList<>();
 
         List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);

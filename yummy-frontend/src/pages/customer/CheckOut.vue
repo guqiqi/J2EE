@@ -83,17 +83,26 @@
 
           <div v-else>
             <span v-for="item in addressList" @click="modifyAddress(item.addressId)">
-              <el-card :shadow="item.addressId === address.addressId ? 'always' : 'never'"
-                       style="margin: 10px 20px;" body-style="paddingTop: 10px; paddingBottom: 10px">
-              <el-row style="text-align: left">
+              <el-card v-if="!item.canSend" :shadow="item.addressId === address.addressId ? 'always' : 'never'"
+                       style="margin: 10px 20px; background-color: #9d9d9d"
+                       body-style="paddingTop: 10px; paddingBottom: 10px">
+                <el-row style="text-align: left">
                 <span style="font-weight: bold">{{item.receiver}}</span>  {{item.phone}}
-              </el-row>
-              <el-row style="text-align: left">
-                {{item.detail}}
-              </el-row>
-            </el-card>
-            </span>
+                </el-row>
+                <el-row style="color: white; margin-top: -8px">地址超出配送范围</el-row>
+                <el-row style="text-align: left; margin-top: -8px">
+                  {{item.detail}}
+                </el-row>
+              </el-card>
 
+              <el-card v-else :shadow="item.addressId === address.addressId ? 'always' : 'never'"
+                       style="margin: 10px 20px;" body-style="paddingTop: 10px; paddingBottom: 10px">
+                <el-row style="text-align: left">
+                  <span style="font-weight: bold">{{item.receiver}}</span>  {{item.phone}}
+                </el-row>
+                <el-row style="text-align: left">{{item.detail}}</el-row>
+              </el-card>
+            </span>
           </div>
         </el-card>
         <el-card body-style="padding: 0" style="margin-left: 10px; margin-top: 20px">
@@ -166,12 +175,17 @@
 </template>
 
 <script>
+  import ElRow from "element-ui/packages/row/src/row"
+
   const navigation = () => import('../../components/Navigation.vue')
   import global from '../../../static/Global'
 
   export default {
     name: "check-out",
-    components: {navigation},
+    components: {
+      ElRow,
+      navigation
+    },
     data() {
       return {
         foodList: [],
@@ -296,7 +310,12 @@
       modifyAddress: function (addressId) {
         for (let i = 0; i < this.addressList.length; i++) {
           if (this.addressList[i].addressId === addressId) {
-            this.address = this.addressList[i]
+            if(this.addressList[i].canSend)
+              this.address = this.addressList[i]
+            else
+              this.$alert('抱歉，您选择的地址不在配送范围内', '错误提示', {
+                confirmButtonText: '确定',
+              });
             break
           }
         }
@@ -305,7 +324,7 @@
         this.dialogVisible = true
 
         console.log(this.deliverTime)
-        // TODO 收货时间
+        //收货时间
         let foodId = []
         let num = []
 
@@ -387,16 +406,22 @@
       getAllAddress: function () {
         this.$axios({
           method: 'get',
-          url: '/user/address/all',
+          url: '/order/address/judge',
           params: {
-            email: global.userId
+            email: global.userId,
+            sellerId: this.$route.params.sellerId
           }
         }).then(response => {
           let data_ = response.data
 
+          console.log(response.data)
           this.addressList = data_.addressList
-          this.address = this.addressList[0]
 
+          for(let i = 0; i < this.addressList.length; i++){
+            if(this.addressList.canSend)
+              this.address = this.addressList[i]
+          }
+          
         }).catch(function (err) {
           console.log(err)
         })

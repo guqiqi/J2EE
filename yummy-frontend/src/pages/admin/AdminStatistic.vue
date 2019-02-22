@@ -72,30 +72,30 @@
         customerNumber: 0,
         sellerNumber: 0,
 
-        recentVolume: [0, 0, 1],
+        recentVolume: [0, 0, 0],
 
-        customerIncreaseDate: [2, 2, 2, 2, 2],
-        sellerIncreaseData: [2, 6, 2, 2, 78],
-        sellerNumberByTypeData: [1, 1, 1, 1, 1],
+        customerIncreaseDate: [0, 0, 0, 3, 5, 10, 12],
+        sellerIncreaseData: [0, 0, 0, 3, 6, 10, 15],
+        sellerNumberByTypeData: [2, 4, 5, 2, 2],
         sellerNumberByTypePieData: [
           {name: "快餐便当", value: 2},
-          {name: "甜品饮品", value: 1},
-          {name: "果蔬生鲜", value: 1},
-          {name: "商店超市", value: 1},
-          {name: "鲜花绿植", value: 1}],
+          {name: "甜品饮品", value: 4},
+          {name: "果蔬生鲜", value: 5},
+          {name: "商店超市", value: 2},
+          {name: "鲜花绿植", value: 2}],
 
-        volumeByHourData: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
-        volumeByTypeData: [1, 1, 1, 1, 1],
+        volumeByHourData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        volumeByTypeData: [0, 0, 0, 0, 0],
         volumeByTypePieData: [
-          {name: "快餐便当", value: 2},
-          {name: "甜品饮品", value: 1},
-          {name: "果蔬生鲜", value: 1},
-          {name: "商店超市", value: 1},
-          {name: "鲜花绿植", value: 1}],
+          {name: "快餐便当", value: 0},
+          {name: "甜品饮品", value: 0},
+          {name: "果蔬生鲜", value: 0},
+          {name: "商店超市", value: 0},
+          {name: "鲜花绿植", value: 0}],
       }
     },
     mounted() {
-      // TODO 获得数据
+      // 获得数据
       this.$axios({
         method: 'get',
         url: '/statistic/customer',
@@ -103,6 +103,11 @@
         let data_ = response.data
 
         this.customerNumber = data_.customerNumber
+        this.customerIncreaseDate = data_.customerIncrease
+
+        console.log(this.customerIncreaseDate)
+
+        this.drawCustomerIncrease()
       }).catch(function (err) {
         console.log(err)
       })
@@ -115,6 +120,9 @@
 
         this.sellerNumber = data_.sellerNumber
         this.sellerNumberByTypeData = data_.sellerNumberByType
+        this.sellerIncreaseData = data_.sellerIncrease
+
+        console.log(this.sellerIncreaseData)
 
         this.sellerNumberByTypePieData = [
           {name: "快餐便当", value: this.sellerNumberByTypeData[0]},
@@ -123,8 +131,8 @@
           {name: "商店超市", value: this.sellerNumberByTypeData[3]},
           {name: "鲜花绿植", value: this.sellerNumberByTypeData[4]}]
 
-        this.drawSellerIncrease()
         this.drawSellerNumber()
+        this.drawSellerIncrease()
       }).catch(function (err) {
         console.log(err)
       })
@@ -151,8 +159,6 @@
       }).catch(function (err) {
         console.log(err)
       })
-
-      this.drawCustomerIncrease()
     },
     methods: {
       formatDate: function (date) {
@@ -160,10 +166,11 @@
       },
       drawCustomerIncrease: function () {
         let customerIncrease = this.$echarts.init(document.getElementById('customerIncrease'))
-        // TODO
+
         customerIncrease.setOption({
+          tooltip: {},
           xAxis: {
-            data: ["快餐便当", "甜品饮品", "果蔬生鲜", "商店超市", "鲜花绿植"]
+            data: ["2018.10以前", "2018.10", "2018.11", "2018.12", "2019.01", "2019.02", "2019.03"]
           },
           yAxis: {},
           series: [{
@@ -175,10 +182,10 @@
       },
       drawSellerIncrease: function () {
         let sellerIncrease = this.$echarts.init(document.getElementById('sellerIncrease'))
-        // TODO
         sellerIncrease.setOption({
+          tooltip: {},
           xAxis: {
-            data: ["快餐便当", "甜品饮品", "果蔬生鲜", "商店超市", "鲜花绿植"]
+            data: ["2018.10以前", "2018.10", "2018.11", "2018.12", "2019.01", "2019.02", "2019.03"]
           },
           yAxis: {},
           series: [{
@@ -193,6 +200,7 @@
         let sellerNumberByTypePie = this.$echarts.init(document.getElementById('sellerNumberByTypePie'))
 
         sellerNumber.setOption({
+          tooltip: {},
           xAxis: {
             data: ["快餐便当", "甜品饮品", "果蔬生鲜", "商店超市", "鲜花绿植"]
           },
@@ -205,6 +213,7 @@
         })
 
         sellerNumberByTypePie.setOption({
+          tooltip: {},
           series: [{
             // name: '销量',
             type: 'pie',
@@ -220,6 +229,7 @@
         let volumeByHour = this.$echarts.init(document.getElementById('volumeByHour'))
 
         volumeByHour.setOption({
+          tooltip: {},
           xAxis: {
             data: ["0~1", "2~3", "4~5", "6~7", "8~9", "10~11", "12~13", "14~15", "16~17", "18~19", "20~21", "22~23"]
           },
@@ -235,6 +245,7 @@
         let volumeByTypePie = this.$echarts.init(document.getElementById('volumeByTypePie'))
 
         volumeByType.setOption({
+          tooltip: {},
           xAxis: {
             data: ["快餐便当", "甜品饮品", "果蔬生鲜", "商店超市", "鲜花绿植"]
           },

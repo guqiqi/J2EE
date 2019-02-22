@@ -34,6 +34,9 @@ public class SellerEntity {
     private String tempEndHour;
     private String tempIcon;
 
+    private double latitude;
+    private double longitude;
+
     public SellerEntity() {
     }
 
@@ -53,6 +56,8 @@ public class SellerEntity {
         this.discount = discount;
         this.icon = icon;
         this.registerTime = DateToTimestamp.toTimeStamp(new Date());
+        this.longitude = Math.random()*180-90;
+        this.latitude = Math.random()*360-180;
     }
 
     @Id
@@ -298,5 +303,25 @@ public class SellerEntity {
     @Override
     public int hashCode() {
         return Objects.hash(sellerId, password, name, type, address, phone, startHour, endHour, status, foodType, orderCount, discount, icon);
+    }
+
+    @Basic
+    @Column(name = "latitude")
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    @Basic
+    @Column(name = "longitude")
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

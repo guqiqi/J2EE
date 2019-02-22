@@ -4,13 +4,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import nju.yummy.entity.AddressEntity;
 import nju.yummy.entity.OrderEntity;
+import nju.yummy.entity.SellerEntity;
 import nju.yummy.service.CustomerService;
 import nju.yummy.service.OrderService;
 import nju.yummy.service.SellerService;
+import nju.yummy.serviceImpl.AddressServiceImpl;
 import nju.yummy.serviceImpl.CustomerServiceImpl;
 import nju.yummy.serviceImpl.OrderServiceImpl;
 import nju.yummy.serviceImpl.SellerServiceImpl;
 import nju.yummy.util.Const;
+import nju.yummy.vo.Location;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -77,6 +80,36 @@ public class OrderController {
         result.put("totalMoney", orderEntity.getTotalMoney());
         result.put("payMoney", orderEntity.getPayMoney());
         result.put("orderId", orderEntity.getOrderId());
+
+        return result.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/address/judge", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public String getAddress(String email, String sellerId) {
+        List<AddressEntity> addressEntityList = customerService.getAddressByEmail(email);
+
+        SellerEntity sellerEntity = sellerService.getSellerInfo(sellerId);
+        Location sellerLocation = new Location(sellerEntity.getLongitude(), sellerEntity.getLatitude());
+
+        JSONObject result = new JSONObject();
+
+        JSONArray jsonArray = new JSONArray();
+        for (AddressEntity addressEntity: addressEntityList){
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("addressId", addressEntity.getAddressId());
+            jsonObject.put("detail", addressEntity.getDetail());
+            jsonObject.put("phone", addressEntity.getPhone());
+            jsonObject.put("receiver", addressEntity.getReceiver());
+
+            Location receiverLocation = new Location(addressEntity.getLongitude(), addressEntity.getLatitude());
+            jsonObject.put("canSend", new AddressServiceImpl().judgeCanSend(sellerLocation, receiverLocation));
+
+            jsonArray.add(jsonObject);
+        }
+
+        result.put("addressList", jsonArray);
 
         return result.toJSONString();
     }

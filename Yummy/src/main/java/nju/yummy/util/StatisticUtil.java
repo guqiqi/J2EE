@@ -11,7 +11,7 @@ public class StatisticUtil {
         double[] result = new double[3];
 
         for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() != 0) {
+            if (orderEntity.getStatus() != -1) {
                 long minutes = (System.currentTimeMillis() - orderEntity.getPlaceTime().getTime()) / (1000 * 60);
 
                 if (minutes <= 7 * 24 * 60)

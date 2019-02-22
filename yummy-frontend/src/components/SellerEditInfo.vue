@@ -191,7 +191,7 @@
         })
       },
       modify: function () {
-        // TODO 修改
+        // 修改
         this.$axios({
           method: 'post',
           url: '/seller/modify',

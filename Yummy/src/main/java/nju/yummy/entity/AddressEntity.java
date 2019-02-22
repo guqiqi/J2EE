@@ -11,26 +11,31 @@ public class AddressEntity {
     private String detail;
     private String phone;
     private String receiver;
-    private Integer label;
+    private double latitude;
+    private double longitude;
 
     public AddressEntity() {
     }
 
-    public AddressEntity(String email, String detail, String phone, String receiver, Integer label) {
+    public AddressEntity(String email, String detail, String phone, String receiver) {
         this.email = email;
         this.detail = detail;
         this.phone = phone;
         this.receiver = receiver;
-        this.label = label;
+
+        this.longitude = Math.random()*180-90;
+        this.latitude = Math.random()*360-180;
     }
 
-    public AddressEntity(Integer addressId, String email, String detail, String phone, String receiver, Integer label) {
+    public AddressEntity(Integer addressId, String email, String detail, String phone, String receiver) {
         this.addressId = addressId;
         this.email = email;
         this.detail = detail;
         this.phone = phone;
         this.receiver = receiver;
-        this.label = label;
+
+        this.longitude = Math.random()*180-90;
+        this.latitude = Math.random()*360-180;
     }
 
     @Id
@@ -84,16 +89,6 @@ public class AddressEntity {
         this.receiver = receiver;
     }
 
-    @Basic
-    @Column(name = "label")
-    public Integer getLabel() {
-        return label;
-    }
-
-    public void setLabel(Integer label) {
-        this.label = label;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -104,11 +99,31 @@ public class AddressEntity {
                 Objects.equals(detail, that.detail) &&
                 Objects.equals(phone, that.phone) &&
                 Objects.equals(receiver, that.receiver) &&
-                Objects.equals(label, that.label);
+                Objects.equals(latitude, that.latitude);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(addressId, email, detail, phone, receiver, label);
+        return Objects.hash(addressId, email, detail, phone, receiver, latitude, longitude);
+    }
+
+    @Basic
+    @Column(name = "latitude")
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    @Basic
+    @Column(name = "longitude")
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

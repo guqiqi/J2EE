@@ -37,13 +37,13 @@ public class CustomerDaoImplTest {
 
     @Test
     public void addAddress() {
-        AddressEntity addressEntity = new AddressEntity("222", "南京大学", "137777777777", "kiki", 9);
+        AddressEntity addressEntity = new AddressEntity("222", "南京大学", "137777777777", "kiki");
         new CustomerDaoImpl().addAddress(addressEntity);
     }
 
     @Test
     public void updateAddress() {
-        AddressEntity addressEntity = new AddressEntity("222", "南京大学222", "137777777777", "kiki", 9);
+        AddressEntity addressEntity = new AddressEntity(2, "222", "南京大学222", "137777777777", "kiki");
         addressEntity.setAddressId(7);
         new CustomerDaoImpl().updateAddress(addressEntity);
     }

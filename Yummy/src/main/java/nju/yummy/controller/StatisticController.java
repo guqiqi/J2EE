@@ -27,6 +27,7 @@ public class StatisticController {
         JSONObject result = new JSONObject();
 
         result.put("customerNumber", statisticService.getCustomerNumber());
+        result.put("customerIncrease", statisticService.getCustomerIncrease());
 
         return result.toJSONString();
     }
@@ -38,6 +39,7 @@ public class StatisticController {
 
         result.put("sellerNumber", statisticService.getSellerNumber());
         result.put("sellerNumberByType", statisticService.getSellerNumberClassifiedByType());
+        result.put("sellerIncrease", statisticService.getSellerIncrease());
 
         return result.toJSONString();
     }

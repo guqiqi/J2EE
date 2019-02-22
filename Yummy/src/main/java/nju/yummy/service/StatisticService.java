@@ -53,11 +53,11 @@ public interface StatisticService {
      * 用户数量增长情况
      * @return 用户按月增长数量
      */
-    public List<Integer> getCustomerIncrease();
+    public int[] getCustomerIncrease();
 
     /**
      * 商户数量增长情况
      * @return 商户按月增长数量
      */
-    public List<Integer> getSellerIncrease();
+    public int[] getSellerIncrease();
 }

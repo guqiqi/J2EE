@@ -73,14 +73,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public boolean addAddress(String email, String receiver, String detail, String phone, int label) {
-        AddressEntity addressEntity = new AddressEntity(email, detail, phone, receiver, label);
+        AddressEntity addressEntity = new AddressEntity(email, detail, phone, receiver);
 
         return customerDao.addAddress(addressEntity);
     }
 
     @Override
     public boolean modifyAddress(int addressId, String email, String receiver, String detail, String phone, int label) {
-        AddressEntity addressEntity = new AddressEntity(addressId, email, detail, phone, receiver, label);
+        AddressEntity addressEntity = new AddressEntity(addressId, email, detail, phone, receiver);
         return customerDao.updateAddress(addressEntity);
     }
 
@@ -111,7 +111,7 @@ public class CustomerServiceImpl implements CustomerService {
         List<OrderEntity> orderEntityList = orderDao.getOrderByEmail(email);
 
         for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() != 0) {
+            if (orderEntity.getStatus() != -1) {
                 Timestamp placeTime = orderEntity.getPlaceTime();
                 SimpleDateFormat sd = new SimpleDateFormat("HH");
                 int hour = Integer.parseInt(sd.format(placeTime)) - 1;
@@ -133,7 +133,7 @@ public class CustomerServiceImpl implements CustomerService {
         List<OrderEntity> orderEntityList = orderDao.getOrderByEmail(email);
 
         for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() != 0) {
+            if (orderEntity.getStatus() != -1) {
                 SellerEntity sellerEntity = sellerDao.getSellerEntity(orderEntity.getSellerId());
 
                 int index = 0;
@@ -159,7 +159,7 @@ public class CustomerServiceImpl implements CustomerService {
         List<OrderEntity> orderEntityList = orderDao.getOrderByEmail(email);
 
         for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() != 0) {
+            if (orderEntity.getStatus() != -1) {
                 SellerEntity sellerEntity = sellerDao.getSellerEntity(orderEntity.getSellerId());
 
                 if (sellerNames.contains(sellerEntity.getName())) {

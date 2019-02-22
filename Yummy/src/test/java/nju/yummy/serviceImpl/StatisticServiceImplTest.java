@@ -31,4 +31,20 @@ public class StatisticServiceImplTest {
     @Test
     public void getCustomerNumber() {
     }
+
+    @Test
+    public void getCustomerIncrease() {
+        int[] result = new StatisticServiceImpl().getCustomerIncrease();
+        for (int i : result) {
+            System.out.println(i);
+        }
+    }
+
+    @Test
+    public void getSellerIncrease() {
+        int[] result = new StatisticServiceImpl().getSellerIncrease();
+        for (int i : result) {
+            System.out.println(i);
+        }
+    }
 }
