@@ -37,7 +37,6 @@
                 </el-button>
                 <el-button type="primary" style="width: 45%; margin-top: 20px" @click="pass(props.row.sellerId)">通过
                 </el-button>
-
               </el-col>
             </div>
           </template>
@@ -60,6 +59,7 @@
 </template>
 
 <script>
+  import global from '../../../static/Global'
   import AdminNavigation from "../../components/AdminNavigation"
 
   export default {
@@ -117,10 +117,14 @@
           for(let i = 0 ; i < sellerList.length; i++){
             if(!(sellerList[i].status === 1 || sellerList[i].status === 3)){
               sellerList.splice(i, 1)
+              i--
+            }
+            else {
+              sellerList[i].tempStartHour = global.formatTime(new Date(sellerList[i].tempStartHour))
+              sellerList[i].tempEndHour = global.formatTime(new Date(sellerList[i].tempEndHour))
             }
           }
 
-          console.log(sellerList)
           this.sellerList = sellerList
         }).catch(function (err) {
           console.log(err)

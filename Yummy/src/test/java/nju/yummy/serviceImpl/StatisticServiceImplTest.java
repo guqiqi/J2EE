@@ -13,6 +13,7 @@ public class StatisticServiceImplTest {
 
     @Test
     public void getSellerNumberClassifiedByType() {
+        System.out.println(new StatisticServiceImpl().getSellerNumberClassifiedByType());
     }
 
     @Test

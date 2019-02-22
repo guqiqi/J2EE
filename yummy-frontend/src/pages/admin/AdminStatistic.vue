@@ -17,7 +17,7 @@
       <el-tab-pane label="商户统计" name="second">
         <el-row style="font-size: 25px; font-weight: bold; text-align: right; margin-right: 30px">
           截至<span style="color: red"> {{formatDate(today)}} </span>, 系统共有<span
-          style="color: red"> {{customerNumber}} </span>名注册商户
+          style="color: red"> {{sellerNumber}} </span>名注册商户
         </el-row>
         <el-row class="chart_title" style="margin-top: 20px">
           商户数量统计表
@@ -77,11 +77,21 @@
         customerIncreaseDate: [2, 2, 2, 2, 2],
         sellerIncreaseData: [2, 6, 2, 2, 78],
         sellerNumberByTypeData: [1, 1, 1, 1, 1],
-        sellerNumberByTypePieData: [{name: "快餐便当", value: 2}, {name: "甜品饮品", value: 1}, {name: "果蔬生鲜", value: 1}, {name: "商店超市", value: 1}, {name: "鲜花绿植", value: 1}],
+        sellerNumberByTypePieData: [
+          {name: "快餐便当", value: 2},
+          {name: "甜品饮品", value: 1},
+          {name: "果蔬生鲜", value: 1},
+          {name: "商店超市", value: 1},
+          {name: "鲜花绿植", value: 1}],
 
         volumeByHourData: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
         volumeByTypeData: [1, 1, 1, 1, 1],
-        volumeByTypePieData: [{name: "快餐便当", value: 2}, {name: "甜品饮品", value: 1}, {name: "果蔬生鲜", value: 1}, {name: "商店超市", value: 1}, {name: "鲜花绿植", value: 1}],
+        volumeByTypePieData: [
+          {name: "快餐便当", value: 2},
+          {name: "甜品饮品", value: 1},
+          {name: "果蔬生鲜", value: 1},
+          {name: "商店超市", value: 1},
+          {name: "鲜花绿植", value: 1}],
       }
     },
     mounted() {
@@ -200,7 +210,7 @@
             type: 'pie',
             data: this.sellerNumberByTypePieData
           }],
-          tooltip : {
+          tooltip: {
             trigger: 'item',
             formatter: "{b} : {c} ({d}%)"
           },
@@ -246,7 +256,7 @@
             type: 'pie',
             data: this.volumeByTypePieData
           }],
-          tooltip : {
+          tooltip: {
             trigger: 'item',
             formatter: "{b} : {c} ({d}%)"
           },

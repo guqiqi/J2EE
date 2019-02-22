@@ -74,7 +74,6 @@
       </el-time-picker>
       <el-time-picker
         style="width: 150px; margin-top: 20px; margin-left: 15px"
-        arrow-control
         v-model="endHour"
         :picker-options="{selectableRange: '0:0:0 - 23:59:59'}"
         placeholder="任意时间点">

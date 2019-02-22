@@ -49,7 +49,8 @@ public class OrderServiceImpl implements OrderService {
 
         String orderId = generateOrderId();
         OrderEntity orderEntity = new OrderEntity(orderId, email, sellerId, getTotalMoney(foods, amount),
-                getDiscountMoney(email, sellerId, foods, amount), DateToTimestamp.toTimeStamp(reachTime), addressId);
+                getDiscountMoney(email, sellerId, foods, amount), DateToTimestamp.toTimeStamp(reachTime), addressId,
+                Const.convertListToString(foods), Const.convertListToString(amount));
 
         orderDao.addOrder(orderEntity);
 

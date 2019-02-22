@@ -1,5 +1,5 @@
 <script>
-  let userId = 'XgZGiwT'
+  let userId = '111'
   let startHour = new Date()
   startHour.setHours(8)
   startHour.setMinutes(0)
@@ -28,7 +28,6 @@
     let h = date.getHours()
     let minute = date.getMinutes()
     minute = minute < 10 ? ('0' + minute) : minute
-    console.log(h + ':' + minute)
     return h + ':' + minute
   }
 

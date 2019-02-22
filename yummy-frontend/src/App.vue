@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script defer="true">
 export default {
   name: 'App'
 }

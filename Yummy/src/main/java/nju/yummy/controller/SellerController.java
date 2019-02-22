@@ -84,6 +84,15 @@ public class SellerController {
             jsonObject.put("status", sellerEntity.getStatus());
             jsonObject.put("sellerId", sellerEntity.getSellerId());
 
+            jsonObject.put("tempIcon", sellerEntity.getTempIcon());
+            jsonObject.put("tempName", sellerEntity.getTempName());
+            jsonObject.put("tempAddress", sellerEntity.getTempAddress());
+            jsonObject.put("tempPhone", sellerEntity.getTempPhone());
+            jsonObject.put("tempPassword", sellerEntity.getTempPassword());
+            jsonObject.put("tempStartHour", sellerEntity.getTempStartHour());
+            jsonObject.put("tempEndHour", sellerEntity.getTempEndHour());
+            jsonObject.put("tempType", sellerEntity.getTempType());
+
             jsonArray.add(jsonObject);
         }
 

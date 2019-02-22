@@ -1,6 +1,10 @@
 package nju.yummy.entity;
 
+import nju.yummy.util.DateToTimestamp;
+
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +23,7 @@ public class SellerEntity {
     private Integer orderCount;
     private String discount;
     private String icon;
+    private Timestamp registerTime;
 
     private String tempPassword;
     private String tempName;
@@ -47,6 +52,7 @@ public class SellerEntity {
         this.orderCount = 0;
         this.discount = discount;
         this.icon = icon;
+        this.registerTime = DateToTimestamp.toTimeStamp(new Date());
     }
 
     @Id
@@ -257,6 +263,16 @@ public class SellerEntity {
 
     public void setTempIcon(String tempIcon) {
         this.tempIcon = tempIcon;
+    }
+
+    @Basic
+    @Column(name = "registerTime")
+    public Timestamp getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(Timestamp registerTime) {
+        this.registerTime = registerTime;
     }
 
     @Override

@@ -19,7 +19,7 @@
             <el-row class="chart_title" style="margin-top: 40px">
               消费活跃时间表
             </el-row>
-            <div id="costByHour" :style="{width: '90%', height: '400px', marginLeft: '5%'}"></div>
+            <div id="costByHour"  :style="{width: '90%', height: '400px', marginLeft: '5%'}"></div>
 
             <el-row class="chart_title" style="margin-top: 20px">
               分类消费统计表
@@ -103,10 +103,10 @@
       return {
         activeName: 'first',
 
-        recentVolume: [],
-        costByHourData: [],
-        costByTypeData: [],
-        timesByTypeData: [],
+        recentVolume: [1, 1,1],
+        costByHourData: [1,1,1,1,1,1,1,1,1,1,2,2],
+        costByTypeData: [2,2,2,2,2],
+        timesByTypeData: [3,3,3,3,3],
 
         costData: [],
 
@@ -158,7 +158,7 @@
         })
       },
       drawCostByType: function () {
-        let costByType = this.$echarts.init(document.getElementById('costByType'))
+        let costByType = this.$echarts.init(document.getElementById("costByType"))
 
         let colors = ['#4371ba', '#871717']
 
@@ -217,17 +217,18 @@
           email: global.userId
         }
       }).then(response => {
-        let data_ = response.data
 
+        let data_ = response.data
+        console.log(data_)
         this.recentVolume = data_.recentVolume
         this.costByHourData = data_.costByHour
         this.costByTypeData = data_.costByType
         this.timesByTypeData = data_.timesByType
         this.costData = data_.costTable
 
-        this.drawCostByHour()
-        this.drawCostByType()
 
+        this.drawCostByType()
+        this.drawCostByHour()
       }).catch(function (err) {
         console.log(err)
       })

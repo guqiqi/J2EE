@@ -1,6 +1,10 @@
 package nju.yummy.entity;
 
+import nju.yummy.util.DateToTimestamp;
+
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +19,7 @@ public class CustomerEntity {
     /* 0表示已注销，1表示可以使用 */
     private Byte status;
     private Double leftMoney;
+    private Timestamp registerTime;
 
     public CustomerEntity() {
     }
@@ -28,6 +33,7 @@ public class CustomerEntity {
         this.status = 1;
         this.leftMoney = 1000.0;
         this.point = 0.0;
+        this.registerTime = DateToTimestamp.toTimeStamp(new Date());
     }
 
     @Id
@@ -108,6 +114,16 @@ public class CustomerEntity {
 
     public void setLeftMoney(Double leftMoney) {
         this.leftMoney = leftMoney;
+    }
+
+    @Basic
+    @Column(name = "registerTime")
+    public Timestamp getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(Timestamp registerTime) {
+        this.registerTime = registerTime;
     }
 
     @Override

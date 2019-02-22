@@ -65,7 +65,7 @@
             </el-col>
           </el-row>
 
-          <div v-if="!allAddress">
+          <div v-if="!allAddress && address === {}">
             <el-card shadow="never" style="margin: 10px 20px;" body-style="paddingTop: 10px; paddingBottom: 10px">
               <el-row style="text-align: left">
                 <span style="font-weight: bold">{{address.receiver}}</span> {{address.phone}}
@@ -123,7 +123,7 @@
           </el-row>
 
           <el-row>
-            <el-button type="danger" style="width: 90%; margin-bottom: 10px; margin-top: 30px" @click="placeOrder">
+            <el-button type="danger" style="width: 90%; margin-bottom: 10px; margin-top: 100px" @click="placeOrder">
               确认下单
             </el-button>
           </el-row>
@@ -178,12 +178,7 @@
         total: 0,
         discount: 0,
 
-        address: {
-          addressId: 1,
-          detail: "南京大学",
-          receiver: 'kiki',
-          phone: '13770758178'
-        },
+        address: {},
         deliverTime: this.getFirstTime(),
 
         addressList: [],
@@ -348,7 +343,7 @@
         this.dialogVisible = false
 
         this.$axios({
-          method: 'get',
+          method: 'patch',
           url: '/order/pay',
           params: {
             orderId: this.orderId
