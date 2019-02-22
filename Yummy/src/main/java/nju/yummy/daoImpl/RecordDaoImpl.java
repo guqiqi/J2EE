@@ -36,8 +36,25 @@ public class RecordDaoImpl implements RecordDao {
         Session session = MySessionFactory.getSession();
         Transaction tx = session.beginTransaction();
 
-        Query query = session.createQuery("select record from PayRecordEntity record where userId=:userId");
+        Query query = session.createQuery("select record from PayRecordEntity record where payId=:userId or " +
+                "receiverId=:userId");
         query.setParameter("userId", userId);
+
+        List<PayRecordEntity> payRecordEntities = (List<PayRecordEntity>)query.list();
+
+        tx.commit();
+        session.close();
+
+        return payRecordEntities;
+    }
+
+    @Override
+    public List<PayRecordEntity> getRecordByOrderId(String orderId) {
+        Session session = MySessionFactory.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("select record from PayRecordEntity record where orderId=:orderId");
+        query.setParameter("orderId", orderId);
 
         List<PayRecordEntity> payRecordEntities = (List<PayRecordEntity>)query.list();
 

@@ -97,10 +97,10 @@
         this.type = data_.type
         this.address = data_.address
         this.phone = data_.phone
-        this.startHour = data_.startHour.split('T')[1].split('.')[0]
-        this.endHour = data_.endHour.split('T')[1].split('.')[0]
-        this.icon = data_.icon
+        this.startHour = global.formatTime(new Date(data_.startHour))
+        this.endHour = global.formatTime(new Date(data_.endHour))
         this.password = data_.password
+        this.icon = data_.icon
       }).catch(function (err) {
         console.log(err)
       })

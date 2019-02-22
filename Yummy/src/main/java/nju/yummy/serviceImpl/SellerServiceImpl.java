@@ -2,9 +2,11 @@ package nju.yummy.serviceImpl;
 
 import nju.yummy.dao.CustomerDao;
 import nju.yummy.dao.OrderDao;
+import nju.yummy.dao.RecordDao;
 import nju.yummy.dao.SellerDao;
 import nju.yummy.daoImpl.CustomerDaoImpl;
 import nju.yummy.daoImpl.OrderDaoImpl;
+import nju.yummy.daoImpl.RecordDaoImpl;
 import nju.yummy.daoImpl.SellerDaoImpl;
 import nju.yummy.entity.*;
 import nju.yummy.service.SellerService;
@@ -12,9 +14,11 @@ import nju.yummy.util.Const;
 import nju.yummy.util.DateToTimestamp;
 import nju.yummy.util.SellerStatus;
 import nju.yummy.util.StatisticUtil;
+import nju.yummy.vo.CancelOrderVO;
 import nju.yummy.vo.SellerCostVO;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -22,11 +26,13 @@ public class SellerServiceImpl implements SellerService {
     private SellerDao sellerDao;
     private OrderDao orderDao;
     private CustomerDao customerDao;
+    private RecordDao recordDao;
 
     public SellerServiceImpl() {
         sellerDao = new SellerDaoImpl();
         orderDao = new OrderDaoImpl();
         customerDao = new CustomerDaoImpl();
+        recordDao = new RecordDaoImpl();
     }
 
     @Override
@@ -295,8 +301,33 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public List<SellerCostVO> getCancelByUser(String sellerId) {
+    public List<CancelOrderVO> getCancelByUser(String sellerId) {
         // TODO
-        return null;
+        List<CancelOrderVO> cancelOrderVOList = new ArrayList<>();
+
+        List<OrderEntity> orderEntityList = orderDao.getOrderBySellerId(sellerId);
+
+        DecimalFormat df = new DecimalFormat("#.00");
+
+        for (OrderEntity orderEntity : orderEntityList) {
+            if (orderEntity.getStatus() == -1) {
+                CustomerEntity customerEntity = customerDao.getCustomer(orderEntity.getEmail());
+
+                List<PayRecordEntity> payRecordEntities = recordDao.getRecordByOrderId(orderEntity.getOrderId());
+
+                if(payRecordEntities.size() == 0){
+                    cancelOrderVOList.add(new CancelOrderVO(customerEntity.getUsername(), orderEntity.getFinishTime(),
+                            orderEntity.getPlaceTime(), "0", "0"));
+                }
+                else {
+                    cancelOrderVOList.add(new CancelOrderVO(customerEntity.getUsername(), orderEntity.getFinishTime(),
+                            orderEntity.getPlaceTime(), df.format(Math.max(payRecordEntities.get(0).getMoney(),
+                            payRecordEntities.get(1).getMoney())), df.format(Math.min(payRecordEntities.get(0).getMoney(),
+                            payRecordEntities.get(1).getMoney()))));
+                }
+            }
+        }
+
+        return cancelOrderVOList;
     }
 }

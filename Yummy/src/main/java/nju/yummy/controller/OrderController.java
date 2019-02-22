@@ -64,6 +64,9 @@ public class OrderController {
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Date time = sdf.parse(reachTime);
+        time.setYear(new Date().getYear());
+        time.setMonth(new Date().getMonth());
+        time.setDate(new Date().getDate());
         System.out.println(time);
 
         Integer addressId = jsonParam.getInteger("addressId");

@@ -64,7 +64,14 @@
                 align="center">
               </el-table-column>
               <el-table-column
-                prop="time"
+                prop="placeTime"
+                width="250px"
+                label="下单时间"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="cancelTime"
+                width="250px"
                 label="退款时间"
                 align="center">
               </el-table-column>
@@ -110,35 +117,7 @@
 
         costData: [],
 
-        cancelData: [
-          {
-            id: '12987122',
-            name: '王小虎',
-            payMoney: '234',
-            returnMoney: '3.2',
-            time: '2019-10-10 29:23:23'
-          }, {
-            name: '王小虎',
-            payMoney: '234',
-            returnMoney: '3.2',
-            time: '2019-10-10 29:23:23'
-          }, {
-            name: '王小虎',
-            payMoney: '234',
-            returnMoney: '3.2',
-            time: '2019-10-10 29:23:23'
-          }, {
-            name: '王小虎',
-            payMoney: '234',
-            returnMoney: '3.2',
-            time: '2019-10-10 29:23:23'
-          }, {
-            name: '王小虎',
-            payMoney: '234',
-            returnMoney: '3.2',
-            time: '2019-10-10 29:23:23'
-          }
-        ]
+        cancelData: []
       }
     },
     methods: {
@@ -219,7 +198,7 @@
       }).then(response => {
 
         let data_ = response.data
-        console.log(data_)
+
         this.recentVolume = data_.recentVolume
         this.costByHourData = data_.costByHour
         this.costByTypeData = data_.costByType
@@ -233,7 +212,20 @@
         console.log(err)
       })
 
-      // TODO 退订
+      // 退订
+      this.$axios({
+        method: 'get',
+        url: '/user/statistic/cancel',
+        params: {
+          email: global.userId
+        }
+      }).then(response => {
+        let data_ = response.data
+
+        this.cancelData = data_.cancelList
+      }).catch(function (err) {
+        console.log(err)
+      })
     }
   }
 </script>

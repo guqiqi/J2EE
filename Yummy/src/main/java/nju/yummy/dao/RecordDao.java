@@ -10,4 +10,6 @@ public interface RecordDao {
     public List<PayRecordEntity> getAllPayRecord();
 
     public List<PayRecordEntity> getRecordByUserId(String userId);
+
+    public List<PayRecordEntity> getRecordByOrderId(String orderId);
 }

@@ -8,20 +8,18 @@ import java.util.Objects;
 @Table(name = "payRecord", schema = "yummy")
 public class PayRecordEntity {
     private Integer recordId;
-    // 1为付款，0为收款
-    private Byte payType;
-    private String userId;
+    private String payId;
+    private String receiverId;
+    private String orderId;
     private Double money;
-    // 1为客户，0为商家
-    private Byte userType;
     private Timestamp time;
 
-    public PayRecordEntity(Byte payType, String userId, Double money, Byte userType) {
-        this.payType = payType;
-        this.userId = userId;
+    public PayRecordEntity(String payId, String receiverId, Double money, String orderId) {
+        this.payId = payId;
+        this.receiverId = receiverId;
         this.money = money;
-        this.userType = userType;
         this.time = new Timestamp(System.currentTimeMillis());
+        this.orderId = orderId;
     }
 
     public PayRecordEntity() {
@@ -39,23 +37,23 @@ public class PayRecordEntity {
     }
 
     @Basic
-    @Column(name = "payType")
-    public Byte getPayType() {
-        return payType;
+    @Column(name = "payId")
+    public String getPayId() {
+        return payId;
     }
 
-    public void setPayType(Byte payType) {
-        this.payType = payType;
+    public void setPayId(String payId) {
+        this.payId = payId;
     }
 
     @Basic
-    @Column(name = "userId")
-    public String getUserId() {
-        return userId;
+    @Column(name = "receiverId")
+    public String getReceiverId() {
+        return receiverId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
     }
 
     @Basic
@@ -69,16 +67,6 @@ public class PayRecordEntity {
     }
 
     @Basic
-    @Column(name = "userType")
-    public Byte getUserType() {
-        return userType;
-    }
-
-    public void setUserType(Byte userType) {
-        this.userType = userType;
-    }
-
-    @Basic
     @Column(name = "time")
     public Timestamp getTime() {
         return time;
@@ -88,22 +76,30 @@ public class PayRecordEntity {
         this.time = time;
     }
 
+    @Basic
+    @Column(name = "orderId")
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PayRecordEntity that = (PayRecordEntity) o;
         return Objects.equals(recordId, that.recordId) &&
-                Objects.equals(payType, that.payType) &&
-                Objects.equals(userId, that.userId) &&
+                Objects.equals(payId, that.payId) &&
+                Objects.equals(receiverId, that.receiverId) &&
                 Objects.equals(money, that.money) &&
-                Objects.equals(userType, that.userType);
+                Objects.equals(time, that.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recordId, payType, userId, money, userType);
+        return Objects.hash(recordId, payId, receiverId, money, time);
     }
-
-
 }

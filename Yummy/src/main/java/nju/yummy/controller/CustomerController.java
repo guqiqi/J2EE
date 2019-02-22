@@ -7,6 +7,7 @@ import nju.yummy.service.CustomerService;
 import nju.yummy.serviceImpl.CustomerServiceImpl;
 import nju.yummy.util.StatisticUtil;
 import nju.yummy.util.TokenProcessor;
+import nju.yummy.vo.CancelOrderVO;
 import nju.yummy.vo.SellerCostVO;
 import org.springframework.web.bind.annotation.*;
 
@@ -179,7 +180,9 @@ public class CustomerController {
             "charset=UTF-8")
     public String getCancelStatistic(String email) {
         JSONObject result = new JSONObject();
-        // TODO
+
+        List<CancelOrderVO> cancelOrderVOS = customerService.getCancelByUser(email);
+        result.put("cancelList", cancelOrderVOS);
 
         return result.toJSONString();
     }

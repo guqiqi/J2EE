@@ -8,6 +8,7 @@ import nju.yummy.service.SellerService;
 import nju.yummy.serviceImpl.SellerServiceImpl;
 import nju.yummy.util.Const;
 import nju.yummy.util.StatisticUtil;
+import nju.yummy.vo.CancelOrderVO;
 import nju.yummy.vo.SellerCostVO;
 import org.springframework.web.bind.annotation.*;
 
@@ -374,9 +375,12 @@ public class SellerController {
     @ResponseBody
     @RequestMapping(value = "/statistic/cancel", method = RequestMethod.GET, produces = "application/json;" +
             "charset=UTF-8")
-    public String getCancelStatistic(String email) {
+    public String getCancelStatistic(String sellerId) {
         JSONObject result = new JSONObject();
-        // TODO
+
+        List<CancelOrderVO> cancelOrderVOS = sellerService.getCancelByUser(sellerId);
+
+        result.put("cancelList", cancelOrderVOS);
 
         return result.toJSONString();
     }

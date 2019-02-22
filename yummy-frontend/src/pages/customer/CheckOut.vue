@@ -303,6 +303,8 @@
       },
       placeOrder: function () {
         this.dialogVisible = true
+
+        console.log(this.deliverTime)
         // TODO 收货时间
         let foodId = []
         let num = []

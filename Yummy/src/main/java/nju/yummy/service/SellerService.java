@@ -3,6 +3,7 @@ package nju.yummy.service;
 import nju.yummy.entity.DiscountTableEntity;
 import nju.yummy.entity.FoodEntity;
 import nju.yummy.entity.SellerEntity;
+import nju.yummy.vo.CancelOrderVO;
 import nju.yummy.vo.SellerCostVO;
 
 import java.util.Date;
@@ -246,5 +247,5 @@ public interface SellerService {
      * @param sellerId 商家编号
      * @return 退订列表
      */
-    public List<SellerCostVO> getCancelByUser(String sellerId);
+    public List<CancelOrderVO> getCancelByUser(String sellerId);
 }

@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         sellerDao.updateSeller(sellerEntity);
 
         // 相关库存减少
-        for(int i = 0; i < foods.size(); i++){
+        for (int i = 0; i < foods.size(); i++) {
             FoodEntity foodEntity = sellerDao.getFoodById(foods.get(i));
             foodEntity.setStock(foodEntity.getStock() - amount.get(i));
             sellerDao.updateFood(foodEntity);
@@ -195,7 +195,8 @@ public class OrderServiceImpl implements OrderService {
             customerEntity.setPoint(customerEntity.getPoint() + payMoney);
             return customerDao.updateCustomer(customerEntity) &&
                     orderDao.updateOrderStatus(orderId, OrderStatus.TOBEDELIVERED) &&
-                    recordDao.insertRecord(new PayRecordEntity((byte) 1, customerEntity.getEmail(), payMoney, (byte) 1));
+                    recordDao.insertRecord(new PayRecordEntity(customerEntity.getEmail(),
+                            orderEntity.getSellerId(), orderEntity.getPayMoney(), orderId));
         } else
             return false;
     }
@@ -215,14 +216,14 @@ public class OrderServiceImpl implements OrderService {
                 customerEntity = customerDao.getCustomer(orderEntity.getEmail());
                 customerEntity.setLeftMoney(customerEntity.getLeftMoney() + orderEntity.getPayMoney() * 0.95);
                 return customerDao.updateCustomer(customerEntity) && orderDao.updateOrderStatus(orderId,
-                        OrderStatus.CANCEL) && recordDao.insertRecord(new PayRecordEntity((byte) 1,
-                        customerEntity.getEmail(), orderEntity.getPayMoney() * 0.95, (byte) 0));
+                        OrderStatus.CANCEL) && recordDao.insertRecord(new PayRecordEntity(orderEntity.getSellerId(),
+                        customerEntity.getEmail(), orderEntity.getPayMoney() * 0.95, orderId));
             case 2: // 开始配送，返回50%钱
                 customerEntity = customerDao.getCustomer(orderEntity.getEmail());
                 customerEntity.setLeftMoney(customerEntity.getLeftMoney() + orderEntity.getPayMoney() * 0.5);
                 return customerDao.updateCustomer(customerEntity) && orderDao.updateOrderStatus(orderId,
-                        OrderStatus.CANCEL) && recordDao.insertRecord(new PayRecordEntity((byte) 1,
-                        customerEntity.getEmail(), orderEntity.getPayMoney() * 0.5, (byte) 0));
+                        OrderStatus.CANCEL) && recordDao.insertRecord(new PayRecordEntity(orderEntity.getSellerId(),
+                        customerEntity.getEmail(), orderEntity.getPayMoney() * 0.95, orderId));
             case 3: // 已经完成不能退订
                 return false;
         }

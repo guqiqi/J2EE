@@ -2,6 +2,7 @@ package nju.yummy.service;
 
 import nju.yummy.entity.AddressEntity;
 import nju.yummy.entity.CustomerEntity;
+import nju.yummy.vo.CancelOrderVO;
 import nju.yummy.vo.SellerCostVO;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -149,5 +150,5 @@ public interface CustomerService {
      * @param email 用户邮箱
      * @return 退订列表
      */
-    public List<SellerCostVO> getCancelByUser(String email);
+    public List<CancelOrderVO> getCancelByUser(String email);
 }

@@ -2,21 +2,22 @@ package nju.yummy.serviceImpl;
 
 import nju.yummy.dao.CustomerDao;
 import nju.yummy.dao.OrderDao;
+import nju.yummy.dao.RecordDao;
 import nju.yummy.dao.SellerDao;
 import nju.yummy.daoImpl.CustomerDaoImpl;
 import nju.yummy.daoImpl.OrderDaoImpl;
+import nju.yummy.daoImpl.RecordDaoImpl;
 import nju.yummy.daoImpl.SellerDaoImpl;
-import nju.yummy.entity.AddressEntity;
-import nju.yummy.entity.CustomerEntity;
-import nju.yummy.entity.OrderEntity;
-import nju.yummy.entity.SellerEntity;
+import nju.yummy.entity.*;
 import nju.yummy.service.CustomerService;
 import nju.yummy.util.Const;
 import nju.yummy.util.StatisticUtil;
+import nju.yummy.vo.CancelOrderVO;
 import nju.yummy.vo.SellerCostVO;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,13 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerDao customerDao;
     private OrderDao orderDao;
     private SellerDao sellerDao;
+    private RecordDao recordDao;
 
     public CustomerServiceImpl() {
         customerDao = new CustomerDaoImpl();
         orderDao = new OrderDaoImpl();
         sellerDao = new SellerDaoImpl();
+        recordDao = new RecordDaoImpl();
     }
 
     @Override
@@ -181,29 +184,33 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<SellerCostVO> getCancelByUser(String email) {
-        // TODO 退款金额计算
-        List<SellerCostVO> sellerCostVOList = new ArrayList<>();
-
-        List<String> sellerNames = new ArrayList<>();
+    public List<CancelOrderVO> getCancelByUser(String email) {
+        // 退款金额计算
+        List<CancelOrderVO> cancelOrderVOList = new ArrayList<>();
 
         List<OrderEntity> orderEntityList = orderDao.getOrderByEmail(email);
 
+        DecimalFormat df = new DecimalFormat("#.00");
+
         for (OrderEntity orderEntity : orderEntityList) {
-            if (orderEntity.getStatus() == 0) {
+            if (orderEntity.getStatus() == -1) {
                 SellerEntity sellerEntity = sellerDao.getSellerEntity(orderEntity.getSellerId());
 
-                if (sellerNames.contains(sellerEntity.getName())) {
-                    SellerCostVO sellerCostVO = sellerCostVOList.get(sellerNames.indexOf(sellerEntity.getName()));
-                    sellerCostVO.addCost(orderEntity.getPayMoney());
-                    sellerCostVOList.set(sellerNames.indexOf(sellerEntity.getName()), sellerCostVO);
-                } else {
-                    sellerNames.add(sellerEntity.getName());
-                    sellerCostVOList.add(new SellerCostVO(sellerEntity.getName(), orderEntity.getPayMoney()));
+                List<PayRecordEntity> payRecordEntities = recordDao.getRecordByOrderId(orderEntity.getOrderId());
+
+                if(payRecordEntities.size() == 0){
+                    cancelOrderVOList.add(new CancelOrderVO(sellerEntity.getName(), orderEntity.getFinishTime(),
+                            orderEntity.getPlaceTime(), "0", "0"));
+                }
+                else {
+                    cancelOrderVOList.add(new CancelOrderVO(sellerEntity.getName(), orderEntity.getFinishTime(),
+                            orderEntity.getPlaceTime(), df.format(Math.max(payRecordEntities.get(0).getMoney(),
+                            payRecordEntities.get(1).getMoney())), df.format(Math.min(payRecordEntities.get(0).getMoney(),
+                            payRecordEntities.get(1).getMoney()))));
                 }
             }
         }
 
-        return sellerCostVOList;
+        return cancelOrderVOList;
     }
 }

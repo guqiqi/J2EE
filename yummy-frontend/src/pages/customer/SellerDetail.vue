@@ -32,7 +32,7 @@
     </el-row>
     <el-row style="margin-top: 10px">
       <el-col :span="20" :offset="2" style="margin-top: 10px">
-        <el-tabs v-model="type">
+        <el-tabs v-model="type" style="margin-bottom: 50px">
           <el-tab-pane label="所有商品" name="all">
             <div v-for="subList in foodList">
               <el-row style="font-size: 24px; font-weight: bold; text-align: left; margin-top: 15px; margin-left: 10px">
