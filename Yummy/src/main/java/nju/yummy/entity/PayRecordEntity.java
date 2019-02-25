@@ -22,6 +22,13 @@ public class PayRecordEntity {
         this.orderId = orderId;
     }
 
+    public PayRecordEntity(String receiverId, Double money) {
+        this.payId = "-1";
+        this.receiverId = receiverId;
+        this.money = money;
+        this.time = new Timestamp(System.currentTimeMillis());
+    }
+
     public PayRecordEntity() {
     }
 

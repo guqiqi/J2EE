@@ -60,4 +60,9 @@ public interface StatisticService {
      * @return 商户按月增长数量
      */
     public int[] getSellerIncrease();
+
+    /**
+     * 网站结算
+     */
+    public void settleAccount();
 }

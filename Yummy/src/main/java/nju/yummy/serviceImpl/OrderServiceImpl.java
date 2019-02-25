@@ -261,4 +261,9 @@ public class OrderServiceImpl implements OrderService {
     public OrderEntity getOrder(String orderId) {
         return orderDao.getOrderById(orderId);
     }
+
+    @Override
+    public List<OrderEntity> getAllOrders() {
+        return orderDao.getAllOrders();
+    }
 }

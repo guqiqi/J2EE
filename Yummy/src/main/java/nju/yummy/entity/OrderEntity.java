@@ -12,6 +12,7 @@ public class OrderEntity {
     private String sellerId;
     private Integer status;
     private Timestamp placeTime;
+    private Timestamp deliverTime;
     private Timestamp finishTime;
     private Double totalMoney;
     private Double payMoney;
@@ -84,6 +85,16 @@ public class OrderEntity {
     }
 
     @Basic
+    @Column(name = "deliverTime")
+    public Timestamp getDeliverTime() {
+        return deliverTime;
+    }
+
+    public void setDeliverTime(Timestamp deliverTime) {
+        this.deliverTime = deliverTime;
+    }
+
+    @Basic
     @Column(name = "placeTime")
     public Timestamp getPlaceTime() {
         return placeTime;
@@ -92,6 +103,7 @@ public class OrderEntity {
     public void setPlaceTime(Timestamp placeTime) {
         this.placeTime = placeTime;
     }
+
 
     @Basic
     @Column(name = "finishTime")

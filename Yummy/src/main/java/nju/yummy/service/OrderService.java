@@ -77,4 +77,10 @@ public interface OrderService {
      * @return 订单信息
      */
     public OrderEntity getOrder(String orderId);
+
+    /**
+     * 所有订单
+     * @return 订单列表
+     */
+    public List<OrderEntity> getAllOrders();
 }
