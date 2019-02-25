@@ -57,10 +57,19 @@
             this.$router.push('/seller/home')
           }
           else {
-            this.$alert(response.data.mes, '错误', {
-              confirmButtonText: '确定',
-              type: 'error'
-            });
+            if(response.data.mes === '审核没有通过，请修改商家信息'){
+              this.$message({
+                message: response.data.mes,
+                type: 'warning'
+              });
+              this.$router.push({name: 'sellerReEdit', params: {sellerId: this.sellerId}})
+            }
+            else {
+              this.$alert(response.data.mes, '错误', {
+                confirmButtonText: '确定',
+                type: 'error'
+              });
+            }
           }
         }).catch(function(err){
           console.log(err)

@@ -43,7 +43,7 @@ public class SellerServiceImpl implements SellerService {
         else if (sellerEntity.getPassword().equals(password)) {
             switch (sellerEntity.getStatus()) {
                 case 0:
-                    return "您的信息没有初始化,请先初始化商家信息";
+                    return "审核没有通过，请修改商家信息";
                 case 1:
                     return "您的信息正在加速审核中，请耐心等待";
                 default:

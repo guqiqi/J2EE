@@ -2,19 +2,20 @@
   <div>
     <seller-navigation default_active="/seller/info"/>
     <seller-edit-info :name="this.name" :type="this.type" :address="this.address"
-                 :phone="this.phone" :password="this.password"
-                 :startHour="this.startHour" :endHour="this.endHour" :icon="this.icon"/>
+                      :phone="this.phone" :password="this.password"
+                      :startHour="this.startHour" :endHour="this.endHour" :icon="this.icon" :isFirstEdit="isFirstEdit"
+                      :sellerId="this.$route.params.sellerId"/>
   </div>
 </template>
 
 <script>
+  import global from '../../../static/Global'
   import SellerNavigation from "../../components/SellerNavigation"
   import SellerEditInfo from "../../components/SellerEditInfo"
-  import global from '../../../static/Global'
 
   export default {
-    components: {SellerNavigation, SellerEditInfo},
-    name: "seller-edit",
+    name: "seller-re-edit",
+    components: {SellerEditInfo, SellerNavigation},
     data(){
       return {
         name: '',
@@ -24,7 +25,8 @@
         startHour: '',
         endHour: '',
         icon: '',
-        password: ''
+        password: '',
+        isFirstEdit: true
       }
     },
     mounted(){
@@ -32,7 +34,7 @@
         method: 'get',
         url: '/seller/info',
         params: {
-          sellerId: global.userId
+          sellerId: this.$route.params.sellerId
         }
       }).then(response => {
         let data_ = response.data

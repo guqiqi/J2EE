@@ -52,12 +52,20 @@ public class SellerController {
         String startHour = jsonParam.getString("startHour");
         String endHour = jsonParam.getString("endHour");
         String icon = jsonParam.getString("icon");
+        boolean isFirst = jsonParam.getBoolean("isFirst");
+
+        String sellerId;
 
         JSONObject result = new JSONObject();
+        if (isFirst) {
+            sellerId = jsonParam.getString("sellerId");
+            result.put("isSuccess", sellerService.modifyInfo(sellerId, password, name, type, address, phone,
+                    startHour, endHour, icon, 1));
+        } else {
+            result.put("isSuccess", true);
+            result.put("sellerId", sellerService.register(password, name, type, address, phone, startHour, endHour, icon));
 
-        result.put("isSuccess", true);
-        result.put("sellerId", sellerService.register(password, name, type, address, phone, startHour, endHour, icon));
-
+        }
         return result.toJSONString();
     }
 
@@ -69,7 +77,7 @@ public class SellerController {
         JSONObject result = new JSONObject();
 
         JSONArray jsonArray = new JSONArray();
-        for(SellerEntity sellerEntity: sellerEntities) {
+        for (SellerEntity sellerEntity : sellerEntities) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("name", sellerEntity.getName());
             jsonObject.put("type", sellerEntity.getType());

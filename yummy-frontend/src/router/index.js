@@ -21,6 +21,7 @@ import SellerStatisticPage from '../pages/seller/SellerStatistic'
 import SellerInfoPage from '../pages/seller/SellerInfo'
 import SellerInProcessPage from '../pages/seller/SellerInProcess'
 import SellerEditPage from '../pages/seller/SellerEdit'
+import SellerReEditPage from '../pages/seller/SellerReEdit'
 
 import AdminStatisticPage from '../pages/admin/AdminStatistic'
 import VerifySellerPage from '../pages/admin/VerifySeller'
@@ -125,6 +126,11 @@ export default new Router({
       path: '/seller/edit',
       name: 'sellerEdit',
       component: SellerEditPage
+    },
+    {
+      path: '/seller/reEdit',
+      name: 'sellerReEdit',
+      component: SellerReEditPage
     },
     {
       path: '/admin/verify',
