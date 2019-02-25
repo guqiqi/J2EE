@@ -127,10 +127,52 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    public List<ProfitVO> getProfit() {
-        // TODO
+    public List<ProfitVO> getDailyProfit() {
+        return getDailyCount();
+    }
 
-        return null;
+    @Override
+    public List<ProfitVO> getMonthlyProfit() {
+        List<OrderEntity> orderEntityList = orderDao.getAllOrders();
+        List<ProfitVO> profitVOList = new ArrayList<>();
+        List<String> sellerIds = new ArrayList<>();
+
+        for (OrderEntity orderEntity : orderEntityList) {
+            if (orderEntity.getStatus() == 3 && isSameMonth(orderEntity.getFinishTime())) {
+                if (sellerIds.contains(orderEntity.getSellerId())) {
+                    int index = sellerIds.indexOf(orderEntity.getSellerId());
+                    profitVOList.get(index).addAmount(orderEntity.getPayMoney());
+                } else {
+                    sellerIds.add(orderEntity.getSellerId());
+                    SellerEntity sellerEntity = sellerDao.getSellerEntity(orderEntity.getSellerId());
+                    profitVOList.add(new ProfitVO(orderEntity.getSellerId(), sellerEntity.getName(), orderEntity.getPayMoney()));
+                }
+            }
+        }
+
+        return profitVOList;
+    }
+
+    @Override
+    public List<ProfitVO> getTotalProfit() {
+        List<OrderEntity> orderEntityList = orderDao.getAllOrders();
+        List<ProfitVO> profitVOList = new ArrayList<>();
+        List<String> sellerIds = new ArrayList<>();
+
+        for (OrderEntity orderEntity : orderEntityList) {
+            if (orderEntity.getStatus() == 3) {
+                if (sellerIds.contains(orderEntity.getSellerId())) {
+                    int index = sellerIds.indexOf(orderEntity.getSellerId());
+                    profitVOList.get(index).addAmount(orderEntity.getPayMoney());
+                } else {
+                    sellerIds.add(orderEntity.getSellerId());
+                    SellerEntity sellerEntity = sellerDao.getSellerEntity(orderEntity.getSellerId());
+                    profitVOList.add(new ProfitVO(orderEntity.getSellerId(), sellerEntity.getName(), orderEntity.getPayMoney()));
+                }
+            }
+        }
+
+        return profitVOList;
     }
 
     @Override
@@ -139,7 +181,7 @@ public class StatisticServiceImpl implements StatisticService {
 
         List<Date> dateList = new ArrayList<>();
 
-        for(CustomerEntity customerEntity: customerEntities){
+        for (CustomerEntity customerEntity : customerEntities) {
             dateList.add(customerEntity.getRegisterTime());
         }
 
@@ -152,7 +194,7 @@ public class StatisticServiceImpl implements StatisticService {
 
         List<Date> dateList = new ArrayList<>();
 
-        for(SellerEntity sellerEntity: sellerEntities){
+        for (SellerEntity sellerEntity : sellerEntities) {
             dateList.add(sellerEntity.getRegisterTime());
         }
 
@@ -162,26 +204,33 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     public void settleAccount() {
         // 网站定时结算，每天计算盈利，转给商家，就写入转账记录
+        List<ProfitVO> profitVOList = getDailyProfit();
+
+        // 网站固定把收入的固定比例给商家
+        for (ProfitVO profitVO : profitVOList) {
+            recordDao.insertRecord(new PayRecordEntity(profitVO.getSellerId(), (double) Math.round(profitVO.getAmount() * Const.cut * 100) / 100));
+        }
+    }
+
+    private List<ProfitVO> getDailyCount() {
         List<OrderEntity> orderEntityList = orderDao.getAllOrders();
+        List<ProfitVO> profitVOList = new ArrayList<>();
         List<String> sellerIds = new ArrayList<>();
-        List<Double> money = new ArrayList<>();
 
         for (OrderEntity orderEntity : orderEntityList) {
             if (orderEntity.getStatus() == 3 && isSameDate(orderEntity.getFinishTime())) {
-                if(sellerIds.contains(orderEntity.getSellerId())){
+                if (sellerIds.contains(orderEntity.getSellerId())) {
                     int index = sellerIds.indexOf(orderEntity.getSellerId());
-                    money.set(index, money.get(index) + orderEntity.getPayMoney());
-                }
-                else {
+                    profitVOList.get(index).addAmount(orderEntity.getPayMoney());
+                } else {
                     sellerIds.add(orderEntity.getSellerId());
-                    money.add(orderEntity.getPayMoney());
+                    SellerEntity sellerEntity = sellerDao.getSellerEntity(orderEntity.getSellerId());
+                    profitVOList.add(new ProfitVO(orderEntity.getSellerId(), sellerEntity.getName(), orderEntity.getPayMoney()));
                 }
             }
         }
 
-        for(int i = 0; i < sellerIds.size(); i++){
-            recordDao.insertRecord(new PayRecordEntity(sellerIds.get(i), money.get(i)));
-        }
+        return profitVOList;
     }
 
     private static boolean isSameDate(Date date1) {
@@ -193,35 +242,46 @@ public class StatisticServiceImpl implements StatisticService {
 
         boolean isSameYear = cal1.get(Calendar.YEAR) == cal2
                 .get(Calendar.YEAR);
-        boolean isSameMonth = isSameYear
-                && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
-        boolean isSameDate = isSameMonth
+
+        return isSameMonth(date1)
                 && cal1.get(Calendar.DAY_OF_MONTH) == cal2
                 .get(Calendar.DAY_OF_MONTH);
-
-        return isSameDate;
     }
 
-    private int[] getRegisterNumber(List<Date> dates){
+    private static boolean isSameMonth(Date date1) {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(new Date());
+
+        boolean isSameYear = cal1.get(Calendar.YEAR) == cal2
+                .get(Calendar.YEAR);
+
+        return isSameYear
+                && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+    }
+
+    private int[] getRegisterNumber(List<Date> dates) {
         // 半年前，接下来每个月统计
         int[] result = new int[7];
 
-        for (Date date: dates) {
-            long days=(new Date().getTime()-date.getTime())/(1000*3600*24);
+        for (Date date : dates) {
+            long days = (new Date().getTime() - date.getTime()) / (1000 * 3600 * 24);
 
-            if(days > 180)
+            if (days > 180)
                 result[0] += 1;
-            if(days > 150)
+            if (days > 150)
                 result[1] += 1;
-            if(days > 120)
+            if (days > 120)
                 result[2] += 1;
-            if(days > 90)
+            if (days > 90)
                 result[3] += 1;
-            if(days > 60)
+            if (days > 60)
                 result[4] += 1;
-            if(days > 30)
+            if (days > 30)
                 result[5] += 1;
-            if(days <= 30)
+            if (days <= 30)
                 result[6] += 1;
         }
 

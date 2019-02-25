@@ -59,7 +59,7 @@ public class SellerServiceImpl implements SellerService {
         String sellerId = generateSellerId();
         System.out.println(startHour);
         SellerEntity sellerEntity = new SellerEntity(sellerId, password, name, type, address, phone, startHour,
-                endHour, 1, "", "1" + Const.regix + "1" + Const.regix + "1", icon);
+                endHour, 1, "", "1" + Const.regex + "1" + Const.regex + "1", icon);
 
         sellerEntity.setTempName(name);
         sellerEntity.setTempPassword(password);

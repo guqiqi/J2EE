@@ -45,9 +45,21 @@ public interface StatisticService {
 
     /**
      * 盈利列表
-     * @return 盈利列表（按月计算）
+     * @return 盈利列表
      */
-    public List<ProfitVO> getProfit();
+    public List<ProfitVO> getDailyProfit();
+
+    /**
+     * 盈利列表
+     * @return 盈利列表
+     */
+    public List<ProfitVO> getMonthlyProfit();
+
+    /**
+     * 盈利列表
+     * @return 盈利列表
+     */
+    public List<ProfitVO> getTotalProfit();
 
     /**
      * 用户数量增长情况

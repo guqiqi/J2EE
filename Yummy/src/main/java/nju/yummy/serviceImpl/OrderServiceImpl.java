@@ -106,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 店铺给相应等级的会员优惠
         double customerDiscount =
-                Double.parseDouble(sellerDao.getSellerEntity(sellerId).getDiscount().split(Const.regix)[level]);
+                Double.parseDouble(sellerDao.getSellerEntity(sellerId).getDiscount().split(Const.regex)[level]);
 
         // yummy平台给用户的会员优惠
         double yummyDiscount = Const.discount[level];
@@ -115,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
         List<DiscountTableEntity> discountTableEntities = sellerDao.getDiscountBySeller(sellerId);
 
         for (int i = 0; i < discountTableEntities.size(); i++) {
-            String[] ids = discountTableEntities.get(i).getFoodIds().split(Const.regix);
+            String[] ids = discountTableEntities.get(i).getFoodIds().split(Const.regex);
 
             // 应该含有的商品编号列表
             List<Integer> foodIds = new ArrayList<>();

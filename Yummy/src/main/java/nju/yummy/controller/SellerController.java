@@ -86,8 +86,8 @@ public class SellerController {
             jsonObject.put("phone", sellerEntity.getPhone());
             jsonObject.put("startHour", sellerEntity.getStartHour());
             jsonObject.put("endHour", sellerEntity.getEndHour());
-            jsonObject.put("foodType", sellerEntity.getFoodType().split(Const.regix));
-            jsonObject.put("discount", sellerEntity.getDiscount().split(Const.regix));
+            jsonObject.put("foodType", sellerEntity.getFoodType().split(Const.regex));
+            jsonObject.put("discount", sellerEntity.getDiscount().split(Const.regex));
             jsonObject.put("icon", sellerEntity.getIcon());
             jsonObject.put("orderCount", sellerEntity.getOrderCount());
             jsonObject.put("status", sellerEntity.getStatus());
@@ -124,8 +124,8 @@ public class SellerController {
         result.put("phone", sellerEntity.getPhone());
         result.put("startHour", sellerEntity.getStartHour());
         result.put("endHour", sellerEntity.getEndHour());
-        result.put("foodType", sellerEntity.getFoodType().split(Const.regix));
-        result.put("discount", sellerEntity.getDiscount().split(Const.regix));
+        result.put("foodType", sellerEntity.getFoodType().split(Const.regex));
+        result.put("discount", sellerEntity.getDiscount().split(Const.regex));
         result.put("icon", sellerEntity.getIcon());
         result.put("orderCount", sellerEntity.getOrderCount());
 
@@ -275,8 +275,8 @@ public class SellerController {
 
             jsonpObject.put("startTime", discountTableEntity.getStartTime());
             jsonpObject.put("endTime", discountTableEntity.getEndTime());
-            jsonpObject.put("foodIds", discountTableEntity.getFoodIds().split(Const.regix));
-            jsonpObject.put("foodNames", discountTableEntity.getFoodNames().split(Const.regix));
+            jsonpObject.put("foodIds", discountTableEntity.getFoodIds().split(Const.regex));
+            jsonpObject.put("foodNames", discountTableEntity.getFoodNames().split(Const.regex));
 
             composedDiscounts.add(jsonpObject);
         }
