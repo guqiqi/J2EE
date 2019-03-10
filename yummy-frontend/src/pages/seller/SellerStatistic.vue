@@ -26,11 +26,13 @@
             align="center">
           </el-table-column>
           <el-table-column
+            sortable
             prop="times"
             label="消费次数"
             align="right">
           </el-table-column>
           <el-table-column
+            sortable
             prop="cost"
             label="消费金额"
             align="right">
@@ -50,6 +52,7 @@
             align="center">
           </el-table-column>
           <el-table-column
+            sortable
             prop="placeTime"
             width="250px"
             label="下单时间"
@@ -62,11 +65,13 @@
             align="center">
           </el-table-column>
           <el-table-column
+            sortable
             prop="payMoney"
             label="支付费用"
             align="right">
           </el-table-column>
           <el-table-column
+            sortable
             prop="returnMoney"
             label="退款费用"
             align="right">

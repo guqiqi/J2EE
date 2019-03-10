@@ -95,7 +95,7 @@ public class OrderController {
         JSONObject result = new JSONObject();
 
         JSONArray jsonArray = new JSONArray();
-        for (AddressEntity addressEntity: addressEntityList){
+        for (AddressEntity addressEntity : addressEntityList) {
             JSONObject jsonObject = new JSONObject();
 
             jsonObject.put("addressId", addressEntity.getAddressId());
@@ -171,6 +171,8 @@ public class OrderController {
             jsonObject.put("status", orderEntity.getStatus());
             jsonObject.put("payMoney", new BigDecimal(orderEntity.getPayMoney()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 
+            jsonObject.put("foods", getOrderDetail(orderEntity.getFoodIds(), orderEntity.getFoodNumbers()));
+
             jsonArray.add(jsonObject);
         }
 
@@ -196,6 +198,8 @@ public class OrderController {
             jsonObject.put("payMoney", new BigDecimal(orderEntity.getPayMoney()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
             jsonObject.put("receiveTime", orderEntity.getReachTime());
 
+            jsonObject.put("foods", getOrderDetail(orderEntity.getFoodIds(), orderEntity.getFoodNumbers()));
+
             AddressEntity addressEntity = customerService.getAddressById(orderEntity.getAddressId());
 
             jsonObject.put("receiver", addressEntity.getReceiver());
@@ -210,4 +214,23 @@ public class OrderController {
         return result.toJSONString();
     }
 
+    private JSONArray getOrderDetail(String foodId, String foodNumber){
+        int[] foodIds = Const.convertStringToInts(foodId);
+        int[] fondNumbers = Const.convertStringToInts(foodNumber);
+
+        JSONArray jsonArray = new JSONArray();
+
+        for (int i = 0; i < foodIds.length; i++) {
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("foodId", foodIds[i]);
+            jsonObject.put("foodName", sellerService.getFoodInfo(foodIds[i]).getName());
+            jsonObject.put("foodNumber", fondNumbers[i]);
+            jsonObject.put("money", sellerService.getFoodInfo(foodIds[i]).getMoney());
+
+            jsonArray.add(jsonObject);
+        }
+
+        return jsonArray;
+    }
 }

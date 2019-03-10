@@ -30,10 +30,10 @@ public class Scheduler {
 
         for (OrderEntity orderEntity : orderEntityList) {
             // 确认收货
-            if (orderEntity.getStatus() == 2 && getMinutes(orderEntity.getDeliverTime()) > 15)
+            if (orderEntity.getStatus() == 2 && getMinutes(orderEntity.getDeliverTime()) > 2)
                 orderService.confirmReceive(orderEntity.getOrderId());
 
-            if (orderEntity.getStatus() == 0 && getMinutes(orderEntity.getPlaceTime()) > 15)
+            if (orderEntity.getStatus() == 0 && getMinutes(orderEntity.getPlaceTime()) > 2)
                 orderService.cancel(orderEntity.getOrderId());
         }
     }

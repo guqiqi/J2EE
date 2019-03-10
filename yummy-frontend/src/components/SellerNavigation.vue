@@ -6,6 +6,12 @@
     <el-menu-item index="/seller/order">我的订单</el-menu-item>
     <el-menu-item index="/seller/statistic">经营统计</el-menu-item>
     <el-menu-item index="/seller/info">个人中心</el-menu-item>
+
+    <el-menu-item style="position: fixed; right: 10px" index="/seller/signIn">
+      <el-button type="primary" size="small">
+        登出
+      </el-button>
+    </el-menu-item>
   </el-menu>
 </template>
 

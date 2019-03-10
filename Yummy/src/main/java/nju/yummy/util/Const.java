@@ -14,7 +14,7 @@ public class Const {
 
     public static String[] sellerType = new String[]{"快餐便当", "甜品饮品", "果蔬生鲜", "商店超市", "鲜花绿植"};
 
-    public static String convertListToString(List<Integer> list){
+    public static String convertListToString(List<Integer> list) {
         String result = "";
         for (int i = 0; i < list.size() - 1; i++) {
             result = result + list.get(i) + regex;
@@ -40,5 +40,16 @@ public class Const {
             result.add(Integer.parseInt(array[i].toString()));
         }
         return result;
+    }
+
+    public static int[] convertStringToInts(String string) {
+        String[] strings = string.split(regex);
+        int[] ints = new int[strings.length];
+
+        for (int i = 0; i < strings.length; i++) {
+            ints[i] = Integer.parseInt(strings[i]);
+        }
+
+        return ints;
     }
 }

@@ -9,7 +9,7 @@
           <template slot-scope="props">
             <div>
               <el-col :span="6">
-                <img width="180px" height="180px" style="text-align: right" :src="props.row.icon"/>
+                <img width="180px" height="180px" style="text-align: right" :src="props.row.tempIcon"/>
               </el-col>
               <el-col :span="18">
                 <el-form label-position="left" inline class="demo-table-expand">
@@ -42,6 +42,7 @@
           </template>
         </el-table-column>
         <el-table-column
+          sortable
           label="商店编号"
           prop="sellerId">
         </el-table-column>
