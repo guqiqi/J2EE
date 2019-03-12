@@ -206,19 +206,29 @@ public class OrderServiceImpl implements OrderService {
         // 根据订单状态
         OrderEntity orderEntity = orderDao.getOrderById(orderId);
         CustomerEntity customerEntity;
-
+        int[] foods;
+        int[] amount;
         switch (orderEntity.getStatus()) {
             case -1: // 已经取消不能退订
                 return false;
             case 0: // 尚未付款，直接取消订单即可
+                foods = Const.convertStringToInts(orderEntity.getFoodIds());
+                amount = Const.convertStringToInts(orderEntity.getFoodNumbers());
+                addStock(foods, amount);
                 return orderDao.updateOrderStatus(orderId, OrderStatus.CANCEL);
             case 1: // 尚未配送，返回95%钱
+                foods = Const.convertStringToInts(orderEntity.getFoodIds());
+                amount = Const.convertStringToInts(orderEntity.getFoodNumbers());
+                addStock(foods, amount);
                 customerEntity = customerDao.getCustomer(orderEntity.getEmail());
                 customerEntity.setLeftMoney(customerEntity.getLeftMoney() + orderEntity.getPayMoney() * 0.95);
                 return customerDao.updateCustomer(customerEntity) && orderDao.updateOrderStatus(orderId,
                         OrderStatus.CANCEL) && recordDao.insertRecord(new PayRecordEntity(orderEntity.getSellerId(),
                         customerEntity.getEmail(), orderEntity.getPayMoney() * 0.95, orderId));
             case 2: // 开始配送，返回50%钱
+                foods = Const.convertStringToInts(orderEntity.getFoodIds());
+                amount = Const.convertStringToInts(orderEntity.getFoodNumbers());
+                addStock(foods, amount);
                 customerEntity = customerDao.getCustomer(orderEntity.getEmail());
                 customerEntity.setLeftMoney(customerEntity.getLeftMoney() + orderEntity.getPayMoney() * 0.5);
                 return customerDao.updateCustomer(customerEntity) && orderDao.updateOrderStatus(orderId,
@@ -229,6 +239,15 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return false;
+    }
+
+    private void addStock(int[] foods, int[] amount){
+        // 相关库存减少
+        for (int i = 0; i < foods.length; i++) {
+            FoodEntity foodEntity = sellerDao.getFoodById(foods[i]);
+            foodEntity.setStock(foodEntity.getStock() + amount[i]);
+            sellerDao.updateFood(foodEntity);
+        }
     }
 
     @Override

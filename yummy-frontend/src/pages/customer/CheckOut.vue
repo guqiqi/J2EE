@@ -245,7 +245,7 @@
       },
       getFirstTime: function () {
         let t = new Date()
-        t.setMinutes(t.getMinutes() + 30)
+        t.setMinutes(t.getMinutes() + Math.round(Math.random()*60))
         return global.formatTime(t)
       },
       calculateTotalMoney: function () {
@@ -421,7 +421,7 @@
             if(this.addressList.canSend)
               this.address = this.addressList[i]
           }
-          
+
         }).catch(function (err) {
           console.log(err)
         })
