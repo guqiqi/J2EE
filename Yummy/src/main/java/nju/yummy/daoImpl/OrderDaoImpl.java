@@ -24,21 +24,19 @@ public class OrderDaoImpl implements OrderDao {
         Transaction tx = session.beginTransaction();
 
         Query query;
-        if(orderStatus.equals(OrderStatus.FINISHED) || orderStatus.equals(OrderStatus.CANCEL)){
+        if (orderStatus.equals(OrderStatus.FINISHED) || orderStatus.equals(OrderStatus.CANCEL)) {
             query = session.createQuery("update OrderEntity o set o.status = :newStatus , " +
                     "o.finishTime =:finishTime where orderId = :orderId");
             query.setParameter("newStatus", orderStatus.getIndex());
             query.setParameter("orderId", orderId);
             query.setParameter("finishTime", new Date());
-        }
-        else if(orderStatus.equals(OrderStatus.DEVERING)){
+        } else if (orderStatus.equals(OrderStatus.DEVERING)) {
             query = session.createQuery("update OrderEntity o set o.status = :newStatus, o.deliverTime = :deliverTime" +
                     " where orderId = :orderId");
             query.setParameter("newStatus", orderStatus.getIndex());
             query.setParameter("orderId", orderId);
             query.setParameter("deliverTime", new Date());
-        }
-        else {
+        } else {
             query = session.createQuery("update OrderEntity o set o.status = :newStatus where orderId = :orderId");
             query.setParameter("newStatus", orderStatus.getIndex());
             query.setParameter("orderId", orderId);
@@ -89,6 +87,22 @@ public class OrderDaoImpl implements OrderDao {
 
         Query query = session.createQuery("select o1 from OrderEntity o1 where sellerId=:sellerId");
         query.setParameter("sellerId", sellerId);
+
+        List<OrderEntity> orderEntities = query.list();
+
+        tx.commit();
+        session.close();
+
+        return orderEntities;
+    }
+
+    @Override
+    public List<OrderEntity> getOrderByCourierId(Integer courierId) {
+        Session session = MySessionFactory.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("select o1 from OrderEntity o1 where courierId=:courierId");
+        query.setParameter("courierId", courierId);
 
         List<OrderEntity> orderEntities = query.list();
 

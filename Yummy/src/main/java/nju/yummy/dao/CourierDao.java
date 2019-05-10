@@ -12,4 +12,6 @@ public interface CourierDao {
     public CourierEntity getInfo(Integer courierId);
 
     public List<CourierEntity> getCourierByPhone(String phone);
+
+    public List<CourierEntity> getAllCourier();
 }

@@ -1,13 +1,7 @@
 package nju.yummy.serviceImpl;
 
-import nju.yummy.dao.CustomerDao;
-import nju.yummy.dao.OrderDao;
-import nju.yummy.dao.RecordDao;
-import nju.yummy.dao.SellerDao;
-import nju.yummy.daoImpl.CustomerDaoImpl;
-import nju.yummy.daoImpl.OrderDaoImpl;
-import nju.yummy.daoImpl.RecordDaoImpl;
-import nju.yummy.daoImpl.SellerDaoImpl;
+import nju.yummy.dao.*;
+import nju.yummy.daoImpl.*;
 import nju.yummy.entity.*;
 import nju.yummy.service.OrderService;
 import nju.yummy.util.Const;
@@ -21,12 +15,14 @@ public class OrderServiceImpl implements OrderService {
     private SellerDao sellerDao;
     private CustomerDao customerDao;
     private RecordDao recordDao;
+    private CourierDao courierDao;
 
     public OrderServiceImpl() {
         orderDao = new OrderDaoImpl();
         sellerDao = new SellerDaoImpl();
         customerDao = new CustomerDaoImpl();
         recordDao = new RecordDaoImpl();
+        courierDao = new CourierDaoImpl();
     }
 
     @Override
@@ -51,6 +47,9 @@ public class OrderServiceImpl implements OrderService {
         OrderEntity orderEntity = new OrderEntity(orderId, email, sellerId, getTotalMoney(foods, amount),
                 getDiscountMoney(email, sellerId, foods, amount), DateToTimestamp.toTimeStamp(reachTime), addressId,
                 Const.convertListToString(foods), Const.convertListToString(amount));
+
+        List<CourierEntity> courierEntities = courierDao.getAllCourier();
+        orderEntity.setCourierId(courierEntities.get((int)(Math.random()*courierEntities.size())).getCourierId());
 
         orderDao.addOrder(orderEntity);
 
@@ -274,6 +273,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderEntity> getSellerOrders(String sellerId) {
         return orderDao.getOrderBySellerId(sellerId);
+    }
+
+    @Override
+    public List<OrderEntity> getCourierOrders(Integer courierId) {
+        return orderDao.getOrderByCourierId(courierId);
     }
 
     @Override

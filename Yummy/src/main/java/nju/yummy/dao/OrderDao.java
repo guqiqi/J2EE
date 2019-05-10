@@ -16,5 +16,7 @@ public interface OrderDao {
 
     public List<OrderEntity> getOrderBySellerId(String sellerId);
 
+    public List<OrderEntity> getOrderByCourierId(Integer courierId);
+
     public List<OrderEntity> getAllOrders();
 }

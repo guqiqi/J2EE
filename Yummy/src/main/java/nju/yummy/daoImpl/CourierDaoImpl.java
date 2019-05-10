@@ -51,5 +51,20 @@ public class CourierDaoImpl implements CourierDao {
         return courierEntities;
     }
 
+    @Override
+    public List<CourierEntity> getAllCourier() {
+        Session session = MySessionFactory.getSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("select courier from CourierEntity courier");
+
+        List<CourierEntity> courierEntities = query.list();
+
+        tx.commit();
+        session.close();
+
+        return courierEntities;
+    }
+
 
 }

@@ -133,35 +133,7 @@
         else if (status === 3)
           return '已完成'
       },
-      pay: function (id) {
-        // 付款
-        for (let i = 0; i < this.orderList.length; i++) {
-          if (this.orderList[i].orderId === id) {
-            this.orderList[i].status = 1
-            break
-          }
-        }
 
-        this.$axios({
-          method: 'patch',
-          url: '/order/pay',
-          params: {
-            orderId: id,
-          }
-        }).then(response => {
-          if (response.data.isSuccess) {
-            this.$message.success("支付成功")
-            this.getAllOrder()
-          }
-          else {
-            this.$message.warning("系统繁忙，请稍后再试")
-          }
-        }).catch(function (err) {
-          console.log(err)
-        })
-
-
-      },
       confirm: function (id) {
         // 确认收货
         for (let i = 0; i < this.orderList.length; i++) {
@@ -189,24 +161,24 @@
           console.log(err)
         })
       },
-      cancel: function (id) {
-        // 取消订单
+      deliver: function (id) {
+        //开始配送
         for (let i = 0; i < this.orderList.length; i++) {
           if (this.orderList[i].orderId === id) {
-            this.orderList[i].status = -1
+            this.orderList[i].status = 2
             break
           }
         }
 
         this.$axios({
           method: 'patch',
-          url: '/order/cancel',
+          url: '/order/deliver',
           params: {
             orderId: id,
           }
         }).then(response => {
           if (response.data.isSuccess) {
-            this.$message.success("取消订单成功")
+            this.$message.success("开始配送")
             this.getAllOrder()
           }
           else {
@@ -215,27 +187,29 @@
         }).catch(function (err) {
           console.log(err)
         })
-
       },
+      
       getAllOrder: function () {
         this.$axios({
           method: 'get',
-          url: '/order/customer/order',
+          url: '/order/courier/order',
           params: {
-            email: global.userId,
+            courierId: global.userId,
           }
         }).then(response => {
           this.orderList = response.data.orders
 
           for (let i = 0; i < this.orderList.length; i++) {
             this.orderList[i].placeTime = global.formatDate(new Date(this.orderList[i].placeTime))
+            this.orderList[i].receiveTime = global.formatDate(new Date(this.orderList[i].receiveTime))
           }
+
         }).catch(function (err) {
           console.log(err)
         })
       }
     },
-    mounted(){
+    mounted() {
       this.getAllOrder()
     }
   }

@@ -20,6 +20,7 @@ public class OrderEntity {
     private Integer addressId;
     private String foodIds;
     private String foodNumbers;
+    private Integer courierId;
 
     public OrderEntity() {
     }
@@ -38,6 +39,23 @@ public class OrderEntity {
         this.foodIds = foodIds;
         this.foodNumbers = foodNumbers;
     }
+
+    public OrderEntity(String orderId, String email, String sellerId, Double totalMoney, Double payMoney,
+                       Timestamp reachTime, Integer addressId, String foodIds, String foodNumbers, Integer courierId) {
+        this.orderId = orderId;
+        this.email = email;
+        this.sellerId = sellerId;
+        this.status = 0;
+        this.placeTime = new Timestamp(System.currentTimeMillis());
+        this.totalMoney = totalMoney;
+        this.payMoney = payMoney;
+        this.reachTime = reachTime;
+        this.addressId = addressId;
+        this.foodIds = foodIds;
+        this.foodNumbers = foodNumbers;
+        this.courierId = courierId;
+    }
+
 
     public OrderEntity(Double totalMoney, Double payMoney) {
         this.totalMoney = totalMoney;
@@ -193,5 +211,15 @@ public class OrderEntity {
 
     public void setFoodNumbers(String foodNumbers) {
         this.foodNumbers = foodNumbers;
+    }
+
+    @Basic
+    @Column(name = "courierId")
+    public Integer getCourierId() {
+        return courierId;
+    }
+
+    public void setCourierId(Integer courierId) {
+        this.courierId = courierId;
     }
 }

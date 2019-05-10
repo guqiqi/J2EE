@@ -72,6 +72,13 @@ public interface OrderService {
     public List<OrderEntity> getSellerOrders(String sellerId);
 
     /**
+     * 得到所有骑手订单
+     * @param courierId 骑手编号
+     * @return 订单列表
+     */
+    public List<OrderEntity> getCourierOrders(Integer courierId);
+
+    /**
      * 得到一个订单详情
      * @param orderId 订单编号
      * @return 订单信息

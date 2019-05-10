@@ -63,14 +63,12 @@ public class OrderController {
         List<Integer> amounts = Const.convertJSONArrayToIntegerList(jsonParam.getJSONArray("amount"));
 
         String reachTime = jsonParam.getString("reachTime");
-        System.out.println(reachTime);
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Date time = sdf.parse(reachTime);
         time.setYear(new Date().getYear());
         time.setMonth(new Date().getMonth());
         time.setDate(new Date().getDate());
-        System.out.println(time);
 
         Integer addressId = jsonParam.getInteger("addressId");
 
@@ -189,6 +187,39 @@ public class OrderController {
         JSONArray jsonArray = new JSONArray();
 
         List<OrderEntity> orderEntities = orderService.getSellerOrders(sellerId);
+
+        for (OrderEntity orderEntity : orderEntities) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("orderId", orderEntity.getOrderId());
+            jsonObject.put("placeTime", orderEntity.getPlaceTime());
+            jsonObject.put("status", orderEntity.getStatus());
+            jsonObject.put("payMoney", new BigDecimal(orderEntity.getPayMoney()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+            jsonObject.put("receiveTime", orderEntity.getReachTime());
+
+            jsonObject.put("foods", getOrderDetail(orderEntity.getFoodIds(), orderEntity.getFoodNumbers()));
+
+            AddressEntity addressEntity = customerService.getAddressById(orderEntity.getAddressId());
+
+            jsonObject.put("receiver", addressEntity.getReceiver());
+            jsonObject.put("detail", addressEntity.getDetail());
+            jsonObject.put("phone", addressEntity.getPhone());
+
+            jsonArray.add(jsonObject);
+        }
+
+        result.put("orders", jsonArray);
+
+        return result.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/courier/order", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public String getCourierOrder(Integer courierId) {
+        JSONObject result = new JSONObject();
+
+        JSONArray jsonArray = new JSONArray();
+
+        List<OrderEntity> orderEntities = orderService.getCourierOrders(courierId);
 
         for (OrderEntity orderEntity : orderEntities) {
             JSONObject jsonObject = new JSONObject();
