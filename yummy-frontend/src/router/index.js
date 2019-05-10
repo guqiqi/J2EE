@@ -27,6 +27,12 @@ import AdminStatisticPage from '../pages/admin/AdminStatistic'
 import VerifySellerPage from '../pages/admin/VerifySeller'
 import AdminCostPage from '../pages/admin/AdminCost'
 
+import CourierSignInPage from '../pages/courier/SignIn'
+import CourierSignUpPage from '../pages/courier/SignUp'
+import CourierHomePage from '../pages/courier/Home'
+import CourierInfoPage from '../pages/courier/PersonalInfo'
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -132,6 +138,7 @@ export default new Router({
       name: 'sellerReEdit',
       component: SellerReEditPage
     },
+
     {
       path: '/admin/verify',
       name: 'adminVerify',
@@ -146,6 +153,27 @@ export default new Router({
       path: '/admin/statistic',
       name: 'adminStatistic',
       component: AdminStatisticPage
+    },
+
+    {
+      path: '/courier/signIn',
+      name: 'courierSignInPage',
+      component: CourierSignInPage
+    },
+    {
+      path: '/courier/signUp',
+      name: 'courierSignUpPage',
+      component: CourierSignUpPage
+    },
+    {
+      path: '/courier/home',
+      name: 'courierHomePage',
+      component: CourierHomePage
+    },
+    {
+      path: '/courier/Info',
+      name: 'courierInfoPage',
+      component: CourierInfoPage
     }
   ]
 })
