@@ -281,10 +281,9 @@ public class StatisticServiceImpl implements StatisticService {
                 result[4] += 1;
             if (days > 30)
                 result[5] += 1;
-            if (days <= 30)
-                result[6] += 1;
-        }
 
+            result[6] += 1;
+        }
         return result;
     }
 }
