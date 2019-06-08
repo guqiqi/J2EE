@@ -55,7 +55,7 @@
           data: {
             phone: this.phone,
             password: this.password,
-            username: this.name
+            username: this.namew
           }
         }).then(response => {
           this.isLoading = false

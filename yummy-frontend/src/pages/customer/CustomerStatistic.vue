@@ -18,8 +18,14 @@
             </el-row>
             <el-row class="chart_title" style="margin-top: 40px">
               消费活跃时间表
+              <el-row style="margin-top: 10px">
+                <el-button size="small" :type="type[0]" @click="getHourCost">时间段</el-button>
+                <el-button size="small" :type="type[1]" @click="getWeekCost">周</el-button>
+                <el-button size="small" :type="type[2]" @click="getMonthCost">月</el-button>
+                <el-button size="small" :type="type[3]" @click="getQuarterCost">季度</el-button>
+              </el-row>
             </el-row>
-            <div id="costByHour"  :style="{width: '90%', height: '400px', marginLeft: '5%'}"></div>
+            <div id="costByHour" :style="{width: '90%', height: '400px', marginLeft: '5%'}"></div>
 
             <el-row class="chart_title" style="margin-top: 20px">
               分类消费统计表
@@ -56,6 +62,19 @@
           </el-tab-pane>
 
           <el-tab-pane label="退订统计" name="second">
+            <el-row class="chart_title" style="margin-top: 20px">
+              退订统计
+            </el-row>
+            <el-row>
+              <el-col :span="12">
+                <div id="unsubscribeTimes" :style="{width: '400px', height: '400px', marginLeft: '5%'}"></div>
+              </el-col>
+              <el-col :span="12">
+                <div id="unsubscribeMoney" :style="{width: '400px', height: '400px', marginLeft: '5%'}"></div>
+              </el-col>
+            </el-row>
+
+
             <el-table
               :data="cancelData"
               border
@@ -92,6 +111,13 @@
               </el-table-column>
             </el-table>
           </el-tab-pane>
+
+          <el-tab-pane label="商家配送时间统计" name="third">
+            <el-row class="chart_title" style="margin-top: 40px">
+              商家配送时间表（平均 最快 最慢）
+            </el-row>
+            <div id="deliverTime" :style="{width: '850px', height: '400px', marginLeft: '20px'}"></div>
+          </el-tab-pane>
         </el-tabs>
       </el-col>
     </el-col>
@@ -102,23 +128,34 @@
 <script>
   import UserNavigation from "../../components/UserNavigation"
   import global from '../../../static/Global'
+  import ElRow from "element-ui/packages/row/src/row"
 
   const navigation = () => import('../../components/Navigation.vue')
 
   export default {
     name: "customer-statistic",
     components: {
+      ElRow,
       UserNavigation,
       navigation
     },
     data() {
       return {
+        type: ['primary', '', '', ''],
+
         activeName: 'first',
 
-        recentVolume: [1, 1,1],
-        costByHourData: [1,1,1,1,1,1,1,1,1,1,2,2],
-        costByTypeData: [2,2,2,2,2],
-        timesByTypeData: [3,3,3,3,3],
+        recentVolume: [1, 1, 1],
+        costByHourData: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2],
+        costByTypeData: [2, 2, 2, 2, 2],
+        timesByTypeData: [3, 3, 3, 3, 3],
+
+        deliverFastTimeData: [3, 3, 3, 3, 3],
+        deliverAverageTimeData: [3, 3, 3, 3, 3],
+        deliverSlowTimeData: [3, 3, 3, 3, 3],
+
+        unsubscribeTimes: [{value: 2, name: '退订单数'}, {value: 10, name: '实际订单数'}],
+        unsubscribeMoney: [{value: 2, name: '违约金'}, {value: 10, name: '退款额'}, {value: 10, name: '实际订单额'}],
 
         costData: [],
 
@@ -126,6 +163,30 @@
       }
     },
     methods: {
+      getHourCost: function () {
+        this.type = ['primary', '', '', '']
+
+        //TODO
+      },
+
+      getWeekCost: function () {
+        this.type = ['', 'primary', '', '']
+
+        //TODO
+      },
+
+      getMonthCost: function () {
+        this.type = ['', '', 'primary', '']
+
+        // TODO
+      },
+
+      getQuarterCost: function () {
+        this.type = ['', '', '', 'primary']
+
+        // TODO
+      },
+
       drawCostByHour: function () {
         let costByHour = this.$echarts.init(document.getElementById('costByHour'))
 
@@ -192,8 +253,103 @@
           ]
         })
       },
+      drawDeliverTime: function () {
+        let deliverTime = this.$echarts.init(document.getElementById("deliverTime"))
+
+        deliverTime.setOption({
+          legend: {
+            data: ['最快配送时间', '平均配送时间', '最慢配送时间']
+          },
+          xAxis: {
+            data: ["快餐便当", "甜品饮品", "果蔬生鲜", "商店超市", "鲜花绿植"]
+          },
+          tooltip: {},
+          yAxis: {},
+          series: [
+            {
+              type: 'bar',
+              name: '平均配送时间',
+              data: this.deliverAverageTimeData
+            },
+            {
+              type: 'line',
+              name: '最快配送时间',
+              data: this.deliverFastTimeData
+            },
+            {
+              type: 'line',
+              name: '最慢配送时间',
+              data: this.deliverSlowTimeData
+            }
+          ]
+        })
+      },
+      drawUnsubscribeTimes: function () {
+        let unsubscribeTimes = this.$echarts.init(document.getElementById("unsubscribeTimes"))
+
+        unsubscribeTimes.setOption({
+          legend: {
+            orient: 'vertical',
+            x: 'left',
+            data: ['退订单数', '实际订单数']
+          },
+          tooltip: {},
+          series: [
+            {
+              name: '实际订单比率',
+              type: 'pie',
+              selectedMode: 'single',
+              radius: ['40%', '60%'],
+
+              label: {
+                normal: {
+                  position: 'inner'
+                }
+              },
+              labelLine: {
+                normal: {
+                  show: false
+                }
+              },
+              data: this.unsubscribeTimes
+            }
+          ]
+        })
+      },
+      drawUnsubscribeMoney: function () {
+        let unsubscribeMoney = this.$echarts.init(document.getElementById("unsubscribeMoney"))
+
+        unsubscribeMoney.setOption({
+          legend: {
+            orient: 'vertical',
+            x: 'left',
+            data: ['违约金', '退款额', '实际订单额']
+          },
+          tooltip: {},
+          series: [
+            {
+              type: 'pie',
+              selectedMode: 'single',
+              radius: ['40%', '60%'],
+
+              label: {
+                normal: {
+                  position: 'inner'
+                }
+              },
+              labelLine: {
+                normal: {
+                  show: false
+                }
+              },
+              data: this.unsubscribeMoney
+            }
+          ]
+        })
+      }
     },
     mounted() {
+      // TODO 获取退款相关内容
       this.$axios({
         method: 'get',
         url: '/user/statistic/cost',
@@ -210,9 +366,11 @@
         this.timesByTypeData = data_.timesByType
         this.costData = data_.costTable
 
-
         this.drawCostByType()
         this.drawCostByHour()
+        this.drawDeliverTime()
+        this.drawUnsubscribeTimes()
+        this.drawUnsubscribeMoney()
       }).catch(function (err) {
         console.log(err)
       })

@@ -2,7 +2,7 @@
   <div>
     <admin-navigation default_active="/admin/statistic"/>
     <el-tabs v-model="activeName" type="border-card" style="width: 90%; margin-left: 5%; margin-top: 20px">
-      <el-tab-pane label="用户统计" name="first">
+      <el-tab-pane label="用户分析" name="first">
         <el-row style="font-size: 25px; font-weight: bold; text-align: right; margin-right: 30px">
           截至<span style="color: red"> {{formatDate(today)}} </span>, 系统共有<span
           style="color: red"> {{customerNumber}} </span>名注册用户
@@ -13,8 +13,15 @@
         </el-row>
         <div id="customerIncrease" :style="{width: '1090px', height: '400px', marginLeft: '100px'}"></div>
 
+        <el-row class="chart_title" style="margin-top: 20px; margin-bottom: 40px">
+          用户地域分析
+        </el-row>
+        <div class="map-container">
+          <div id="container" style="width:90%;height:600px;margin-left:5%; margin-bottom: 40px"></div>
+        </div>
+
       </el-tab-pane>
-      <el-tab-pane label="商户统计" name="second">
+      <el-tab-pane label="商户分析" name="second">
         <el-row style="font-size: 25px; font-weight: bold; text-align: right; margin-right: 30px">
           截至<span style="color: red"> {{formatDate(today)}} </span>, 系统共有<span
           style="color: red"> {{sellerNumber}} </span>名注册商户
@@ -30,15 +37,27 @@
         <div id="sellerNumber" :style="{width: '1090px', height: '400px', marginLeft: '100px'}"></div>
         <div id="sellerNumberByTypePie" :style="{width: '1090px', height: '400px', marginLeft: '100px'}"></div>
 
+        <el-row class="chart_title" style="margin-top: 20px; margin-bottom: 40px">
+          商户地域分析
+        </el-row>
+        <div class="map-container">
+          <div id="sellerContainer" style="width:90%;height:600px;margin-left:5%; margin-bottom: 40px"></div>
+        </div>
+
       </el-tab-pane>
-      <el-tab-pane label="经营统计" name="third">
+      <el-tab-pane label="经营分析" name="third">
         <el-row>
           <el-row style="font-size: 25px; font-weight: bold; text-align: right; margin-right: 30px">
             本周销售额<span style="color: red"> {{recentVolume[0].toFixed(2)}} </span>元，本月销售额<span
             style="color: red"> {{recentVolume[1].toFixed(2)}} </span>元，本年度销售额<span style="color: red"> {{recentVolume[2].toFixed(2)}} </span>元
           </el-row>
 
-          <el-row class="chart_title" style="margin-top: 20px">
+          <el-row style="font-size: 25px; font-weight: bold; text-align: right; margin-right: 30px">
+            本周营业增长率<span style="color: red"> 000 </span>%，本月营业增长率<span
+            style="color: red"> 98 </span>%，本年度营业增长率<span style="color: red"> 100 </span>%
+          </el-row>
+
+          <el-row class="chart_title" style="margin-top: 40px">
             消费活跃时间表
           </el-row>
         </el-row>
@@ -51,6 +70,10 @@
         <div id="volumeByTypePie" :style="{width: '1090px', height: '400px', marginLeft: '100px'}"></div>
 
       </el-tab-pane>
+
+      <el-tab-pane label="订单分析" name="forth">
+        <admin-order-analysis/>
+      </el-tab-pane>
     </el-tabs>
 
 
@@ -60,9 +83,15 @@
 <script>
   import AdminNavigation from "../../components/AdminNavigation"
   import global from '../../../static/Global'
+  import ElTabPane from "element-ui/packages/tabs/src/tab-pane"
+  import AdminOrderAnalysis from "./AdminOrderAnalysis"
 
   export default {
-    components: {AdminNavigation},
+    components: {
+      AdminOrderAnalysis,
+      ElTabPane,
+      AdminNavigation
+    },
     name: "admin-statistic",
     data() {
       return {
@@ -159,6 +188,9 @@
       }).catch(function (err) {
         console.log(err)
       })
+
+      this.initMap()
+      this.initSellerMap()
     },
     methods: {
       formatDate: function (date) {
@@ -170,7 +202,7 @@
         customerIncrease.setOption({
           tooltip: {},
           xAxis: {
-            data: ["2018.10以前", "2018.10", "2018.11", "2018.12", "2019.01", "2019.02", "2019.03"]
+            data: ["2018.12以前", "2019.01", "2019.02", "2019.03", "2019.04", "2019.05", "2019.06"]
           },
           yAxis: {},
           series: [{
@@ -185,7 +217,7 @@
         sellerIncrease.setOption({
           tooltip: {},
           xAxis: {
-            data: ["2018.10以前", "2018.10", "2018.11", "2018.12", "2019.01", "2019.02", "2019.03"]
+            data: ["2018.12以前", "2019.01", "2019.02", "2019.03", "2019.04", "2019.05", "2019.06"]
           },
           yAxis: {},
           series: [{
@@ -213,7 +245,6 @@
         })
 
         sellerNumberByTypePie.setOption({
-          tooltip: {},
           series: [{
             // name: '销量',
             type: 'pie',
@@ -272,6 +303,134 @@
             formatter: "{b} : {c} ({d}%)"
           },
         })
+      },
+
+      // 创建地图
+      initMap() {
+        let map = new AMap.Map('container', {
+          features: ['bg', 'road', 'building', 'point'],
+          resizeEnable: true,
+          zoom: 5,
+          mapStyle: "amap://styles/4261c8dec313b784c0933324313428a8666",
+          center: [118.77948, 32.05489],
+          pitch: 1,
+          scrollWheel: true,
+          viewMode: '2D',
+        })
+        if (!this.isSupportCanvas()) {
+          this.$Message.info('热力图仅对支持canvas的浏览器适用,您所使用的浏览器不能使用热力图功能,请换个浏览器试试~')
+        }
+
+        let heatmap
+        let heatmapData = [];
+        //从接口获取数据
+        //官网示例数据结构 http://a.amap.com/jsapi_demos/static/resource/heatmapData.js
+        [{
+          "lng": 118.76948,
+          "lat": 32,
+          "count": 100
+        }, {
+          "lng": 118.77848,
+          "lat": 32.05479,
+          "count": 90
+        }, {
+          "lng": 118.87948,
+          "lat": 32.05589,
+          "count": 20
+        }].forEach(item => {
+          let obj = {
+            lng: item.lng,
+            lat: item.lat,
+            count: item.count,
+          }
+          heatmapData.push(obj)
+        })
+        map.plugin(["AMap.Heatmap"], function () {
+          //初始化heatmap对象
+          heatmap = new AMap.Heatmap(map, {
+            radius: 25, //给定半径
+            opacity: [0, 0.8],
+            gradient: {
+              0.5: 'blue',
+              0.65: 'rgb(117,211,248)',
+              0.7: 'rgb(0, 255, 0)',
+              0.9: '#ffea00',
+              1.0: 'red'
+            }
+          })
+          //设置数据集
+          heatmap.setDataSet({
+            data: heatmapData,
+            max: 5
+          })
+        })
+      },
+
+      // 创建地图
+      initSellerMap() {
+        let map = new AMap.Map('sellerContainer', {
+          features: ['bg', 'road', 'building', 'point'],
+          resizeEnable: true,
+          zoom: 5,
+          mapStyle: "amap://styles/4261c8dec313b784c0933324313428a8666",
+          center: [118.77948, 32.05489],
+          pitch: 1,
+          scrollWheel: true,
+          viewMode: '2D',
+        })
+        if (!this.isSupportCanvas()) {
+          this.$Message.info('热力图仅对支持canvas的浏览器适用,您所使用的浏览器不能使用热力图功能,请换个浏览器试试~')
+        }
+
+        let heatmap
+        let heatmapData = [];
+        //从接口获取数据
+        //官网示例数据结构 http://a.amap.com/jsapi_demos/static/resource/heatmapData.js
+        [{
+          "lng": 118.76948,
+          "lat": 32,
+          "count": 100
+        }, {
+          "lng": 118.77848,
+          "lat": 32.05479,
+          "count": 90
+        }, {
+          "lng": 118.87948,
+          "lat": 32.05589,
+          "count": 20
+        }].forEach(item => {
+          let obj = {
+            lng: item.lng,
+            lat: item.lat,
+            count: item.count,
+          }
+          heatmapData.push(obj)
+        })
+        map.plugin(["AMap.Heatmap"], function () {
+          //初始化heatmap对象
+          heatmap = new AMap.Heatmap(map, {
+            radius: 25, //给定半径
+            opacity: [0, 0.8],
+            gradient: {
+              0.5: 'blue',
+              0.65: 'rgb(117,211,248)',
+              0.7: 'rgb(0, 255, 0)',
+              0.9: '#ffea00',
+              1.0: 'red'
+            }
+          })
+          //设置数据集
+          heatmap.setDataSet({
+            data: heatmapData,
+            max: 5
+          })
+        })
+      },
+
+
+      isSupportCanvas() {//判断浏览区是否支持canvas
+        var elem = document.createElement('canvas')
+        return !!(elem.getContext && elem.getContext('2d'))
       },
     }
   }
