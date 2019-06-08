@@ -2,7 +2,7 @@
   <div>
     <el-row class="chart_title" style="margin-top: 40px">
       订单分析
-      <el-row style="margin-top: 40px">
+      <el-row style="margin-top: 40px; margin-bottom: 20px">
         <el-button size="small" :type="type[0]" @click="getHourCost">时间段</el-button>
         <el-button size="small" :type="type[1]" @click="getWeekCost">周</el-button>
         <el-button size="small" :type="type[2]" @click="getMonthCost">月</el-button>
@@ -59,10 +59,10 @@
 
     data() {
       return {
-        hourData: [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
-        weekData: [],
-        monthData: [],
-        quarterData: [],
+        hourData: [[0, 0, 0, 10.3, 15.9, 0, 25.6, 0, 24.8, 9.4, 0, 20.4], [0, 0, 0, 8.3, 12.9, 0, 23.6, 0, 21.8, 8.4, 0, 19.4], [0, 0, 0, 8.0, 12.4, 0, 23.2, 0, 21.1, 7.9, 0, 18.4]],
+        weekData: [[22.9, 16.3, 0, 22.3, 13.8, 0, 17.8], [20.9, 14.3, 0, 20.3, 10.8, 0, 16.8], [19.9, 13.3, 0, 19.5, 8.8, 0, 14.8]],
+        monthData: [[0, 15.9, 10.3, 14, 23.3, 30.8, 0, 0, 0, 0, 0, 0], [0, 10.9, 8.3, 11.5, 20.3, 27.8, 0, 0, 0, 0, 0, 0], [0, 10.4, 7.3, 10.5, 19.7, 25.8, 0, 0, 0, 0, 0, 0]],
+        quarterData: [[19.3, 24, 0, 0], [17.5, 20, 0, 0], [16.8, 18, 0, 0]],
 
         xaxis: [["0~1", "2~3", "4~5", "6~7", "8~9", "10~11", "12~13", "14~15", "16~17", "18~19", "20~21", "22~23"],
           ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
@@ -126,7 +126,13 @@
             data: this.xaxis[this.typeIndex]
           },
           tooltip: {},
-          yAxis: {},
+          yAxis: {
+            name: '价格'
+          },
+          legend: {
+            x: 'center',
+            data: ['平均客单价', '平均用户实付客单价', '平均商家实收客单价'],
+          },
           series: [
             {
               type: 'line',
@@ -140,7 +146,7 @@
             },
             {
               type: 'line',
-              name: '平均商家实收客单价 ',
+              name: '平均商家实收客单价',
               data: data[2]
             }
           ]
@@ -185,7 +191,7 @@
       this.drawOrder()
       this.drawRepurchase()
 
-      // TODO 得到具体订单情况 订单数据
+      // TODO 得到具体订单情况
     }
 
   }

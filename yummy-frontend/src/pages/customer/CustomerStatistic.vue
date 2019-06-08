@@ -22,7 +22,6 @@
                 <el-button size="small" :type="type[0]" @click="getHourCost">时间段</el-button>
                 <el-button size="small" :type="type[1]" @click="getWeekCost">周</el-button>
                 <el-button size="small" :type="type[2]" @click="getMonthCost">月</el-button>
-                <el-button size="small" :type="type[3]" @click="getQuarterCost">季度</el-button>
               </el-row>
             </el-row>
             <div id="costByHour" :style="{width: '90%', height: '400px', marginLeft: '5%'}"></div>
@@ -114,7 +113,7 @@
 
           <el-tab-pane label="商家配送时间统计" name="third">
             <el-row class="chart_title" style="margin-top: 40px">
-              商家配送时间表（平均 最快 最慢）
+              商家配送时间表
             </el-row>
             <div id="deliverTime" :style="{width: '850px', height: '400px', marginLeft: '20px'}"></div>
           </el-tab-pane>
@@ -141,21 +140,29 @@
     },
     data() {
       return {
-        type: ['primary', '', '', ''],
+        type: ['primary', '', ''],
+        typeIndex: 0,
+        xaxis: [["0~1", "2~3", "4~5", "6~7", "8~9", "10~11", "12~13", "14~15", "16~17", "18~19", "20~21", "22~23"],
+          ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
+          ["1月", "2月", "2月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        ],
 
         activeName: 'first',
 
         recentVolume: [1, 1, 1],
         costByHourData: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2],
+        costByWeekData: [50, 12.6, 20, 0, 23.6, 50, 160.8],
+        costByMonthData: [0, 10.6, 28.4, 11.4, 20.3, 196.06, 0, 0, 0, 0, 0, 0],
+
         costByTypeData: [2, 2, 2, 2, 2],
         timesByTypeData: [3, 3, 3, 3, 3],
 
-        deliverFastTimeData: [3, 3, 3, 3, 3],
-        deliverAverageTimeData: [3, 3, 3, 3, 3],
-        deliverSlowTimeData: [3, 3, 3, 3, 3],
+        deliverFastTimeData: [17, 20, 0, 0, 0],
+        deliverAverageTimeData: [25, 37, 0, 0, 0],
+        deliverSlowTimeData: [33, 45, 0, 0, 0],
 
         unsubscribeTimes: [{value: 2, name: '退订单数'}, {value: 10, name: '实际订单数'}],
-        unsubscribeMoney: [{value: 2, name: '违约金'}, {value: 10, name: '退款额'}, {value: 10, name: '实际订单额'}],
+        unsubscribeMoney: [{value: 2.65, name: '违约金'}, {value: 50.27, name: '退款额'}, {value: 226.76, name: '实际订单额'}],
 
         costData: [],
 
@@ -164,41 +171,43 @@
     },
     methods: {
       getHourCost: function () {
-        this.type = ['primary', '', '', '']
-
-        //TODO
+        this.type = ['primary', '', '']
+        this.typeIndex = 0
+        this.drawCostByHour()
       },
 
       getWeekCost: function () {
-        this.type = ['', 'primary', '', '']
-
-        //TODO
+        this.type = ['', 'primary', '']
+        this.typeIndex = 1
+        this.drawCostByHour()
       },
 
       getMonthCost: function () {
-        this.type = ['', '', 'primary', '']
-
-        // TODO
-      },
-
-      getQuarterCost: function () {
-        this.type = ['', '', '', 'primary']
-
-        // TODO
+        this.type = ['', '', 'primary']
+        this.typeIndex = 2
+        this.drawCostByHour()
       },
 
       drawCostByHour: function () {
         let costByHour = this.$echarts.init(document.getElementById('costByHour'))
 
+        let data
+        if (this.typeIndex === 0)
+          data = this.costByHourData
+        else if (this.typeIndex === 1)
+          data = this.costByWeekData
+        else
+          data = this.costByMonthData
+
         costByHour.setOption({
           xAxis: {
-            data: ["0~1", "2~3", "4~5", "6~7", "8~9", "10~11", "12~13", "14~15", "16~17", "18~19", "20~21", "22~23"]
+            data: this.xaxis[this.typeIndex]
           },
           tooltip: {},
           yAxis: {},
           series: [{
             type: 'line',
-            data: this.costByHourData
+            data: data
           }]
         })
       },
@@ -349,7 +358,6 @@
       }
     },
     mounted() {
-      // TODO 获取退款相关内容
       this.$axios({
         method: 'get',
         url: '/user/statistic/cost',
