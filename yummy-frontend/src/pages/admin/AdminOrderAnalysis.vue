@@ -2,7 +2,7 @@
   <div>
     <el-row class="chart_title" style="margin-top: 40px">
       订单分析
-      <el-row style="margin-top: 40px">
+      <el-row style="margin-top: 40px; margin-bottom: 20px">
         <el-button size="small" :type="type[0]" @click="getHourCost">时间段</el-button>
         <el-button size="small" :type="type[1]" @click="getWeekCost">周</el-button>
         <el-button size="small" :type="type[2]" @click="getMonthCost">月</el-button>
@@ -66,10 +66,10 @@
 
     data() {
       return {
-        hourData: [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
-        weekData: [],
-        monthData: [],
-        quarterData: [],
+        hourData: [[0, 0, 0, 13, 20.9, 20.3, 13, 30.3, 24.8, 35.6, 29.8, 30.4], [0, 0, 0, 12, 18.9, 16.3, 12, 27.3, 20.8, 33.6, 25.8, 20.4], [0, 0, 0, 11.8, 17.9, 15.3, 11.5, 25.9, 19.6, 32.6, 24.8, 19.4]],
+        weekData: [[24.9, 26.3, 0, 32.3, 33.8, 0, 27.8], [20.9, 24.3, 0, 30.3, 30.8, 0, 26.8], [19.9, 23.3, 0, 29.5, 28.8, 0, 24.8]],
+        monthData: [[0, 25.9, 20.3, 24, 33.3, 40.8, 0, 0, 0, 0, 0, 0], [0, 20.9, 18.3, 21.5, 30.3, 37.8, 0, 0, 0, 0, 0, 0], [0, 18.9, 17.3, 20.5, 29.7, 35.8, 0, 0, 0, 0, 0, 0]],
+        quarterData: [[29.3, 34, 0, 0], [27.5, 30, 0, 0], [26.8, 28, 0, 0]],
 
         xaxis: [["0~1", "2~3", "4~5", "6~7", "8~9", "10~11", "12~13", "14~15", "16~17", "18~19", "20~21", "22~23"],
           ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
@@ -81,7 +81,7 @@
 
         orderData: [],
 
-        repurchaseData: [{value: 20, name: '复购订单数'}, {value: 10, name: '新订单数'}],
+        repurchaseData: [{value: 10, name: '复购订单数'}, {value: 13, name: '新订单数'}],
       }
 
     },
@@ -133,7 +133,14 @@
             data: this.xaxis[this.typeIndex]
           },
           tooltip: {},
-          yAxis: {},
+          yAxis: {
+            name: '价格'
+          },
+          legend: {
+            x: 'center',
+            data: ['平均客单价', '平均用户实付客单价', '平均商家实收客单价'],
+            width: 900
+          },
           series: [
             {
               type: 'line',
@@ -147,7 +154,7 @@
             },
             {
               type: 'line',
-              name: '平均商家实收客单价 ',
+              name: '平均商家实收客单价',
               data: data[2]
             }
           ]
@@ -208,17 +215,33 @@
         //从接口获取数据
         //官网示例数据结构 http://a.amap.com/jsapi_demos/static/resource/heatmapData.js
         [{
-          "lng": 118.76948,
-          "lat": 32,
-          "count": 100
+          "lng": 118.7777209282,
+          "lat": 32.0583000608,
+          "count": 8
         }, {
-          "lng": 118.77848,
-          "lat": 32.05479,
-          "count": 90
+          "lng": 118.7818837166,
+          "lat": 32.0524259369,
+          "count": 5
         }, {
-          "lng": 118.87948,
-          "lat": 32.05589,
-          "count": 20
+          "lng": 118.7915182114,
+          "lat": 32.0515529699,
+          "count": 2
+        }, {
+          "lng": 118.7858104706,
+          "lat": 32.0572634781,
+          "count": 2
+        }, {
+          "lng": 118.783,
+          "lat": 32.0512983529,
+          "count": 3
+        }, {
+          "lng": 116.4071700000,
+          "lat": 39.9046900000,
+          "count": 2
+        }, {
+          "lng": 104.0647600000,
+          "lat": 30.5702000000,
+          "count": 1
         }].forEach(item => {
           let obj = {
             lng: item.lng,
@@ -243,7 +266,7 @@
           //设置数据集
           heatmap.setDataSet({
             data: heatmapData,
-            max: 5
+            max: 8
           })
         })
       },
@@ -258,6 +281,8 @@
       this.drawOrder()
       this.drawRepurchase()
       this.initMap()
+
+      // TODO 订单分析表格数据
     }
 
   }

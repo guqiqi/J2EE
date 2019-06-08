@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-row class="chart_title" style="margin-top: 40px;">
-      用户平均收入
-      <el-row style="margin-top: 40px">
+      用户订单收益
+      <el-row style="margin-top: 40px; margin-bottom: 20px">
         <el-button size="small" :type="type[0]" @click="getHourCost">时间段</el-button>
         <el-button size="small" :type="type[1]" @click="getWeekCost">周</el-button>
         <el-button size="small" :type="type[2]" @click="getMonthCost">月</el-button>
@@ -52,7 +52,7 @@
         type: ['primary', '', '', ''],
         typeIndex: 0,
 
-        repurchaseData: [{value: 20, name: '复购用户数'}, {value: 10, name: '新用户数'}],
+        repurchaseData: [{value: 3, name: '复购用户数'}, {value: 4, name: '新用户数'}],
       }
     },
 
@@ -103,6 +103,9 @@
             data: this.xaxis[this.typeIndex]
           },
           tooltip: {},
+          legend: {
+            data: ['平均购买次数', '平均订单额', '平均实付额', '平均实收额']
+          },
           yAxis: [
             {
               type: 'value',
@@ -253,13 +256,13 @@
               type: 'bar',
               barGap: 0,
               label: labelOption,
-              data: [320, 332, 301, 334, 390]
+              data: [0, 0, 1, 0, 0]
             },
             {
               name: '女',
               type: 'bar',
               label: labelOption,
-              data: [220, 182, 191, 234, 290]
+              data: [1, 1, 0, 0, 1]
             },
           ]
         })
@@ -305,11 +308,9 @@
           features: ['bg', 'road', 'building', 'point'],
           resizeEnable: false,
           zoom: 15,
-          center: [118.77948, 32.05489],
+          center: [118.7831926346, 32.0608096335],
           pitch: 1,
           jogEnable: false,
-          dragEnable: false,
-          scrollWheel: false,
           viewMode: '2D',
         })
         if (!this.isSupportCanvas()) {
@@ -320,213 +321,21 @@
         //从接口获取数据
         //官网示例数据结构 http://a.amap.com/jsapi_demos/static/resource/heatmapData.js
         [{
-          "lng": 118.76948,
-          "lat": 32,
-          "count": 100
+          "lng": 118.7818837166,
+          "lat": 32.0524259369,
+          "count": 5
         }, {
-          "lng": 118.77848,
-          "lat": 32.05479,
-          "count": 90
+          "lng": 118.7915182114,
+          "lat": 32.0515529699,
+          "count": 2
         }, {
-          "lng": 118.87948,
-          "lat": 32.05589,
-          "count": 20
+          "lng": 118.7858104706,
+          "lat": 32.0572634781,
+          "count": 2
         }, {
-          "lng": 116.481707,
-          "lat": 39.940089,
-          "count": 13
-        }, {
-          "lng": 116.410588,
-          "lat": 39.880172,
-          "count": 14
-        }, {
-          "lng": 116.394816,
-          "lat": 39.91181,
-          "count": 15
-        }, {
-          "lng": 116.416002,
-          "lat": 39.952917,
-          "count": 16
-        }, {
-          "lng": 116.39671,
-          "lat": 39.924903,
-          "count": 17
-        }, {
-          "lng": 116.180816,
-          "lat": 39.957553,
-          "count": 18
-        }, {
-          "lng": 116.382035,
-          "lat": 39.874114,
-          "count": 19
-        }, {
-          "lng": 116.316648,
-          "lat": 39.914529,
-          "count": 20
-        }, {
-          "lng": 116.395803,
-          "lat": 39.908556,
-          "count": 21
-        }, {
-          "lng": 116.74553,
-          "lat": 39.875916,
-          "count": 22
-        }, {
-          "lng": 116.352289,
-          "lat": 39.916475,
-          "count": 23
-        }, {
-          "lng": 116.441548,
-          "lat": 39.878262,
-          "count": 24
-        }, {
-          "lng": 116.318947,
-          "lat": 39.942735,
-          "count": 25
-        }, {
-          "lng": 116.382585,
-          "lat": 39.941949,
-          "count": 26
-        }, {
-          "lng": 116.42042,
-          "lat": 39.884017,
-          "count": 27
-        }, {
-          "lng": 116.31744,
-          "lat": 39.892561,
-          "count": 28
-        }, {
-          "lng": 116.407059,
-          "lat": 39.912438,
-          "count": 29
-        }, {
-          "lng": 116.412351,
-          "lat": 39.888082,
-          "count": 30
-        }, {
-          "lng": 116.444341,
-          "lat": 39.915891,
-          "count": 31
-        }, {
-          "lng": 116.335385,
-          "lat": 39.741756,
-          "count": 32
-        }, {
-          "lng": 116.3926,
-          "lat": 40.008733,
-          "count": 33
-        }, {
-          "lng": 116.389731,
-          "lat": 39.92292,
-          "count": 34
-        }, {
-          "lng": 116.413371,
-          "lat": 39.874483,
-          "count": 35
-        }, {
-          "lng": 116.199752,
-          "lat": 39.911717,
-          "count": 36
-        }, {
-          "lng": 116.278472,
-          "lat": 40.254994,
-          "count": 37
-        }, {
-          "lng": 116.464252,
-          "lat": 39.925828,
-          "count": 38
-        }, {
-          "lng": 116.479475,
-          "lat": 39.937945,
-          "count": 39
-        }, {
-          "lng": 116.415599,
-          "lat": 39.956902,
-          "count": 40
-        }, {
-          "lng": 116.355675,
-          "lat": 39.870089,
-          "count": 41
-        }, {
-          "lng": 116.295267,
-          "lat": 39.987171,
-          "count": 42
-        }, {
-          "lng": 116.323634,
-          "lat": 39.911692,
-          "count": 43
-        }, {
-          "lng": 116.692769,
-          "lat": 40.173307,
-          "count": 44
-        }, {
-          "lng": 116.287888,
-          "lat": 39.928531,
-          "count": 45
-        }, {
-          "lng": 116.386502,
-          "lat": 39.922747,
-          "count": 46
-        }, {
-          "lng": 116.236773,
-          "lat": 40.218341,
-          "count": 47
-        }, {
-          "lng": 116.490636,
-          "lat": 39.804253,
-          "count": 48
-        }, {
-          "lng": 116.391095,
-          "lat": 39.925791,
-          "count": 49
-        }, {
-          "lng": 116.472402,
-          "lat": 39.769178,
-          "count": 50
-        }, {
-          "lng": 116.38657,
-          "lat": 39.956731,
-          "count": 51
-        }, {
-          "lng": 116.427536,
-          "lat": 39.943671,
-          "count": 52
-        }, {
-          "lng": 116.374547,
-          "lat": 39.967588,
-          "count": 53
-        }, {
-          "lng": 116.380383,
-          "lat": 39.871634,
-          "count": 54
-        }, {
-          "lng": 116.376092,
-          "lat": 39.965485,
-          "count": 55
-        }, {
-          "lng": 116.352424,
-          "lat": 39.91811,
-          "count": 56
-        }, {
-          "lng": 116.020157,
-          "lat": 40.348526,
-          "count": 57
-        }, {
-          "lng": 116.416201,
-          "lat": 39.951736,
-          "count": 58
-        }, {
-          "lng": 116.405392,
-          "lat": 39.908738,
-          "count": 59
-        }, {
-          "lng": 116.49238,
-          "lat": 39.926248,
-          "count": 60
-        }, {
-          "lng": 116.389282,
-          "lat": 39.988391,
-          "count": 61
+          "lng": 118.7826991081,
+          "lat": 32.0560450238,
+          "count": 2
         }].forEach(item => {
           let obj = {
             lng: item.lng,
@@ -557,7 +366,7 @@
       },
 
       isSupportCanvas() {//判断浏览区是否支持canvas
-        var elem = document.createElement('canvas')
+        let elem = document.createElement('canvas')
         return !!(elem.getContext && elem.getContext('2d'))
       },
     },

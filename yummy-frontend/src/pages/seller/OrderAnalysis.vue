@@ -74,7 +74,7 @@
 
         orderData: [],
 
-        repurchaseData: [{value: 20, name: '复购订单数'}, {value: 10, name: '新订单数'}]
+        repurchaseData: [{value: 7, name: '复购订单数'}, {value: 4, name: '新订单数'}]
       }
 
     },
@@ -184,6 +184,8 @@
     mounted() {
       this.drawOrder()
       this.drawRepurchase()
+
+      // TODO 得到具体订单情况 订单数据
     }
 
   }

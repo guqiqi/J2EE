@@ -14,7 +14,6 @@
             <el-button size="small" :type="type[0]" @click="getHourCost">时间段</el-button>
             <el-button size="small" :type="type[1]" @click="getWeekCost">周</el-button>
             <el-button size="small" :type="type[2]" @click="getMonthCost">月</el-button>
-            <el-button size="small" :type="type[3]" @click="getQuarterCost">季度</el-button>
           </el-row>
         </el-row>
         <div id="sellByHour" :style="{width: '90%', height: '400px', marginLeft: '5%'}"></div>
@@ -134,55 +133,63 @@
 
         recentVolume: [0, 2, 1],
         sellByHourData: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        sellByWeekData: [54, 12.6, 35.6, 40, 23, 12.5, 26.3],
+        sellByMonthData: [0, 23.4, 53.4, 26.4, 82.6, 37.8, 0, 0, 0, 0, 0, 0],
+
+        xaxis: [["0~1", "2~3", "4~5", "6~7", "8~9", "10~11", "12~13", "14~15", "16~17", "18~19", "20~21", "22~23"],
+          ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
+          ["1月", "2月", "2月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        ],
+        type: ['primary', '', ''],
+        typeIndex: 0,
 
         sellData: [],
 
         cancelData: [],
 
-        type: ['primary', '', '', ''],
-
-        unsubscribeTimes: [{value: 2, name: '退订单数'}, {value: 10, name: '实际订单数'}],
-        unsubscribeMoney: [{value: 2, name: '违约金'}, {value: 10, name: '退款额'}, {value: 10, name: '实际订单额'}],
-
+        unsubscribeTimes: [{value: 2, name: '退订单数'}, {value: 9, name: '实际订单数'}],
+        unsubscribeMoney: [{value: 1.37, name: '违约金'}, {value: 26.19, name: '退款额'}, {value: 223.53, name: '实际订单额'}],
       }
     },
     methods: {
       getHourCost: function () {
         this.type = ['primary', '', '', '']
-
-        //TODO
+        this.typeIndex = 0
+        this.drawSellByHour()
       },
 
       getWeekCost: function () {
         this.type = ['', 'primary', '', '']
-
-        //TODO
+        this.typeIndex = 1
+        this.drawSellByHour()
       },
 
       getMonthCost: function () {
         this.type = ['', '', 'primary', '']
-
-        // TODO
-      },
-
-      getQuarterCost: function () {
-        this.type = ['', '', '', 'primary']
-
-        // TODO
+        this.typeIndex = 2
+        this.drawSellByHour()
       },
 
       drawSellByHour: function () {
         let sellByHour = this.$echarts.init(document.getElementById('sellByHour'))
 
+        let data
+        if (this.typeIndex === 0)
+          data = this.sellByHourData
+        else if (this.typeIndex === 1)
+          data = this.sellByWeekData
+        else
+          data = this.sellByMonthData
+
         sellByHour.setOption({
           xAxis: {
-            data: ["0~1", "2~3", "4~5", "6~7", "8~9", "10~11", "12~13", "14~15", "16~17", "18~19", "20~21", "22~23"]
+            data: this.xaxis[this.typeIndex]
           },
           tooltip: {},
           yAxis: {},
           series: [{
             type: 'line',
-            data: this.sellByHourData
+            data: data
           }]
         })
       },

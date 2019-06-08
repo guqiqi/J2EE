@@ -53,8 +53,8 @@
           </el-row>
 
           <el-row style="font-size: 25px; font-weight: bold; text-align: right; margin-right: 30px">
-            本周营业增长率<span style="color: red"> 000 </span>%，本月营业增长率<span
-            style="color: red"> 98 </span>%，本年度营业增长率<span style="color: red"> 100 </span>%
+            本周营业增长率<span style="color: red"> 95.3 </span>%，本月营业增长率<span
+            style="color: red"> 80 </span>%，本年度营业增长率<span style="color: red"> 100 </span>%
           </el-row>
 
           <el-row class="chart_title" style="margin-top: 40px">
@@ -132,6 +132,7 @@
         let data_ = response.data
 
         this.customerNumber = data_.customerNumber
+        console.log(data_.customerIncrease)
         this.customerIncreaseDate = data_.customerIncrease
 
         console.log(this.customerIncreaseDate)
@@ -328,15 +329,23 @@
         [{
           "lng": 118.76948,
           "lat": 32,
-          "count": 100
+          "count": 4
         }, {
-          "lng": 118.77848,
-          "lat": 32.05479,
-          "count": 90
+          "lng": 118.7838363647,
+          "lat": 32.0512983529,
+          "count": 2
         }, {
-          "lng": 118.87948,
-          "lat": 32.05589,
-          "count": 20
+          "lng": 118.7920761108,
+          "lat": 32.0486793946,
+          "count": 1
+        }, {
+          "lng": 116.4071700000,
+          "lat": 39.9046900000,
+          "count": 1
+        }, {
+          "lng": 104.0647600000,
+          "lat": 30.5702000000,
+          "count": 1
         }].forEach(item => {
           let obj = {
             lng: item.lng,
@@ -361,7 +370,7 @@
           //设置数据集
           heatmap.setDataSet({
             data: heatmapData,
-            max: 5
+            max: 4
           })
         })
       },
@@ -378,26 +387,31 @@
           scrollWheel: true,
           viewMode: '2D',
         })
-        if (!this.isSupportCanvas()) {
-          this.$Message.info('热力图仅对支持canvas的浏览器适用,您所使用的浏览器不能使用热力图功能,请换个浏览器试试~')
-        }
 
         let heatmap
         let heatmapData = [];
         //从接口获取数据
         //官网示例数据结构 http://a.amap.com/jsapi_demos/static/resource/heatmapData.js
         [{
-          "lng": 118.76948,
-          "lat": 32,
-          "count": 100
+          "lng": 118.7857890129,
+          "lat": 32.0588819968,
+          "count": 5
         }, {
-          "lng": 118.77848,
-          "lat": 32.05479,
-          "count": 90
+          "lng": 118.7638,
+          "lat": 31.9853,
+          "count": 2
         }, {
-          "lng": 118.87948,
-          "lat": 32.05589,
-          "count": 20
+          "lng": 118.783,
+          "lat": 32.0512983529,
+          "count": 3
+        }, {
+          "lng": 116.4071700000,
+          "lat": 39.9046900000,
+          "count": 1
+        }, {
+          "lng": 104.0647600000,
+          "lat": 30.5702000000,
+          "count": 2
         }].forEach(item => {
           let obj = {
             lng: item.lng,
@@ -429,7 +443,7 @@
 
 
       isSupportCanvas() {//判断浏览区是否支持canvas
-        var elem = document.createElement('canvas')
+        let elem = document.createElement('canvas')
         return !!(elem.getContext && elem.getContext('2d'))
       },
     }
