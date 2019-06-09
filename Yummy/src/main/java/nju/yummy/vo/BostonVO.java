@@ -1,39 +1,44 @@
 package nju.yummy.vo;
 
 public class BostonVO {
-    private int rate;
-    private int price;
-    private int name;
+    private double rate;
+    private double price;
+    private String name;
     private int number;
 
-    public BostonVO(int rate, int price, int name, int number) {
+    public BostonVO(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public BostonVO(double rate, double price, String name, int number) {
         this.rate = rate;
         this.price = price;
         this.name = name;
         this.number = number;
     }
 
-    public int getRate() {
+    public double getRate() {
         return rate;
     }
 
-    public void setRate(int rate) {
+    public void setRate(double rate) {
         this.rate = rate;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public int getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
     }
 
