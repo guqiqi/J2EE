@@ -282,7 +282,16 @@
       this.drawRepurchase()
       this.initMap()
 
-      // TODO 订单分析表格数据
+      this.$axios({
+        method: 'get',
+        url: '/statistic/order',
+      }).then(response => {
+        let data_ = response.data
+
+        this.orderData = data_.orderData
+      }).catch(function (err) {
+        console.log(err)
+      })
     }
 
   }

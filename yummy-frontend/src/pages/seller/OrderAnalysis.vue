@@ -191,7 +191,17 @@
       this.drawOrder()
       this.drawRepurchase()
 
-      // TODO 得到具体订单情况
+      // 得到具体订单情况
+      this.$axios({
+        method: 'get',
+        url: '/statistic/seller/order',
+      }).then(response => {
+        let data_ = response.data
+
+        this.orderData = data_.orderData
+      }).catch(function (err) {
+        console.log(err)
+      })
     }
 
   }
