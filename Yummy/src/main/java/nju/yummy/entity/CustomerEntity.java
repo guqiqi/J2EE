@@ -21,6 +21,23 @@ public class CustomerEntity {
     private Double leftMoney;
     private Timestamp registerTime;
 
+    public int getSex() {
+        return sex;
+    }
+
+    private int sex;
+
+    public double getLon() {
+        return lon;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    private double lon;
+    private double lat;
+
     public CustomerEntity() {
     }
 

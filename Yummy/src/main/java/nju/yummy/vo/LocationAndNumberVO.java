@@ -5,10 +5,10 @@ public class LocationAndNumberVO {
     private double longitude;
     private int number;
 
-    public LocationAndNumberVO(double latitude, double longitude, int number) {
+    public LocationAndNumberVO(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.number = number;
+        this.number = 1;
     }
 
     public double getLatitude() {

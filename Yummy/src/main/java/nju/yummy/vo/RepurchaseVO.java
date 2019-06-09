@@ -2,11 +2,11 @@ package nju.yummy.vo;
 
 public class RepurchaseVO {
     private int newPurchase;
-    private int olderPruchase;
+    private int olderPurchase;
 
-    public RepurchaseVO(int newPurchase, int olderPruchase) {
+    public RepurchaseVO(int newPurchase, int olderPurchase) {
         this.newPurchase = newPurchase;
-        this.olderPruchase = olderPruchase;
+        this.olderPurchase = olderPurchase;
     }
 
     public int getNewPurchase() {
@@ -17,11 +17,11 @@ public class RepurchaseVO {
         this.newPurchase = newPurchase;
     }
 
-    public int getOlderPruchase() {
-        return olderPruchase;
+    public int getOlderPurchase() {
+        return olderPurchase;
     }
 
-    public void setOlderPruchase(int olderPruchase) {
-        this.olderPruchase = olderPruchase;
+    public void setOlderPurchase(int olderPruchase) {
+        this.olderPurchase = olderPruchase;
     }
 }
