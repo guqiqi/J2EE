@@ -64,7 +64,7 @@
         <div id="volumeByHour" :style="{width: '1090px', height: '400px', marginLeft: '100px'}"></div>
 
         <el-row class="chart_title">
-          分类消费统计表 不同类型的餐厅（用户数，点餐次数，消费总金额，平均消费金额）
+          分类消费统计表
         </el-row>
         <div id="volumeByType" :style="{width: '1090px', height: '400px', marginLeft: '100px'}"></div>
         <div id="volumeByTypePie" :style="{width: '1090px', height: '400px', marginLeft: '100px'}"></div>

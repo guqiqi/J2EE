@@ -6,7 +6,6 @@
         <el-button size="small" :type="type[0]" @click="getHourCost">时间段</el-button>
         <el-button size="small" :type="type[1]" @click="getWeekCost">周</el-button>
         <el-button size="small" :type="type[2]" @click="getMonthCost">月</el-button>
-        <el-button size="small" :type="type[3]" @click="getQuarterCost">季度</el-button>
       </el-row>
     </el-row>
     <div id="sell" :style="{width: '1200px', height: '500px', marginLeft: '40px'}"></div>
@@ -17,7 +16,6 @@
         <el-button size="small" :type="countType[0]" @click="getHour">时间段</el-button>
         <el-button size="small" :type="countType[1]" @click="getWeek">周</el-button>
         <el-button size="small" :type="countType[2]" @click="getMonth">月</el-button>
-        <el-button size="small" :type="countType[3]" @click="getQuarter">季度</el-button>
       </el-row>
     </el-row>
     <div id="sellCount" :style="{width: '1200px', height: '500px', marginLeft: '40px'}"></div>
@@ -26,11 +24,11 @@
       套餐与商品拉新分析
     </el-row>
     <el-row>
-      <el-col :span="6">
-        <div id="package" :style="{width: '400px', height: '400px'}"></div>
+      <el-col :span="5">
+        <div id="package" :style="{width: '280px', height: '400px'}"></div>
       </el-col>
-      <el-col :span="18">
-        <div id="newCustomer" :style="{width: '850px', height: '400px', marginLeft: '40px'}"></div>
+      <el-col :span="19">
+        <div id="newCustomer" :style="{width: '1000px', height: '400px', marginLeft: '40px'}"></div>
       </el-col>
     </el-row>
 
@@ -55,16 +53,16 @@
         foodNames: ['❤招牌皮蛋瘦肉粥', '农家鸡蛋肉松饼', '十三香冒油咸鸭蛋',
           '香香奶黄包', '❤安心油条', '❤民国美龄粥'],
 
-        retainData: [4, 5, 2, 4, 5, 5],
-        leaveData: [-0.34, -1, -0.68, -1.23, -0.53, -3.33],
+        retainData: [1, 1, 4, 3, 5, 7],
+        leaveData: [-1.01, -0.34, -0.34, -0.68, -0.34, 0],
 
         bostonData: [
-          [[30, 40, '❤招牌皮蛋瘦肉粥', 4]],
-          [[40, 20.4, '农家鸡蛋肉松饼', 9]],
-          [[10, 10, '十三香冒油咸鸭蛋', 20]],
-          [[20, 20, '香香奶黄包', 30]],
-          [[29, 48, '❤安心油条', 10]],
-          [[10, 11, '❤民国美龄粥', 10]]],
+          [[70, 10, '❤招牌皮蛋瘦肉粥', 7]],
+          [[10, 15, '农家鸡蛋肉松饼', 2]],
+          [[60, 3, '十三香冒油咸鸭蛋', 5]],
+          [[20, 6, '香香奶黄包', 1]],
+          [[30, 5, '❤安心油条', 7]],
+          [[85, 23, '❤民国美龄粥', 6]]],
 
         xaxis: [["0~1", "2~3", "4~5", "6~7", "8~9", "10~11", "12~13", "14~15", "16~17", "18~19", "20~21", "22~23"],
           ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
@@ -74,21 +72,19 @@
         type: ['primary', '', '', ''],
         typeIndex: 0,
 
-        hourData: [[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
-        weekData: [],
-        monthData: [],
-        quarterData: [],
+        hourData: [[0, 0, 0, 12.4, 0, 0, 18, 0, 0, 20.3, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 13.4], [0, 0, 0, 5, 0, 0, 5, 0, 0, 7, 0, 0], [0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 6, 12.5, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 24, 0, 0, 0, 0, 0, 70.3, 0, 0, 0]],
+        weekData: [[13, 0, 16, 0, 0, 0, 12], [0, 12.6, 0, 0, 0, 0, 0], [25, 0, 0, 0, 0, 0, 0], [15, 0, 0, 0, 23, 0, 0], [0, 0, 19.6, 0, 0, 0, 14.3], [0, 0, 0, 40, 0, 12.5, 0]],
+        monthData: [[0, 18, 0, 13, 24.6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 13.4, 0, 12.5, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 6, 10, 0, 0, 0, 0, 0, 0], [0, 7.5, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0], [0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 45, 0, 0, 50.4, 0, 0, 0, 0, 0, 0, 0]],
 
         countType: ['primary', '', '', ''],
         countTypeIndex: 0,
 
-        countHourData: [[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
-        countWeekData: [],
-        countMonthData: [],
-        countQuarterData: [],
+        countHourData: [[0, 0, 0, 1, 0, 0, 1, 0, 0, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 1, 0, 0, 1, 0, 0, 2, 0, 0], [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0]],
+        countWeekData: [[1, 0, 1, 0, 0, 0, 1], [0, 1, 0, 0, 0, 0, 0], [4, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 5, 0, 0], [0, 0, 4, 0, 0, 0, 3], [0, 0, 0, 2, 0, 1, 0]],
+        countMonthData: [[0, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]],
 
-        packageData: [{value: 20, name: '套餐销量'}, {value: 10, name: '单品销量'}],
-        newCustomerData: [0, 2, 2, 2, 22, 1]
+        packageData: [{value: 4, name: '套餐销量'}, {value: 10, name: '单品销量'}],
+        newCustomerData: [3, 0, 2, 0, 3, 1]
 
       }
     },
@@ -136,9 +132,9 @@
           data = this.quarterData
 
         let series = []
-        for (let i = 1; i < this.foodNames.length; i++) {
+        for (let i = 0; i < this.foodNames.length; i++) {
           series.push({
-            name: this.foodNames[i - 1],
+            name: this.foodNames[i],
             type: 'bar',
             barWidth: 40,
             data: data[i],
@@ -151,6 +147,10 @@
             data: this.xaxis[this.typeIndex]
           },
           tooltip: {},
+          legend: {
+            data: ['❤招牌皮蛋瘦肉粥', '农家鸡蛋肉松饼', '十三香冒油咸鸭蛋',
+              '香香奶黄包', '❤安心油条', '❤民国美龄粥']
+          },
           yAxis: [
             {
               type: 'value',
@@ -216,7 +216,11 @@
 
         sellCount.setOption({
           xAxis: {
-            data: this.xaxis[this.typeIndex]
+            data: this.xaxis[this.countTypeIndex]
+          },
+          legend: {
+            data: ['❤招牌皮蛋瘦肉粥', '农家鸡蛋肉松饼', '十三香冒油咸鸭蛋',
+              '香香奶黄包', '❤安心油条', '❤民国美龄粥']
           },
           tooltip: {},
           yAxis: [
@@ -240,7 +244,7 @@
             data: this.bostonData[i],
             type: 'scatter',
             symbolSize: function (data) {
-              return data[3] * 3
+              return data[3] * 10
             },
             label: {
               emphasis: {
@@ -303,7 +307,7 @@
 
         let comprehensiveData = []
         for (let i = 0; i < this.retainData.length; i++) {
-          comprehensiveData.push(this.retainData[i] + this.leaveData[i])
+          comprehensiveData.push((this.retainData[i] + this.leaveData[i]).toFixed(2))
         }
 
         retain.setOption({
@@ -316,7 +320,6 @@
             name: '菜品',
           },
           yAxis: {
-            inverse: true,
             splitArea: {show: false}
           },
           tooltip: {},
@@ -357,7 +360,8 @@
           legend: {
             orient: 'vertical',
             x: 'right',
-            data: ['套餐销量', '单品销量']
+            data: ['套餐销量', '单品销量'],
+            top: 30
           },
           tooltip: {},
           series: [
@@ -393,7 +397,8 @@
           },
           legend: {
             orient: 'vertical',
-            x: 'right',
+            x: 'center',
+            top: 30,
             data: ['拉新数量']
           },
           tooltip: {},
